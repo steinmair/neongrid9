@@ -2,11 +2,12 @@
 
 ```
 ╔══════════════════════════════════════════════════════════════════╗
-║  NEONGRID-9 :: LPIC-1 COMBAT TRAINING SYSTEM                   ║
-║  Version 2.0  |  22 Kapitel — 500 Missionen                    ║
+║  NEONGRID-9 :: LPIC-1 COMBAT TRAINING SYSTEM                     ║
+║  Version 2.0  |  22 Kapitel — 500 Missionen                      ║
 ║                                                                  ║
-║  "The system does not care who you are.                         ║
-║   Only what you know."                                          ║
+║  "The system does not care who you are.                          ║
+║   Only what you know."                                           ║
+║                                             Powered By Chaoswerk ║
 ╚══════════════════════════════════════════════════════════════════╝
 ```
 
@@ -170,33 +171,7 @@ neongrid9/
 
 ## Entwicklung
 
-**Neue Mission hinzufügen:**
-
-```python
-# In missions/chXX_name.py
-Mission(
-    mission_id   = "X.NN",
-    chapter      = X,
-    title        = "Titel",
-    mtype        = "SCAN",  # SCAN|CONSTRUCT|QUIZ|BOSS|DECODE|REPAIR|INFILTRATE
-    xp           = 80,
-    speaker      = "VECTOR",
-    story        = "Narrativer Einstieg...",
-    why_important = "LPIC-Relevanz...",
-    explanation  = "Technische Erklärung...",
-    syntax       = "command [OPTIONS]",
-    example      = "praktisches Beispiel",
-    task_description = "Aufgabenstellung",
-    expected_commands = ["befehl"],
-    hint_text    = "Tipp für den Spieler",
-    quiz_questions = [QuizQuestion(...)],
-    exam_tip     = "LPIC-1 Prüfungstipp",
-    memory_tip   = "Merkhilfe",
-    gear_reward  = None,
-    faction_reward = ("Kernel Syndicate", 10),
-)
-```
 
 ---
 
-*NeonGrid-9 — Train hard. Root harder.*
+*Powered By Chaoswerk*
