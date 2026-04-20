@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+*.pyo
+*.kate-swp
+*.swp
+.~lock.*
+~/.neongrid9_save*.json
