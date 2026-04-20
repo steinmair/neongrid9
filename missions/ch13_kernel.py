@@ -1,0 +1,2470 @@
+"""
+NeonGrid-9 :: Kapitel 13 — KERNEL FORGE
+LPIC-1 Topic 101.1 (Kernel-Module, udev, sysctl)
+Kernel-Module, /proc, /sys, udev, sysctl & dmesg
+
+"Der Kernel ist das Gehirn von NeonGrid-9.
+ Module sind seine Sinnesorgane.
+ sysctl ist sein Steuerpult.
+ Wer den Kernel kennt, kennt das System in seiner Tiefe."
+"""
+
+from engine.mission_engine import Mission, QuizQuestion
+
+CHAPTER_13_MISSIONS: list[Mission] = [
+
+    # ══════════════════════════════════════════════════════════════════════
+    # 13.01 — Kernel-Module Grundlagen
+    # ══════════════════════════════════════════════════════════════════════
+    Mission(
+        mission_id   = "13.01",
+        chapter      = 13,
+        title        = "Kernel-Module — Treiber zur Laufzeit",
+        mtype        = "SCAN",
+        xp           = 80,
+        speaker      = "ZARA Z3R0",
+        story        = (
+            "Zara Z3R0: 'Der neue Netzwerk-Adapter funktioniert nicht, Ghost.\n"
+            " Kein Treiber. Kein Modul. Kein Netz.\n"
+            " lsmod, modprobe, insmod — das sind deine Werkzeuge.\n"
+            " Lade das Modul. Bringe den Adapter zum Leben.'"
+        ),
+        why_important = (
+            "Kernel-Module sind Treiber und Erweiterungen des Linux-Kernels.\n"
+            "LPIC-1 Topic 101.1 testet lsmod, modprobe, insmod, rmmod ausführlich."
+        ),
+        explanation  = (
+            "KERNEL-MODULE:\n\n"
+            "Module erweitern den Kernel zur Laufzeit ohne Neustart.\n"
+            "Gespeichert als .ko-Dateien (Kernel Object).\n\n"
+            "MODULE ANZEIGEN:\n"
+            "  lsmod                    geladene Module anzeigen\n"
+            "  lsmod | grep e1000       spezifisches Modul suchen\n\n"
+            "MODUL-INFORMATION:\n"
+            "  modinfo e1000            Modul-Details\n"
+            "  modinfo -F description e1000  nur Beschreibung\n"
+            "  modinfo -F filename e1000    Pfad zur .ko-Datei\n\n"
+            "MODULE LADEN:\n"
+            "  modprobe e1000           Modul + Abhängigkeiten laden\n"
+            "  modprobe -v e1000        verbose\n"
+            "  insmod /pfad/modul.ko    Modul direkt laden (keine Deps!)\n\n"
+            "MODULE ENTLADEN:\n"
+            "  modprobe -r e1000        Modul + Abhängigkeiten entladen\n"
+            "  rmmod e1000              Modul direkt entladen\n"
+            "  rmmod -f e1000           force (gefährlich!)\n\n"
+            "MODUL-ABHÄNGIGKEITEN:\n"
+            "  modprobe vs insmod:\n"
+            "  modprobe löst Abhängigkeiten automatisch!\n"
+            "  insmod lädt nur das angegebene Modul\n\n"
+            "MODUL-DATEIEN:\n"
+            "  /lib/modules/$(uname -r)/    Module für aktuellen Kernel\n"
+            "  /lib/modules/6.1.0-neongrid9/  Kernel-Version\n"
+            "  depmod -a                    Abhängigkeitsdatenbank aktualisieren\n"
+            "  /lib/modules/*/modules.dep   Abhängigkeitsliste\n\n"
+            "LSMOD AUSGABE:\n"
+            "  Module     Size    Used by\n"
+            "  e1000      162816  0\n"
+            "  snd_hda    90112   2 snd_hda_intel,snd_hda_codec_hdmi\n"
+            "  Spalten: Name, Größe, Anzahl Nutzungen (und wer)"
+        ),
+        syntax       = "lsmod  |  modinfo MODULE  |  modprobe MODULE  |  rmmod MODULE",
+        example      = (
+            "lsmod\n"
+            "lsmod | grep e1000\n"
+            "modinfo e1000\n"
+            "modprobe e1000\n"
+            "modprobe -r e1000\n"
+            "rmmod e1000"
+        ),
+        task_description = "Zeige alle aktuell geladenen Kernel-Module",
+        expected_commands = ["lsmod"],
+        hint_text    = "lsmod zeigt alle geladenen Kernel-Module mit Größe und Verwendung",
+        exam_tip     = (
+            "KRITISCH: modprobe vs insmod!\n"
+            "  modprobe = löst Abhängigkeiten (EMPFOHLEN)\n"
+            "  insmod   = kein Dependency-Handling\n"
+            "  modprobe -r = entladen mit Abhängigkeiten\n"
+            "  rmmod    = nur dieses Modul entladen"
+        ),
+        memory_tip   = "Merkhilfe: lsmod=list, modinfo=info, modprobe=probe(+deps), rmmod=remove",
+        gear_reward  = None,
+        faction_reward = ("Kernel Syndicate", 5),
+    ),
+
+    # ══════════════════════════════════════════════════════════════════════
+    # 13.02 — Persistente Module & Blacklisting
+    # ══════════════════════════════════════════════════════════════════════
+    Mission(
+        mission_id   = "13.02",
+        chapter      = 13,
+        title        = "Module automatisch laden & blockieren",
+        mtype        = "CONSTRUCT",
+        xp           = 90,
+        speaker      = "CIPHER",
+        story        = (
+            "CIPHER: 'Das Imperium-Modul lädt sich bei jedem Boot neu.\n"
+            " Eine Backdoor. Wir müssen es blacklisten, Ghost.\n"
+            " /etc/modprobe.d/blacklist.conf — das ist die Sperre.\n"
+            " Und /etc/modules für Module die WIR wollen.'"
+        ),
+        why_important = (
+            "Persistentes Modul-Management ist LPIC-1-Pflicht.\n"
+            "Blacklisting verhindert das automatische Laden problematischer Treiber."
+        ),
+        explanation  = (
+            "PERSISTENTE MODULE-KONFIGURATION:\n\n"
+            "AUTOMATISCH LADEN BEIM BOOT:\n"
+            "  /etc/modules              Module die beim Boot geladen werden\n"
+            "  (Eine Zeile pro Modul, Kommentare mit #)\n\n"
+            "  Beispiel /etc/modules:\n"
+            "    # Netzwerk\n"
+            "    e1000\n"
+            "    # Crypto\n"
+            "    dm_crypt\n\n"
+            "MODPROBE-KONFIGURATION:\n"
+            "  /etc/modprobe.d/          Konfigurations-Verzeichnis\n"
+            "  /etc/modprobe.d/blacklist.conf   Blacklist-Datei\n"
+            "  /etc/modprobe.conf        veraltet (nicht mehr verwenden)\n\n"
+            "BLACKLISTING — Modul verhindern:\n"
+            "  blacklist nouveau          Modul nie laden\n"
+            "  install nouveau /bin/false  Noch strikter: blockiert auch\n"
+            "                              indirekte Abhängigkeiten\n\n"
+            "ALIASE:\n"
+            "  alias eth0 e1000          eth0 nutzt e1000-Treiber\n"
+            "  alias pci:... e1000       PCI-ID zu Treiber\n\n"
+            "OPTIONEN ÜBERGEBEN:\n"
+            "  options snd_hda_intel model=laptop  Modul-Parameter\n"
+            "  options e1000 InterruptThrottleRate=3000\n\n"
+            "KERNEL-BOOT-PARAMETER (Grub):\n"
+            "  module_blacklist=nouveau   in /etc/default/grub\n"
+            "  GRUB_CMDLINE_LINUX='module_blacklist=nouveau'\n\n"
+            "DKMS — Dynamic Kernel Module Support:\n"
+            "  dkms — Module automatisch für neue Kernels kompilieren\n"
+            "  dkms status\n"
+            "  dkms install MODUL/VERSION"
+        ),
+        syntax       = "cat /etc/modules  |  cat /etc/modprobe.d/blacklist.conf  |  modprobe -r MOD",
+        example      = (
+            "cat /etc/modules\n"
+            "ls /etc/modprobe.d/\n"
+            "cat /etc/modprobe.d/blacklist.conf\n"
+            "# Modul blacklisten:\n"
+            "echo 'blacklist nouveau' >> /etc/modprobe.d/blacklist.conf\n"
+            "# Nach Änderungen:\n"
+            "update-initramfs -u"
+        ),
+        task_description = "Zeige welche Module beim Boot automatisch geladen werden",
+        expected_commands = ["cat /etc/modules"],
+        hint_text    = "/etc/modules listet Module die automatisch beim Systemstart geladen werden",
+        exam_tip     = (
+            "PRÜFUNGSFRAGE: Wie verhindert man dauerhaft das Laden eines Moduls?\n"
+            "→ 'blacklist MODULNAME' in /etc/modprobe.d/blacklist.conf\n"
+            "Für absolute Sperre: 'install MODULNAME /bin/false'"
+        ),
+        memory_tip   = "Merkhilfe: /etc/modules=laden, /etc/modprobe.d/blacklist.conf=sperren",
+        gear_reward  = None,
+        faction_reward = ("Kernel Syndicate", 5),
+    ),
+
+    # ══════════════════════════════════════════════════════════════════════
+    # 13.03 — /proc — Kernel-Informationsschnittstelle
+    # ══════════════════════════════════════════════════════════════════════
+    Mission(
+        mission_id   = "13.03",
+        chapter      = 13,
+        title        = "/proc — Das Fenster in den Kernel",
+        mtype        = "DECODE",
+        xp           = 80,
+        speaker      = "ZARA Z3R0",
+        story        = (
+            "Zara Z3R0: '/proc ist keine echte Festplatte, Ghost.\n"
+            " Es ist der Kernel selbst — als Dateisystem.\n"
+            " Jede Datei ist ein Kernel-Parameter oder Prozess-Info.\n"
+            " Lese /proc — und du siehst was der Kernel denkt.'"
+        ),
+        why_important = (
+            "/proc ist die primäre Schnittstelle zwischen Userspace und Kernel.\n"
+            "LPIC-1 testet wichtige /proc-Dateien für Diagnose und Konfiguration."
+        ),
+        explanation  = (
+            "/PROC — VIRTUELLES KERNEL-DATEISYSTEM:\n\n"
+            "SYSTEM-INFORMATIONEN:\n"
+            "  /proc/cpuinfo        CPU-Details\n"
+            "  /proc/meminfo        Speicher-Details\n"
+            "  /proc/version        Kernel-Version\n"
+            "  /proc/cmdline        Boot-Parameter\n"
+            "  /proc/loadavg        Load Average (1/5/15 min)\n"
+            "  /proc/uptime         Laufzeit in Sekunden\n"
+            "  /proc/mounts         eingehängte Dateisysteme\n"
+            "  /proc/filesystems    unterstützte Dateisysteme\n"
+            "  /proc/partitions     Partitionstabelle\n"
+            "  /proc/devices        registrierte Geräte\n"
+            "  /proc/modules        geladene Module (wie lsmod)\n"
+            "  /proc/interrupts     IRQ-Zuweisungen\n"
+            "  /proc/ioports        I/O-Port-Zuweisungen\n"
+            "  /proc/iomem          Memory-Mapping\n"
+            "  /proc/net/           Netzwerk-Informationen\n"
+            "  /proc/net/if_inet6   IPv6-Interfaces\n"
+            "  /proc/sys/           sysctl-Parameter\n\n"
+            "PROZESS-INFORMATIONEN:\n"
+            "  /proc/PID/           Verzeichnis pro Prozess\n"
+            "  /proc/1/cmdline      Befehlszeile von PID 1\n"
+            "  /proc/1/status       Status von PID 1\n"
+            "  /proc/1/maps         Speicher-Mapping\n"
+            "  /proc/1/fd/          offene File-Deskriptoren\n"
+            "  /proc/self/          = /proc/aktuellePID\n\n"
+            "KERNEL-VERSION:\n"
+            "  uname -r             Kernel-Release (nur Version)\n"
+            "  uname -a             alle Infos\n"
+            "  uname -m             Architektur (x86_64)\n"
+            "  uname -s             Kernel-Name (Linux)\n"
+            "  cat /proc/version    detaillierte Version"
+        ),
+        syntax       = "cat /proc/cpuinfo  |  cat /proc/meminfo  |  uname -r",
+        example      = (
+            "cat /proc/version\n"
+            "uname -r\n"
+            "uname -a\n"
+            "cat /proc/cpuinfo\n"
+            "cat /proc/meminfo\n"
+            "cat /proc/cmdline\n"
+            "cat /proc/loadavg\n"
+            "cat /proc/modules | grep e1000"
+        ),
+        task_description = "Zeige die aktuelle Kernel-Version",
+        expected_commands = ["uname -r"],
+        hint_text    = "uname -r zeigt die Kernel-Release-Version. uname -a zeigt alles.",
+        exam_tip     = (
+            "PRÜFUNG: uname Flags kennen!\n"
+            "  -r = release (nur Versionsnummer)\n"
+            "  -a = all (alles)\n"
+            "  -m = machine (Architektur: x86_64)\n"
+            "  -s = sysname (Linux)\n"
+            "  -n = nodename (Hostname)"
+        ),
+        memory_tip   = "Merkhilfe: uname -r=release, -a=all, -m=machine, -s=sysname, -n=nodename",
+        gear_reward  = None,
+        faction_reward = ("Kernel Syndicate", 5),
+    ),
+
+    # ══════════════════════════════════════════════════════════════════════
+    # 13.04 — /sys & sysctl — Kernel-Parameter zur Laufzeit
+    # ══════════════════════════════════════════════════════════════════════
+    Mission(
+        mission_id   = "13.04",
+        chapter      = 13,
+        title        = "sysctl & /sys — Kernel-Parameter ändern",
+        mtype        = "REPAIR",
+        xp           = 100,
+        speaker      = "CIPHER",
+        story        = (
+            "CIPHER: 'Das System forwarded keine IP-Pakete, Ghost.\n"
+            " Als Router brauchen wir IP-Forwarding.\n"
+            " sysctl net.ipv4.ip_forward=1 — eine Zeile.\n"
+            " Kernel-Verhalten zur Laufzeit ändern. Mächtig.'"
+        ),
+        why_important = (
+            "sysctl ermöglicht Kernel-Tuning ohne Neustart.\n"
+            "LPIC-1 testet häufig ip_forward, vm.swappiness und /etc/sysctl.conf."
+        ),
+        explanation  = (
+            "SYSCTL — KERNEL-PARAMETER:\n\n"
+            "PARAMETER LESEN:\n"
+            "  sysctl -a                alle Parameter\n"
+            "  sysctl net.ipv4.ip_forward  einzelner Parameter\n"
+            "  sysctl -a | grep forward  suchen\n"
+            "  cat /proc/sys/net/ipv4/ip_forward  direkt lesen\n\n"
+            "PARAMETER SETZEN (temporär):\n"
+            "  sysctl net.ipv4.ip_forward=1   aktivieren\n"
+            "  sysctl -w net.ipv4.ip_forward=1  wie oben (-w = write)\n"
+            "  echo 1 > /proc/sys/net/ipv4/ip_forward  direkt\n\n"
+            "PARAMETER DAUERHAFT SETZEN:\n"
+            "  /etc/sysctl.conf          Haupt-Konfiguration\n"
+            "  /etc/sysctl.d/99-custom.conf  Fragmente\n\n"
+            "  Inhalt:\n"
+            "    net.ipv4.ip_forward = 1\n"
+            "    vm.swappiness = 10\n"
+            "    net.ipv6.conf.all.disable_ipv6 = 1\n\n"
+            "  Aktivieren ohne Neustart:\n"
+            "    sysctl -p                /etc/sysctl.conf laden\n"
+            "    sysctl -p /etc/sysctl.d/99-custom.conf  spezifisch\n\n"
+            "WICHTIGE PARAMETER:\n"
+            "  net.ipv4.ip_forward        IP-Forwarding (Router)\n"
+            "  net.ipv4.icmp_echo_ignore_all  Ping deaktivieren\n"
+            "  vm.swappiness              Swap-Aggressivität (0-100)\n"
+            "  vm.dirty_ratio             Schreib-Cache-Größe\n"
+            "  kernel.hostname            Hostname\n"
+            "  kernel.panic               Neustart nach Kernel-Panic\n"
+            "  fs.file-max                Max offene Dateien\n\n"
+            "/SYS — SYSFS:\n"
+            "  /sys/                      Geräteinformationen (udev)\n"
+            "  /sys/block/                Block-Geräte\n"
+            "  /sys/bus/                  Bus-Systeme\n"
+            "  /sys/class/                Geräteklassen\n"
+            "  /sys/devices/              Gerätehierarchie\n"
+            "  /sys/firmware/efi/         UEFI-Informationen\n"
+            "  /sys/module/               geladene Module\n"
+            "  /sys/kernel/               Kernel-Parameter"
+        ),
+        syntax       = "sysctl PARAM  |  sysctl -w PARAM=WERT  |  sysctl -p",
+        example      = (
+            "sysctl net.ipv4.ip_forward\n"
+            "sysctl -w net.ipv4.ip_forward=1\n"
+            "sysctl vm.swappiness\n"
+            "sysctl -p\n"
+            "cat /proc/sys/net/ipv4/ip_forward\n"
+            "echo 1 > /proc/sys/net/ipv4/ip_forward"
+        ),
+        task_description = "Aktiviere IP-Forwarding mit sysctl",
+        expected_commands = ["sysctl -w net.ipv4.ip_forward=1"],
+        hint_text    = "sysctl -w schreibt den Wert. net.ipv4.ip_forward=1 aktiviert IP-Weiterleitung.",
+        exam_tip     = (
+            "PRÜFUNGSFRAGEN:\n"
+            "  Wie dauerhaft setzen? → /etc/sysctl.conf + sysctl -p\n"
+            "  Temporär vs dauerhaft: sysctl -w = temporär (bis Neustart)\n"
+            "  vm.swappiness=0 = kein Swap, =100 = aggressiver Swap"
+        ),
+        memory_tip   = "Merkhilfe: sysctl -w=write(temp), -p=persistent(laden), -a=all(anzeigen)",
+        gear_reward  = None,
+        faction_reward = ("Kernel Syndicate", 5),
+    ),
+
+    # ══════════════════════════════════════════════════════════════════════
+    # 13.05 — udev — Dynamische Geräteverwaltung
+    # ══════════════════════════════════════════════════════════════════════
+    Mission(
+        mission_id   = "13.05",
+        chapter      = 13,
+        title        = "udev — Geräte-Daemon & Regeln",
+        mtype        = "DECODE",
+        xp           = 90,
+        speaker      = "ZARA Z3R0",
+        story        = (
+            "Zara Z3R0: 'Jedes Mal wenn ein USB-Gerät eingesteckt wird,\n"
+            " entscheidet udev was passiert.\n"
+            " Gerätename. Berechtigungen. Skript ausführen.\n"
+            " udev ist der unsichtbare Torwächter aller Hardware.'"
+        ),
+        why_important = (
+            "udev verwaltet /dev dynamisch und reagiert auf Hardware-Ereignisse.\n"
+            "LPIC-1 testet udev-Regeln, udevadm und /dev-Struktur."
+        ),
+        explanation  = (
+            "UDEV — USERSPACE DEVICE MANAGEMENT:\n\n"
+            "udev empfängt Kernel-Events (uevent) und erstellt /dev-Einträge.\n\n"
+            "UDEV-REGELN:\n"
+            "  /etc/udev/rules.d/          benutzerdefinierte Regeln\n"
+            "  /usr/lib/udev/rules.d/      System-Regeln\n"
+            "  /run/udev/rules.d/          temporäre Regeln\n\n"
+            "REGEL-FORMAT:\n"
+            "  SUBSYSTEM==\"usb\", ATTR{idVendor}==\"0403\", NAME=\"mydevice\"\n"
+            "  ACTION==\"add\", SUBSYSTEM==\"net\", NAME=\"eth0\"\n\n"
+            "REGEL-SCHLÜSSELWÖRTER:\n"
+            "  ACTION     add, remove, change\n"
+            "  SUBSYSTEM  usb, net, block, sound, ...\n"
+            "  KERNEL     Gerätename-Muster\n"
+            "  ATTR{x}    Geräte-Attribut\n"
+            "  ENV{x}     Umgebungsvariable\n"
+            "  NAME       Gerätename in /dev\n"
+            "  SYMLINK    Symlink in /dev erstellen\n"
+            "  MODE       Dateiberechtigungen\n"
+            "  OWNER/GROUP  Eigentümer\n"
+            "  RUN        Programm ausführen\n\n"
+            "UDEVADM — Diagnose-Tool:\n"
+            "  udevadm info /dev/sda          Geräteinformationen\n"
+            "  udevadm info --name=/dev/sda    wie oben\n"
+            "  udevadm info -a /dev/sda        Attribut-Kette\n"
+            "  udevadm monitor                 Ereignisse live anzeigen\n"
+            "  udevadm control --reload-rules  Regeln neu laden\n"
+            "  udevadm trigger                 Regeln anwenden\n"
+            "  udevadm test /sys/block/sda     Regel testen\n\n"
+            "GERÄTEDATEIEN IN /dev:\n"
+            "  /dev/sda, /dev/nvme0n1  Block-Geräte\n"
+            "  /dev/tty, /dev/pts/     Terminal-Geräte\n"
+            "  /dev/null               Daten verwerfen\n"
+            "  /dev/zero               Nullen liefern\n"
+            "  /dev/random, /dev/urandom  Zufallszahlen\n"
+            "  /dev/stdin /dev/stdout /dev/stderr\n\n"
+            "MAJOR/MINOR NUMBERS:\n"
+            "  ls -l /dev/sda   → brw-rw---- 8, 0 (8=SCSI, 0=erste Platte)\n"
+            "  b = block device, c = character device"
+        ),
+        syntax       = "udevadm info /dev/GERÄT  |  udevadm monitor  |  ls -l /dev/",
+        example      = (
+            "ls -l /dev/\n"
+            "ls -l /dev/sda\n"
+            "udevadm info /dev/sda\n"
+            "udevadm info -a /dev/sda\n"
+            "udevadm monitor\n"
+            "udevadm control --reload-rules\n"
+            "ls /etc/udev/rules.d/"
+        ),
+        task_description = "Zeige Informationen über das Gerät /dev/sda mit udevadm",
+        expected_commands = ["udevadm info /dev/sda"],
+        hint_text    = "udevadm info /dev/sda zeigt alle udev-Attribute des Block-Geräts",
+        exam_tip     = (
+            "PRÜFUNGSFRAGEN:\n"
+            "  udev-Regeln liegen in: /etc/udev/rules.d/\n"
+            "  udevadm monitor = Echtzeit-Geräteereignisse\n"
+            "  Nach Regeländerung: udevadm control --reload-rules\n"
+            "  Gerätedateien: b=block, c=character"
+        ),
+        memory_tip   = "Merkhilfe: udevadm info=lesen, monitor=live, control=steuern",
+        gear_reward  = None,
+        faction_reward = ("Kernel Syndicate", 5),
+    ),
+
+    # ══════════════════════════════════════════════════════════════════════
+    # 13.06 — dmesg & Kernel-Logs
+    # ══════════════════════════════════════════════════════════════════════
+    Mission(
+        mission_id   = "13.06",
+        chapter      = 13,
+        title        = "dmesg — Kernel-Nachrichten lesen",
+        mtype        = "SCAN",
+        xp           = 70,
+        speaker      = "CIPHER",
+        story        = (
+            "CIPHER: 'Die Hardware meldet sich nicht, Ghost.\n"
+            " Fehler beim Treiber-Init. Aber wo?\n"
+            " dmesg — der Kernel schreibt alles in seinen Ringpuffer.\n"
+            " Boot-Fehler. Hardware-Events. Treiber-Probleme. Alles.'"
+        ),
+        why_important = (
+            "dmesg ist die erste Anlaufstelle bei Hardware-Problemen.\n"
+            "LPIC-1 testet dmesg-Filtering und journalctl -k."
+        ),
+        explanation  = (
+            "DMESG — KERNEL RING BUFFER:\n\n"
+            "GRUNDBEFEHLE:\n"
+            "  dmesg                    alle Kernel-Nachrichten\n"
+            "  dmesg | less             seitenweise\n"
+            "  dmesg | tail -20         letzte 20 Zeilen\n"
+            "  dmesg -T                 mit Zeitstempel (lesbar)\n"
+            "  dmesg --follow           live (wie tail -f)\n"
+            "  dmesg -H                 menschenlesbar (Farben, Zeit)\n\n"
+            "FILTERN NACH LEVEL:\n"
+            "  dmesg -l err             nur Fehler\n"
+            "  dmesg -l warn            Warnungen\n"
+            "  dmesg -l info            Info\n"
+            "  dmesg -l err,warn        mehrere Level\n\n"
+            "FILTERN NACH FACILITY:\n"
+            "  dmesg -f kern            Kernel-Nachrichten\n"
+            "  dmesg -f daemon          Daemon-Nachrichten\n\n"
+            "SUCHEN:\n"
+            "  dmesg | grep -i usb      USB-Nachrichten\n"
+            "  dmesg | grep -i error    Fehlermeldungen\n"
+            "  dmesg | grep eth0        Netzwerk-Interface\n\n"
+            "PUFFER LÖSCHEN:\n"
+            "  dmesg -c                 nach Ausgabe löschen\n"
+            "  dmesg --clear            Puffer leeren\n\n"
+            "JOURNALCTL KERNEL:\n"
+            "  journalctl -k            Kernel-Nachrichten (wie dmesg)\n"
+            "  journalctl -k --since today  von heute\n"
+            "  journalctl -k -b         vom aktuellen Boot\n\n"
+            "/VAR/LOG/DMESG:\n"
+            "  dmesg-Snapshot vom letzten Boot\n"
+            "  Nützlich für Boot-Diagnose wenn System läuft\n\n"
+            "TYPISCHE DMESG-EINTRÄGE:\n"
+            "  [    0.000000] Initializing cgroup subsys\n"
+            "  [    2.345678] e1000: eth0: e1000_probe: Intel(R) PRO/1000\n"
+            "  [    5.123456] EXT4-fs: mounted filesystem"
+        ),
+        syntax       = "dmesg [-T] [-l LEVEL] | grep MUSTER  |  journalctl -k",
+        example      = (
+            "dmesg -T\n"
+            "dmesg -T | tail -30\n"
+            "dmesg | grep -i 'error\\|fail'\n"
+            "dmesg | grep -i usb\n"
+            "dmesg -l err\n"
+            "journalctl -k --since today"
+        ),
+        task_description = "Zeige Kernel-Nachrichten mit lesbaren Zeitstempeln",
+        expected_commands = ["dmesg -T"],
+        hint_text    = "dmesg -T zeigt Kernel-Nachrichten mit menschenlesbaren Zeitstempeln",
+        exam_tip     = (
+            "MERKE:\n"
+            "  dmesg = Boot-Kernel-Nachrichten aus Ringpuffer\n"
+            "  journalctl -k = gleicher Inhalt aber aus Journal\n"
+            "  dmesg -T = mit Zeitstempel (wichtig für Diagnose)\n"
+            "  dmesg -l err = nur Fehler"
+        ),
+        memory_tip   = "Merkhilfe: dmesg -T=timestamp, -l=level, -H=human, --follow=live",
+        gear_reward  = None,
+        faction_reward = ("Kernel Syndicate", 5),
+    ),
+
+    # ══════════════════════════════════════════════════════════════════════
+    # 13.07 — Kernel-Version & /boot
+    # ══════════════════════════════════════════════════════════════════════
+    Mission(
+        mission_id   = "13.07",
+        chapter      = 13,
+        title        = "/boot & Kernel-Verwaltung",
+        mtype        = "SCAN",
+        xp           = 70,
+        speaker      = "ZARA Z3R0",
+        story        = (
+            "Zara Z3R0: 'Drei Kernels in /boot, Ghost.\n"
+            " Der neue wurde installiert aber nicht gebootet.\n"
+            " GRUB zeigt alle. uname -r verrät den aktiven.\n"
+            " Kenn dein /boot — der Kernel ist das Fundament.'"
+        ),
+        why_important = (
+            "/boot enthält Kernel-Images, initramfs und GRUB-Konfiguration.\n"
+            "LPIC-1 testet Kernel-Dateien, ihre Bedeutung und Verwaltung."
+        ),
+        explanation  = (
+            "/BOOT VERZEICHNIS:\n\n"
+            "KERNEL-DATEIEN:\n"
+            "  vmlinuz-VERSION        komprimiertes Kernel-Image (z-=zipped)\n"
+            "  initrd.img-VERSION     Initial RAM Disk (initramfs)\n"
+            "  System.map-VERSION     Kernel-Symbol-Tabelle\n"
+            "  config-VERSION         Kernel-Kompilierungs-Konfiguration\n"
+            "  grub/                  GRUB2-Verzeichnis\n\n"
+            "KERNEL-VERSION ANZEIGEN:\n"
+            "  uname -r               laufender Kernel\n"
+            "  ls /boot/vmlinuz*      installierte Kernels\n"
+            "  dpkg -l linux-image*   (Debian)\n"
+            "  rpm -qa kernel         (RHEL)\n\n"
+            "INITRAMFS VERWALTEN:\n"
+            "  update-initramfs -u              aktuell (Debian)\n"
+            "  update-initramfs -u -k all       alle Kernels\n"
+            "  mkinitramfs -o /boot/initrd.img-$(uname -r) $(uname -r)\n"
+            "  dracut (RHEL/Fedora)\n\n"
+            "KERNEL INSTALLIEREN/ENTFERNEN:\n"
+            "  apt install linux-image-6.1.0    (Debian)\n"
+            "  apt purge linux-image-5.15.0     alten Kernel entfernen\n"
+            "  yum install kernel-6.1.0         (RHEL)\n\n"
+            "GRUB NACH KERNEL-WECHSEL:\n"
+            "  update-grub                      GRUB neu konfigurieren\n"
+            "  grub-mkconfig -o /boot/grub/grub.cfg\n\n"
+            "KERNEL-PARAMETER PERMANENT:\n"
+            "  /etc/default/grub:\n"
+            "    GRUB_CMDLINE_LINUX='quiet splash net.ifnames=0'\n"
+            "  update-grub danach ausführen\n\n"
+            "WICHTIGE KERNEL-PARAMETER:\n"
+            "  quiet          weniger Boot-Ausgabe\n"
+            "  splash         Bootsplash anzeigen\n"
+            "  ro / rw        root read-only / read-write\n"
+            "  single / 1     Single-User-Mode\n"
+            "  init=/bin/bash Debug-Shell\n"
+            "  mem=2G         Speicher begrenzen"
+        ),
+        syntax       = "uname -r  |  ls /boot/  |  update-initramfs -u  |  update-grub",
+        example      = (
+            "uname -r\n"
+            "uname -a\n"
+            "ls -la /boot/\n"
+            "ls /boot/vmlinuz*\n"
+            "cat /proc/cmdline\n"
+            "dpkg -l linux-image*"
+        ),
+        task_description = "Liste alle Dateien im /boot-Verzeichnis",
+        expected_commands = ["ls /boot/"],
+        hint_text    = "ls /boot/ zeigt alle Kernel-Images, initramfs-Dateien und GRUB-Verzeichnisse",
+        exam_tip     = (
+            "MERKE:\n"
+            "  vmlinuz = komprimierter Linux-Kernel (z = zipped)\n"
+            "  initrd/initramfs = temporäres Root-FS beim Boot\n"
+            "  System.map = Kernel-Symboltabelle (für Debugging)\n"
+            "  uname -r = aktuell LAUFENDER Kernel"
+        ),
+        memory_tip   = "Merkhilfe: vmlinuz=Kernel, initrd=InitRAMDisk, System.map=Symbole",
+        gear_reward  = None,
+        faction_reward = ("Kernel Syndicate", 5),
+    ),
+
+    # ══════════════════════════════════════════════════════════════════════
+    # 13.08 — Kernel-Version lesen
+    # ══════════════════════════════════════════════════════════════════════
+    Mission(
+        mission_id   = "13.08",
+        chapter      = 13,
+        title        = "Kernel-Version lesen — uname & /proc/version",
+        mtype        = "SCAN",
+        xp           = 85,
+        speaker      = "CIPHER",
+        story        = (
+            "CIPHER: 'Vor jedem Angriff identifizierst du dein Ziel, Ghost.\n"
+            " Welcher Kernel läuft? Welche Architektur? Welches OS?\n"
+            " uname -r verrät alles. /proc/version verrät noch mehr.\n"
+            " Kenne dein Fundament — dann baust du darauf auf.'"
+        ),
+        why_important = (
+            "Die Kernel-Version ist die Basis jeder Diagnose und Sicherheitsbewertung.\n"
+            "LPIC-1 prüft uname-Flags und /proc/version im Kontext von Kernel-Management."
+        ),
+        explanation  = (
+            "KERNEL-VERSION ERMITTELN:\n\n"
+            "uname OPTIONEN:\n"
+            "  uname -r       Kernel-Release (z.B. 6.1.0-20-amd64)\n"
+            "  uname -a       Alle Informationen auf einmal\n"
+            "  uname -s       Kernel-Name (immer: Linux)\n"
+            "  uname -n       Netzwerk-Nodename (Hostname)\n"
+            "  uname -v       Kernel-Version (Build-Datum/Nummer)\n"
+            "  uname -m       Maschinenarchitektur (x86_64, aarch64, i686)\n"
+            "  uname -p       Prozessor-Typ\n"
+            "  uname -o       Betriebssystem (GNU/Linux)\n\n"
+            "AUSGABE VON uname -a (Beispiel):\n"
+            "  Linux neongrid9 6.1.0-20-amd64 #1 SMP PREEMPT_DYNAMIC\n"
+            "  Debian 6.1.85-1 (2024-04-11) x86_64 GNU/Linux\n"
+            "  ↑Name   ↑Hostname ↑Kernel-Release  ↑Build-Info ↑Arch ↑OS\n\n"
+            "/proc/version:\n"
+            "  cat /proc/version    Kernel-Version + GCC-Version + Build-User\n"
+            "  Beispiel:\n"
+            "  Linux version 6.1.0-20-amd64 (debian-kernel@lists.debian.org)\n"
+            "  (gcc-12 (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils) 2.40)\n"
+            "  #1 SMP PREEMPT_DYNAMIC Debian 6.1.85-1 (2024-04-11)\n\n"
+            "/proc/sys/kernel/ INTERESSANTE DATEIEN:\n"
+            "  /proc/sys/kernel/ostype      → 'Linux'\n"
+            "  /proc/sys/kernel/osrelease   → Kernel-Release\n"
+            "  /proc/sys/kernel/hostname    → Hostname\n"
+            "  /proc/sys/kernel/version     → Build-Version\n\n"
+            "KERNEL-VERSION IN SCRIPTS:\n"
+            "  KERNEL=$(uname -r)           Variable mit Kernel-Release\n"
+            "  MAJOR=$(uname -r | cut -d. -f1)  Nur Major-Version"
+        ),
+        syntax       = "uname -r  |  uname -a  |  cat /proc/version",
+        example      = (
+            "uname -r\n"
+            "uname -a\n"
+            "uname -m\n"
+            "cat /proc/version\n"
+            "cat /proc/sys/kernel/osrelease"
+        ),
+        task_description = "Zeige alle Kernel-Informationen mit uname in einer Zeile",
+        expected_commands = ["uname -a"],
+        hint_text    = "uname -a zeigt alle Kernel-Informationen: Name, Hostname, Version, Architektur, OS",
+        quiz_questions = [
+            QuizQuestion(
+                question   = "Welches uname-Flag zeigt die CPU-Architektur (z.B. x86_64)?",
+                options    = [
+                    "uname -a",
+                    "uname -r",
+                    "uname -m",
+                    "uname -v",
+                ],
+                correct    = 2,
+                explanation = (
+                    "uname -m zeigt die Maschinenarchitektur: x86_64, aarch64, i686.\n"
+                    "-r = Kernel-Release-Version\n"
+                    "-v = Kernel-Build-Version (Datum/Nummer)\n"
+                    "-a = alle Informationen zusammen"
+                ),
+                xp_value   = 15,
+            ),
+            QuizQuestion(
+                question   = "Welche /proc-Datei enthält die Kernel-Version plus GCC-Build-Informationen?",
+                options    = [
+                    "/proc/sys/kernel/osrelease",
+                    "/proc/version",
+                    "/proc/kernel/version",
+                    "/proc/cmdline",
+                ],
+                correct    = 1,
+                explanation = (
+                    "/proc/version enthält Kernel-Version, GCC-Version und Build-Datum.\n"
+                    "/proc/sys/kernel/osrelease enthält nur die Release-Nummer.\n"
+                    "/proc/cmdline enthält die Boot-Parameter."
+                ),
+                xp_value   = 15,
+            ),
+        ],
+        exam_tip     = (
+            "MERKE: uname Flags\n"
+            "  -r = release (nur Versionsnummer — am häufigsten geprüft)\n"
+            "  -a = all (alles auf einmal)\n"
+            "  -m = machine (Architektur)\n"
+            "  -s = sysname (Linux)\n"
+            "  -n = nodename (Hostname)\n"
+            "/proc/version = ausführlichste Kernel-Info"
+        ),
+        memory_tip   = "Merkhilfe: uname -r=release, -a=all, -m=machine, -s=sysname, -n=nodename, -o=os",
+        gear_reward  = None,
+        faction_reward = ("Kernel Syndicate", 15),
+    ),
+
+    # ══════════════════════════════════════════════════════════════════════
+    # 13.09 — Kernel-Module laden (modprobe, insmod, rmmod, modinfo, lsmod)
+    # ══════════════════════════════════════════════════════════════════════
+    Mission(
+        mission_id   = "13.09",
+        chapter      = 13,
+        title        = "Kernel-Module laden — modprobe & insmod im Detail",
+        mtype        = "CONSTRUCT",
+        xp           = 90,
+        speaker      = "ZARA Z3R0",
+        story        = (
+            "Zara Z3R0: 'Der neue GPU-Treiber ist als .ko-Datei vorhanden.\n"
+            " Aber die Abhängigkeiten? Undokumentiert.\n"
+            " modprobe oder insmod — du musst entscheiden.\n"
+            " Falsch gewählt, und der Kernel hängt sich auf. Lad das Modul.'"
+        ),
+        why_important = (
+            "Kernel-Module dynamisch laden ist täglich Sysadmin-Pflicht.\n"
+            "LPIC-1 prüft den Unterschied zwischen modprobe und insmod intensiv."
+        ),
+        explanation  = (
+            "KERNEL-MODULE VERWALTEN:\n\n"
+            "MODULE ANZEIGEN:\n"
+            "  lsmod                      alle geladenen Module\n"
+            "  lsmod | grep nvidia        nach Modul suchen\n"
+            "  cat /proc/modules          rohe Modul-Liste (wie lsmod)\n\n"
+            "MODUL-INFORMATIONEN:\n"
+            "  modinfo e1000              alle Infos zu einem Modul\n"
+            "  modinfo -F description e1000  nur Beschreibung\n"
+            "  modinfo -F filename e1000  Pfad zur .ko-Datei\n"
+            "  modinfo -F depends e1000   Abhängigkeiten\n"
+            "  modinfo -F parm e1000      Parameter\n\n"
+            "MODULE LADEN:\n"
+            "  modprobe e1000             Modul + Abhängigkeiten laden\n"
+            "  modprobe -v e1000          verbose (zeigt geladene Deps)\n"
+            "  modprobe -n e1000          Dry-Run (nur zeigen, nicht laden)\n"
+            "  insmod /pfad/zum/modul.ko  Modul direkt laden (keine Deps!)\n\n"
+            "MODULE ENTLADEN:\n"
+            "  modprobe -r e1000          Modul + Abhängigkeiten entladen\n"
+            "  rmmod e1000                nur dieses Modul entladen\n"
+            "  rmmod -f e1000             force (gefährlich!)\n\n"
+            "KRITISCHER UNTERSCHIED:\n"
+            "  modprobe:  liest /lib/modules/$(uname -r)/modules.dep\n"
+            "             löst Abhängigkeiten AUTOMATISCH auf\n"
+            "  insmod:    kein Dependency-Handling, braucht vollständigen Pfad\n"
+            "             schneller aber riskanter\n\n"
+            "MODUL-DATEIEN:\n"
+            "  /lib/modules/$(uname -r)/    Verzeichnis aller Kernel-Module\n"
+            "  /lib/modules/$(uname -r)/modules.dep  Abhängigkeits-Datenbank\n"
+            "  depmod -a                    Abhängigkeits-DB neu erstellen\n"
+            "  depmod -A                    nur wenn nötig aktualisieren"
+        ),
+        syntax       = "modprobe MODULE  |  insmod /pfad/MODULE.ko  |  rmmod MODULE  |  modinfo MODULE",
+        example      = (
+            "lsmod\n"
+            "modinfo e1000\n"
+            "modinfo -F depends e1000\n"
+            "modprobe -v e1000\n"
+            "modprobe -r e1000\n"
+            "insmod /lib/modules/$(uname -r)/kernel/drivers/net/e1000/e1000.ko"
+        ),
+        task_description = "Zeige detaillierte Informationen über das Modul 'e1000'",
+        expected_commands = ["modinfo e1000"],
+        hint_text    = "modinfo MODUL zeigt alle Informationen: Beschreibung, Abhängigkeiten, Parameter, Pfad",
+        quiz_questions = [
+            QuizQuestion(
+                question   = "Was ist der Hauptunterschied zwischen 'modprobe e1000' und 'insmod e1000.ko'?",
+                options    = [
+                    "modprobe ist schneller als insmod",
+                    "modprobe löst Abhängigkeiten automatisch auf, insmod nicht",
+                    "insmod lädt Module persistent, modprobe temporär",
+                    "modprobe braucht den vollständigen Pfad, insmod nicht",
+                ],
+                correct    = 1,
+                explanation = (
+                    "modprobe liest modules.dep und lädt alle Abhängigkeiten automatisch.\n"
+                    "insmod lädt NUR das angegebene Modul — keine Abhängigkeiten.\n"
+                    "insmod benötigt auch den vollständigen Pfad zur .ko-Datei.\n"
+                    "Deshalb: modprobe bevorzugen!"
+                ),
+                xp_value   = 15,
+            ),
+            QuizQuestion(
+                question   = "Welcher Befehl zeigt die Abhängigkeiten eines Kernel-Moduls an?",
+                options    = [
+                    "lsmod --deps e1000",
+                    "depmod e1000",
+                    "modinfo -F depends e1000",
+                    "modprobe --info e1000",
+                ],
+                correct    = 2,
+                explanation = (
+                    "modinfo -F depends MODUL zeigt die Abhängigkeiten.\n"
+                    "modinfo ohne -F zeigt alle Informationen inklusive Depends-Feld.\n"
+                    "depmod -a erstellt die Abhängigkeits-Datenbank — kein Query-Tool."
+                ),
+                xp_value   = 15,
+            ),
+        ],
+        exam_tip     = (
+            "LPIC-1 KLASSIKER:\n"
+            "  modprobe = mit Abhängigkeiten (EMPFOHLEN)\n"
+            "  insmod = ohne Abhängigkeiten, braucht vollen Pfad\n"
+            "  modprobe -r = entladen mit Abhängigkeiten\n"
+            "  rmmod = nur dieses Modul, bleibt bei Deps hängen\n"
+            "  modinfo = Modul-Informationen (filename, depends, parm)"
+        ),
+        memory_tip   = "Merkhilfe: mod-PROBE = tastet Abhängigkeiten ab | ins-MOD = direkt rein (kein Komfort)",
+        gear_reward  = None,
+        faction_reward = ("Kernel Syndicate", 15),
+    ),
+
+    # ══════════════════════════════════════════════════════════════════════
+    # 13.10 — /etc/modules & persistentes Laden
+    # ══════════════════════════════════════════════════════════════════════
+    Mission(
+        mission_id   = "13.10",
+        chapter      = 13,
+        title        = "/etc/modules & persistentes Laden — modules-load.d",
+        mtype        = "SCAN",
+        xp           = 85,
+        speaker      = "CIPHER",
+        story        = (
+            "CIPHER: 'Der Netzwerk-Treiber ist nach jedem Reboot weg, Ghost.\n"
+            " Manuell laden ist keine Lösung — das ist kein professioneller Betrieb.\n"
+            " /etc/modules und /etc/modules-load.d/ sind deine Werkzeuge.\n"
+            " Lass den Kernel das Modul automatisch laden — für immer.'"
+        ),
+        why_important = (
+            "Persistentes Modul-Laden beim Systemstart ist LPIC-1-Prüfungsstoff.\n"
+            "Ohne Kenntnisse der Konfigurationsdateien sind Module nach Neustart weg."
+        ),
+        explanation  = (
+            "PERSISTENTES MODUL-LADEN:\n\n"
+            "/etc/modules (traditionell, Debian/Ubuntu):\n"
+            "  Liste von Modulen die beim Boot geladen werden\n"
+            "  Syntax: ein Modulname pro Zeile, Kommentare mit #\n"
+            "  Beispiel:\n"
+            "    # Netzwerk\n"
+            "    e1000\n"
+            "    # Verschlüsselung\n"
+            "    dm_crypt\n"
+            "    loop\n\n"
+            "/etc/modules-load.d/ (systemd, moderner Weg):\n"
+            "  Verzeichnis mit .conf-Dateien\n"
+            "  Jede Datei: ein Modul pro Zeile\n"
+            "  Beispiel: /etc/modules-load.d/crypto.conf:\n"
+            "    # Crypto-Module\n"
+            "    dm_crypt\n"
+            "    dm_mod\n\n"
+            "/etc/modprobe.d/ KONFIGURATION:\n"
+            "  /etc/modprobe.d/blacklist.conf    Module blockieren\n"
+            "  /etc/modprobe.d/options.conf      Parameter setzen\n"
+            "  Syntax:\n"
+            "    blacklist nouveau                Modul nie laden\n"
+            "    options snd_hda_intel model=laptop  Parameter\n"
+            "    alias eth0 e1000                 Alias setzen\n"
+            "    install nouveau /bin/false       Modul deaktivieren (stark)\n\n"
+            "UNTERSCHIED: /etc/modules vs /etc/modules-load.d/:\n"
+            "  /etc/modules = direkte Datei, traditionell (SysV-kompatibel)\n"
+            "  /etc/modules-load.d/*.conf = systemd-basiert, fragmentiert\n"
+            "  Beide funktionieren auf modernen Systemen\n\n"
+            "NACH ÄNDERUNGEN:\n"
+            "  update-initramfs -u    Initramfs neu erstellen (wichtig!)\n"
+            "  systemctl restart systemd-modules-load  nur modules-load.d\n"
+            "  modprobe MODUL         sofort laden (bis nächsten Reboot)"
+        ),
+        syntax       = "cat /etc/modules  |  ls /etc/modules-load.d/  |  cat /etc/modprobe.d/blacklist.conf",
+        example      = (
+            "cat /etc/modules\n"
+            "ls /etc/modules-load.d/\n"
+            "cat /etc/modules-load.d/k8s.conf\n"
+            "# Modul persistent machen:\n"
+            "echo 'br_netfilter' >> /etc/modules-load.d/k8s.conf\n"
+            "# Blacklisten:\n"
+            "echo 'blacklist pcspkr' >> /etc/modprobe.d/blacklist.conf"
+        ),
+        task_description = "Zeige den Inhalt von /etc/modules um persistente Module zu sehen",
+        expected_commands = ["cat /etc/modules"],
+        hint_text    = "/etc/modules enthält die Liste der beim Boot automatisch geladenen Kernel-Module",
+        quiz_questions = [
+            QuizQuestion(
+                question   = "Wo wird auf einem systemd-basierten System die persistente Modul-Ladeliste hinterlegt?",
+                options    = [
+                    "/etc/modules.conf",
+                    "/lib/modules/load",
+                    "/etc/modules-load.d/*.conf",
+                    "/etc/modprobe.conf",
+                ],
+                correct    = 2,
+                explanation = (
+                    "/etc/modules-load.d/*.conf ist der systemd-Weg für persistente Module.\n"
+                    "/etc/modules ist die traditionelle Debian/Ubuntu-Datei (auch noch gültig).\n"
+                    "/etc/modprobe.conf ist veraltet — heute /etc/modprobe.d/*.conf verwenden."
+                ),
+                xp_value   = 15,
+            ),
+            QuizQuestion(
+                question   = "Wie verhindert man ABSOLUT das Laden eines Moduls auch wenn es als Abhängigkeit gebraucht wird?",
+                options    = [
+                    "blacklist MODUL in /etc/modprobe.d/",
+                    "rmmod -f MODUL beim Boot",
+                    "install MODUL /bin/false in /etc/modprobe.d/",
+                    "echo 'disable MODUL' in /etc/modules",
+                ],
+                correct    = 2,
+                explanation = (
+                    "'install MODUL /bin/false' überschreibt den Lade-Befehl mit /bin/false.\n"
+                    "Selbst wenn ein anderes Modul dieses als Abhängigkeit lädt, schlägt es fehl.\n"
+                    "'blacklist' allein verhindert nur direktes Laden — Abhängigkeits-Load geht noch durch."
+                ),
+                xp_value   = 15,
+            ),
+        ],
+        exam_tip     = (
+            "PRÜFUNGS-KLASSIKER:\n"
+            "  blacklist MODUL = kein automatisches Laden\n"
+            "  install MODUL /bin/false = absolut geblockt\n"
+            "  /etc/modules = Boot-Module (Debian-Tradition)\n"
+            "  /etc/modules-load.d/*.conf = systemd-Weg\n"
+            "  /etc/modprobe.d/ = Konfiguration (Alias, Options, Blacklist)"
+        ),
+        memory_tip   = "Merkhilfe: modules=laden | modules-load.d=systemd-laden | modprobe.d=konfigurieren",
+        gear_reward  = None,
+        faction_reward = ("Kernel Syndicate", 15),
+    ),
+
+    # ══════════════════════════════════════════════════════════════════════
+    # 13.11 — Kernel-Parameter (sysctl) vertieft
+    # ══════════════════════════════════════════════════════════════════════
+    Mission(
+        mission_id   = "13.11",
+        chapter      = 13,
+        title        = "Kernel-Parameter — sysctl -a, -w, /etc/sysctl.conf",
+        mtype        = "CONSTRUCT",
+        xp           = 95,
+        speaker      = "ZARA Z3R0",
+        story        = (
+            "Zara Z3R0: 'NeonGrid-9 Routing-Node braucht IP-Forwarding.\n"
+            " Der Swap frisst Performance. randomize_va_space ist aus.\n"
+            " sysctl ist dein Schalttpult, Ghost.\n"
+            " Drei Änderungen — ein Befehl. Dann persistieren.'"
+        ),
+        why_important = (
+            "sysctl erlaubt Kernel-Tuning zur Laufzeit ohne Neustart.\n"
+            "LPIC-1 prüft sysctl intensiv — temporäre vs permanente Änderungen."
+        ),
+        explanation  = (
+            "SYSCTL — KERNEL-PARAMETER VERWALTEN:\n\n"
+            "ALLE PARAMETER ANZEIGEN:\n"
+            "  sysctl -a                       alle Parameter\n"
+            "  sysctl -a 2>/dev/null           ohne Fehlermeldungen\n"
+            "  sysctl -a | grep net.ipv4       filtern\n"
+            "  sysctl net.ipv4.ip_forward      einzelner Parameter lesen\n"
+            "  cat /proc/sys/net/ipv4/ip_forward  direkt aus /proc\n\n"
+            "PARAMETER TEMPORÄR ÄNDERN (bis Neustart):\n"
+            "  sysctl -w net.ipv4.ip_forward=1   Schreibweise mit -w\n"
+            "  sysctl net.ipv4.ip_forward=1      Ohne -w (auch gültig)\n"
+            "  echo 1 > /proc/sys/net/ipv4/ip_forward  via /proc\n\n"
+            "PARAMETER DAUERHAFT SETZEN:\n"
+            "  Datei: /etc/sysctl.conf\n"
+            "  Oder:  /etc/sysctl.d/99-custom.conf (Fragmente)\n"
+            "  Inhalt:\n"
+            "    # IP-Forwarding\n"
+            "    net.ipv4.ip_forward = 1\n"
+            "    # Swap-Aggressivität\n"
+            "    vm.swappiness = 10\n"
+            "    # IPv6 deaktivieren\n"
+            "    net.ipv6.conf.all.disable_ipv6 = 1\n\n"
+            "  Aktivieren ohne Neustart:\n"
+            "    sysctl -p               /etc/sysctl.conf laden\n"
+            "    sysctl --system         alle Dateien laden (systemd)\n"
+            "    sysctl -p /etc/sysctl.d/99-custom.conf  spezifische Datei\n\n"
+            "WICHTIGE PARAMETER:\n"
+            "  net.ipv4.ip_forward = 1          Router-Funktion\n"
+            "  net.ipv4.icmp_echo_ignore_all = 1  Ping deaktivieren\n"
+            "  vm.swappiness = 10               weniger Swap (0-100)\n"
+            "  kernel.randomize_va_space = 2    ASLR aktivieren\n"
+            "  kernel.panic = 10                Neustart nach 10s Kernel-Panic\n"
+            "  fs.file-max = 100000             Max offene Dateien\n"
+            "  net.core.somaxconn = 65535       Socket-Backlog"
+        ),
+        syntax       = "sysctl -a  |  sysctl -w PARAM=WERT  |  sysctl -p  |  cat /proc/sys/...",
+        example      = (
+            "sysctl -a | grep swappiness\n"
+            "sysctl vm.swappiness\n"
+            "sysctl -w vm.swappiness=10\n"
+            "sysctl net.ipv4.ip_forward\n"
+            "sysctl -w net.ipv4.ip_forward=1\n"
+            "sysctl -p\n"
+            "echo 'vm.swappiness=10' >> /etc/sysctl.conf"
+        ),
+        task_description = "Lese den aktuellen vm.swappiness-Wert mit sysctl",
+        expected_commands = ["sysctl vm.swappiness"],
+        hint_text    = "sysctl PARAMETER liest den aktuellen Wert. vm.swappiness steuert die Swap-Nutzungsneigung.",
+        quiz_questions = [
+            QuizQuestion(
+                question   = "Wie wird ein sysctl-Parameter DAUERHAFT gesetzt (überlebt Neustart)?",
+                options    = [
+                    "sysctl -w net.ipv4.ip_forward=1",
+                    "echo 1 > /proc/sys/net/ipv4/ip_forward",
+                    "Eintrag in /etc/sysctl.conf, dann sysctl -p",
+                    "modprobe sysctl net.ipv4.ip_forward=1",
+                ],
+                correct    = 2,
+                explanation = (
+                    "Dauerhaft: Parameter in /etc/sysctl.conf schreiben,\n"
+                    "dann sysctl -p ausführen um sofort zu aktivieren.\n"
+                    "sysctl -w und echo > /proc/sys/ sind nur temporär (bis Neustart)."
+                ),
+                xp_value   = 15,
+            ),
+            QuizQuestion(
+                question   = "Was bewirkt 'sysctl -p'?",
+                options    = [
+                    "Es gibt alle Parameter mit ihren Werten aus",
+                    "Es lädt /etc/sysctl.conf und wendet alle Einstellungen sofort an",
+                    "Es setzt alle Parameter auf ihre Standardwerte zurück",
+                    "Es prüft /etc/sysctl.conf auf Syntaxfehler",
+                ],
+                correct    = 1,
+                explanation = (
+                    "sysctl -p liest /etc/sysctl.conf und setzt alle dort definierten Parameter.\n"
+                    "sysctl -a zeigt alle Parameter.\n"
+                    "sysctl --system lädt alle Dateien (systemd-Variante)."
+                ),
+                xp_value   = 15,
+            ),
+        ],
+        exam_tip     = (
+            "MERKE: sysctl Unterschied\n"
+            "  -w = write (temporär, nur bis Neustart)\n"
+            "  -p = persistent laden (aus /etc/sysctl.conf)\n"
+            "  -a = all (alle Parameter anzeigen)\n"
+            "  vm.swappiness = 0..100 (niedrig=weniger Swap)\n"
+            "  kernel.randomize_va_space = 2 = ASLR voll aktiv"
+        ),
+        memory_tip   = "Merkhilfe: sysctl -w=write(temp), -p=persistently-load, -a=all-show",
+        gear_reward  = None,
+        faction_reward = ("Kernel Syndicate", 15),
+    ),
+
+    # ══════════════════════════════════════════════════════════════════════
+    # 13.12 — Kernel-Build Grundlagen
+    # ══════════════════════════════════════════════════════════════════════
+    Mission(
+        mission_id   = "13.12",
+        chapter      = 13,
+        title        = "Kernel-Build — make menuconfig & Konzepte",
+        mtype        = "SCAN",
+        xp           = 100,
+        speaker      = "CIPHER",
+        story        = (
+            "CIPHER: 'Einen Kernel kompilieren dauert Stunden, Ghost.\n"
+            " Wir machen das konzeptuell — die Prüfung erwartet Wissen, keinen Build.\n"
+            " make menuconfig, make bzImage, make modules_install.\n"
+            " Kenne die Schritte — auch wenn du sie nie ausführst.'"
+        ),
+        why_important = (
+            "Kernel-Kompilierung ist LPIC-1-Theoriewissen.\n"
+            "Die Schritte und Tools werden in Prüfungen abgefragt."
+        ),
+        explanation  = (
+            "KERNEL KOMPILIEREN — ÜBERBLICK:\n\n"
+            "QUELLCODE BESORGEN:\n"
+            "  kernel.org                       offizielle Quelle\n"
+            "  apt source linux-image-$(uname -r)   Debian\n"
+            "  /usr/src/linux-headers-$(uname -r)   Header-Dateien\n\n"
+            "KONFIGURATION:\n"
+            "  make menuconfig     ncurses-basiertes Menü (Standard)\n"
+            "  make xconfig        Qt-basiertes GUI\n"
+            "  make gconfig        GTK-basiertes GUI\n"
+            "  make defconfig      Standard-Konfiguration für aktuelle Architektur\n"
+            "  make oldconfig      Bestehende .config mit neuen Optionen erweitern\n"
+            "  make localmodconfig Nur für aktuelle Hardware konfigurieren\n"
+            "  .config             Konfigurationsdatei (Ausgabe von make *config)\n\n"
+            "KOMPILIEREN:\n"
+            "  make bzImage        komprimiertes Kernel-Image (z=zipped, bz=big-zipped)\n"
+            "  make modules        alle Module kompilieren\n"
+            "  make -j$(nproc) bzImage  parallel mit allen CPU-Kernen\n\n"
+            "INSTALLIEREN:\n"
+            "  make modules_install  Module nach /lib/modules/VERSION/\n"
+            "  make install          Kernel nach /boot/ (oder manuell)\n"
+            "  cp arch/x86/boot/bzImage /boot/vmlinuz-VERSION\n"
+            "  cp System.map /boot/System.map-VERSION\n"
+            "  update-initramfs -c -k VERSION\n"
+            "  update-grub\n\n"
+            "KERNEL-KONFIGURATIONSOPTIONEN:\n"
+            "  [*] = fest eingebaut (built-in)\n"
+            "  [M] = als Modul (ladbar)\n"
+            "  [ ] = nicht kompiliert\n\n"
+            "WICHTIGE VERZEICHNISSE:\n"
+            "  arch/x86/boot/     Architecture-spezifischer Boot-Code\n"
+            "  drivers/           Treiber-Quellen\n"
+            "  net/               Netzwerk-Stack\n"
+            "  fs/                Dateisysteme"
+        ),
+        syntax       = "make menuconfig  |  make bzImage  |  make modules  |  make install",
+        example      = (
+            "# Kernel-Build-Prozess (konzeptuell):\n"
+            "tar xf linux-6.1.tar.xz\n"
+            "cd linux-6.1\n"
+            "make menuconfig       # Konfigurieren\n"
+            "make -j$(nproc) bzImage  # Kernel kompilieren\n"
+            "make -j$(nproc) modules  # Module kompilieren\n"
+            "sudo make modules_install  # Module installieren\n"
+            "sudo make install          # Kernel installieren\n"
+            "sudo update-grub           # GRUB aktualisieren"
+        ),
+        task_description = "Zeige die aktuell geladenen Kernel-Module mit lsmod",
+        expected_commands = ["lsmod"],
+        hint_text    = "lsmod zeigt alle geladenen Kernel-Module — der Beweis welche .ko-Dateien aktiv sind",
+        quiz_questions = [
+            QuizQuestion(
+                question   = "Was erzeugt 'make menuconfig' beim Kernel-Build?",
+                options    = [
+                    "Das komprimierte Kernel-Image (bzImage)",
+                    "Die .config-Datei mit den Kernel-Optionen",
+                    "Den Device-Tree für ARM",
+                    "Die Module-Abhängigkeitsdatenbank",
+                ],
+                correct    = 1,
+                explanation = (
+                    "make menuconfig öffnet ein ncurses-Menü zur Kernel-Konfiguration.\n"
+                    "Das Ergebnis ist die .config-Datei im Quellverzeichnis.\n"
+                    "make bzImage kompiliert dann das Kernel-Image aus dieser Konfiguration."
+                ),
+                xp_value   = 15,
+            ),
+            QuizQuestion(
+                question   = "Was bedeutet [M] bei einer Kernel-Konfigurationsoption?",
+                options    = [
+                    "Mandatory — muss aktiviert sein",
+                    "Minimal — minimale Größe",
+                    "Module — als ladbares Kernel-Modul kompiliert",
+                    "Missing — Abhängigkeit fehlt",
+                ],
+                correct    = 2,
+                explanation = (
+                    "In make menuconfig:\n"
+                    "  [*] = Built-in (fest in den Kernel kompiliert)\n"
+                    "  [M] = Module (als .ko-Datei, ladbar zur Laufzeit)\n"
+                    "  [ ] = Not compiled (nicht vorhanden)\n"
+                    "Module sind flexibler — können bei Bedarf geladen werden."
+                ),
+                xp_value   = 15,
+            ),
+        ],
+        exam_tip     = (
+            "KERNEL-BUILD REIHENFOLGE (Prüfung):\n"
+            "  1. make menuconfig → .config erstellen\n"
+            "  2. make bzImage → Kernel kompilieren\n"
+            "  3. make modules → Module kompilieren\n"
+            "  4. make modules_install → nach /lib/modules/\n"
+            "  5. make install → nach /boot/\n"
+            "  6. update-initramfs, update-grub"
+        ),
+        memory_tip   = "Merkhilfe: config → bzImage → modules → modules_install → install → grub",
+        gear_reward  = None,
+        faction_reward = ("Kernel Syndicate", 15),
+    ),
+
+    # ══════════════════════════════════════════════════════════════════════
+    # 13.13 — /boot Verzeichnis
+    # ══════════════════════════════════════════════════════════════════════
+    Mission(
+        mission_id   = "13.13",
+        chapter      = 13,
+        title        = "/boot Verzeichnis — vmlinuz, initrd, System.map",
+        mtype        = "SCAN",
+        xp           = 85,
+        speaker      = "ZARA Z3R0",
+        story        = (
+            "Zara Z3R0: 'System startet nicht, Ghost. Kernel kaputt?\n"
+            " Oder fehlt die initrd? Oder stimmt grub.cfg nicht?\n"
+            " /boot ist die kritischste Partition des Systems.\n"
+            " Kenne jeden Dateinamen — dein Leben hängt davon ab.'"
+        ),
+        why_important = (
+            "/boot enthält alle für den Boot-Prozess notwendigen Dateien.\n"
+            "LPIC-1 prüft die Bedeutung von vmlinuz, initrd, System.map und grub.cfg."
+        ),
+        explanation  = (
+            "/BOOT VERZEICHNIS — INHALTE:\n\n"
+            "KERNEL-IMAGE:\n"
+            "  vmlinuz-6.1.0-20-amd64    komprimierter Linux-Kernel\n"
+            "  vmlinuz = vm (virtual memory) + linux + z (zipped/komprimiert)\n"
+            "  vmlinux = unkomprimiertes Kernel-Image (selten in /boot)\n\n"
+            "INITIAL RAMDISK:\n"
+            "  initrd.img-6.1.0-20-amd64     initrd (älteres Format)\n"
+            "  initramfs.img-6.1.0-20-amd64  initramfs (modern, cpio)\n"
+            "  → Temporäres Root-Dateisystem im RAM\n"
+            "  → Lädt Module die zum Mounten des echten Root-FS nötig sind\n"
+            "  → Enthält: Kernel-Module, udev, cryptsetup, LVM-Tools\n\n"
+            "SYSTEM.MAP:\n"
+            "  System.map-6.1.0-20-amd64  Kernel-Symboltabelle\n"
+            "  → Mappt Kernel-Funktionsnamen auf Speicheradressen\n"
+            "  → Nötig für Kernel-Debugging, oops-Analyse\n"
+            "  → Wird von klogd / ksymoops verwendet\n\n"
+            "KONFIGURATIONSDATEI:\n"
+            "  config-6.1.0-20-amd64  Kernel-Kompilierungs-Konfiguration\n\n"
+            "GRUB-VERZEICHNIS:\n"
+            "  /boot/grub/grub.cfg    GRUB2-Hauptkonfiguration\n"
+            "  /boot/grub/grub.env    GRUB-Umgebungs-Block\n"
+            "  /boot/grub/fonts/      GRUB-Fonts\n"
+            "  /boot/grub/i386-pc/    GRUB-Module für x86\n\n"
+            "INITRAMFS VERWALTEN:\n"
+            "  update-initramfs -u              aktuelle Kernel (Debian)\n"
+            "  update-initramfs -u -k all       alle installierten Kernels\n"
+            "  update-initramfs -c -k VERSION   neu erstellen\n"
+            "  dracut -f (RHEL/Fedora)          RHEL-Äquivalent\n\n"
+            "GRUB AKTUALISIEREN:\n"
+            "  update-grub                      grub.cfg neu generieren\n"
+            "  grub-mkconfig -o /boot/grub/grub.cfg  explizit"
+        ),
+        syntax       = "ls /boot/  |  ls -la /boot/vmlinuz*  |  update-initramfs -u",
+        example      = (
+            "ls -la /boot/\n"
+            "ls /boot/vmlinuz*\n"
+            "ls /boot/initrd*\n"
+            "ls /boot/System.map*\n"
+            "cat /boot/grub/grub.cfg | grep -i linux\n"
+            "file /boot/vmlinuz-$(uname -r)"
+        ),
+        task_description = "Zeige alle Dateien im /boot-Verzeichnis mit ls",
+        expected_commands = ["ls /boot/"],
+        hint_text    = "ls /boot/ zeigt vmlinuz, initrd/initramfs, System.map, config und grub-Verzeichnis",
+        quiz_questions = [
+            QuizQuestion(
+                question   = "Was ist die initramfs/initrd in /boot?",
+                options    = [
+                    "Eine Sicherheitskopie des Root-Dateisystems",
+                    "Ein temporäres RAM-Dateisystem das beim Boot das echte Root-FS vorbereitet",
+                    "Die Kernel-Konfigurationsdatei",
+                    "Das GRUB2-Konfigurationsarchiv",
+                ],
+                correct    = 1,
+                explanation = (
+                    "initramfs ist ein temporäres Root-Dateisystem im RAM.\n"
+                    "Es wird beim Boot geladen um Module, udev und andere Tools\n"
+                    "bereitzustellen die zum Mounten des echten Root-Dateisystems nötig sind.\n"
+                    "Danach übernimmt das echte Root-FS und initramfs wird verworfen."
+                ),
+                xp_value   = 15,
+            ),
+            QuizQuestion(
+                question   = "Wofür steht das 'z' in 'vmlinuz'?",
+                options    = [
+                    "Zero-copy Kernel",
+                    "Das Kernel-Image ist komprimiert (zipped)",
+                    "Zone-basierter Speichermanager",
+                    "Zig-zag Verschlüsselung",
+                ],
+                correct    = 1,
+                explanation = (
+                    "vmlinuz = vm (virtual memory) + linux + z (zipped/komprimiert).\n"
+                    "Das Kernel-Image ist komprimiert um Platz zu sparen.\n"
+                    "Der Bootloader dekomprimiert es vor dem Start.\n"
+                    "vmlinux (ohne z) wäre das unkomprimierte Kernel-ELF-Binary."
+                ),
+                xp_value   = 15,
+            ),
+        ],
+        exam_tip     = (
+            "MERKE /boot:\n"
+            "  vmlinuz = komprimierter Kernel (z = zipped)\n"
+            "  initrd/initramfs = temporäres Boot-FS\n"
+            "  System.map = Kernel-Symboltabelle\n"
+            "  config = Kernel-Build-Konfiguration\n"
+            "  update-initramfs -u = initramfs neu erstellen\n"
+            "  update-grub = grub.cfg regenerieren"
+        ),
+        memory_tip   = "Merkhilfe: vmlinuz=Kernel, initramfs=Boot-RAM-FS, System.map=Symbole, grub.cfg=Bootmenü",
+        gear_reward  = None,
+        faction_reward = ("Kernel Syndicate", 15),
+    ),
+
+    # ══════════════════════════════════════════════════════════════════════
+    # 13.14 — dmesg & Kernel-Logs (vertieft)
+    # ══════════════════════════════════════════════════════════════════════
+    Mission(
+        mission_id   = "13.14",
+        chapter      = 13,
+        title        = "dmesg & Kernel-Logs — dmesg -T, --level, journalctl -k",
+        mtype        = "CONSTRUCT",
+        xp           = 90,
+        speaker      = "CIPHER",
+        story        = (
+            "CIPHER: 'Der NIC-Treiber schlägt beim Boot fehl, Ghost.\n"
+            " Kein Interface. Kein Netz. Warum?\n"
+            " dmesg ist der Kernel-Tagesschreiber.\n"
+            " Filtere nach Fehlern — finde den Übeltäter.'"
+        ),
+        why_important = (
+            "dmesg ist das wichtigste Hardware-Diagnose-Werkzeug.\n"
+            "LPIC-1 prüft dmesg-Filteroptionen und journalctl -k."
+        ),
+        explanation  = (
+            "DMESG — KERNEL RING BUFFER:\n\n"
+            "GRUNDBEFEHLE:\n"
+            "  dmesg                      alle Kernel-Nachrichten\n"
+            "  dmesg | less               seitenweise blättern\n"
+            "  dmesg -T                   mit menschenlesbaren Zeitstempeln\n"
+            "  dmesg -H                   human-readable (Farben + Zeit)\n"
+            "  dmesg --follow             live (wie tail -f)\n"
+            "  dmesg -c                   nach Ausgabe Puffer leeren\n"
+            "  dmesg --clear              Puffer leeren\n\n"
+            "NACH LOG-LEVEL FILTERN:\n"
+            "  dmesg --level=err          nur Fehler (error)\n"
+            "  dmesg --level=warn         nur Warnungen\n"
+            "  dmesg --level=info         Info-Nachrichten\n"
+            "  dmesg --level=err,warn     mehrere Level\n"
+            "  dmesg -l err               Kurzform\n\n"
+            "LOG-LEVELS (0-7):\n"
+            "  0 emerg    1 alert    2 crit    3 err\n"
+            "  4 warn     5 notice   6 info    7 debug\n\n"
+            "NACH FACILITY FILTERN:\n"
+            "  dmesg -f kern              Kernel-Nachrichten\n"
+            "  dmesg -f daemon            Daemon-Nachrichten\n\n"
+            "SUCHEN:\n"
+            "  dmesg | grep -i usb        USB-Events\n"
+            "  dmesg | grep -i 'error\\|fail'  Fehler\n"
+            "  dmesg -T | grep eth0       NIC-Events\n\n"
+            "JOURNALCTL FÜR KERNEL:\n"
+            "  journalctl -k              Kernel-Nachrichten (= dmesg)\n"
+            "  journalctl -k --since today  nur heute\n"
+            "  journalctl -k -b           vom aktuellen Boot\n"
+            "  journalctl -k -b -1        vom vorherigen Boot\n"
+            "  journalctl -k -p err       nur Fehler\n\n"
+            "/var/log/dmesg:\n"
+            "  Snapshot des dmesg-Puffers vom letzten Boot"
+        ),
+        syntax       = "dmesg -T  |  dmesg --level=err  |  journalctl -k",
+        example      = (
+            "dmesg -T\n"
+            "dmesg -T | tail -50\n"
+            "dmesg --level=err\n"
+            "dmesg -T | grep -i 'error\\|fail\\|warn'\n"
+            "dmesg | grep -i usb\n"
+            "journalctl -k --since '1 hour ago'\n"
+            "journalctl -k -p err"
+        ),
+        task_description = "Zeige nur Kernel-Fehlermeldungen (Level: err) mit dmesg",
+        expected_commands = ["dmesg --level=err"],
+        hint_text    = "dmesg --level=err oder dmesg -l err filtert auf Fehlermeldungen (Log-Level 3)",
+        quiz_questions = [
+            QuizQuestion(
+                question   = "Welcher Befehl zeigt Kernel-Nachrichten mit lesbaren Zeitstempeln?",
+                options    = [
+                    "dmesg -v",
+                    "dmesg -T",
+                    "dmesg --time",
+                    "dmesg -t",
+                ],
+                correct    = 1,
+                explanation = (
+                    "dmesg -T zeigt Kernel-Nachrichten mit menschenlesbaren Zeitstempeln\n"
+                    "statt Sekunden seit Boot-Start.\n"
+                    "-t würde Zeitstempel unterdrücken.\n"
+                    "dmesg -H ist noch benutzerfreundlicher (Farben + Zeit)."
+                ),
+                xp_value   = 15,
+            ),
+            QuizQuestion(
+                question   = "Welcher journalctl-Befehl zeigt Kernel-Nachrichten wie dmesg?",
+                options    = [
+                    "journalctl -u kernel",
+                    "journalctl --kernel",
+                    "journalctl -k",
+                    "journalctl -K",
+                ],
+                correct    = 2,
+                explanation = (
+                    "journalctl -k (oder --dmesg) zeigt nur Kernel-Nachrichten.\n"
+                    "Inhalt ist identisch mit dmesg aber mit Journal-Features\n"
+                    "wie zeitbasiertem Filtern: journalctl -k --since today"
+                ),
+                xp_value   = 15,
+            ),
+        ],
+        exam_tip     = (
+            "DMESG MERKE:\n"
+            "  -T = Timestamps menschenlesbar\n"
+            "  -H = Human-readable (Farben)\n"
+            "  -l err = nur Fehler (--level=err)\n"
+            "  --follow = live-Ausgabe\n"
+            "  journalctl -k = Kernel-Journal (wie dmesg)\n"
+            "  journalctl -k -b -1 = vorheriger Boot"
+        ),
+        memory_tip   = "Merkhilfe: dmesg -T=Time, -H=Human, -l=level, -f=facility, --follow=live",
+        gear_reward  = None,
+        faction_reward = ("Kernel Syndicate", 15),
+    ),
+
+    # ══════════════════════════════════════════════════════════════════════
+    # 13.15 — Kernel-Hardening
+    # ══════════════════════════════════════════════════════════════════════
+    Mission(
+        mission_id   = "13.15",
+        chapter      = 13,
+        title        = "Kernel-Hardening — ASLR, randomize_va_space",
+        mtype        = "SCAN",
+        xp           = 95,
+        speaker      = "ZARA Z3R0",
+        story        = (
+            "Zara Z3R0: 'Der Angreifer kennt Speicheradressen, Ghost.\n"
+            " Feste Stack-Adressen. Kein ASLR. Das ist ein offenes Tor.\n"
+            " /proc/sys/kernel/randomize_va_space — eine Zeile.\n"
+            " Aktiviere ASLR — mache Adressen unvorhersehbar.'"
+        ),
+        why_important = (
+            "Kernel-Hardening reduziert Angriffsfläche durch Speicherschutz-Features.\n"
+            "ASLR ist eine der effektivsten Schutzmaßnahmen gegen Speicher-Exploits."
+        ),
+        explanation  = (
+            "KERNEL-HARDENING MECHANISMEN:\n\n"
+            "ASLR — ADDRESS SPACE LAYOUT RANDOMIZATION:\n"
+            "  Randomisiert Speicheradressen bei jedem Programmstart\n"
+            "  Erschwert Buffer-Overflow-Exploits erheblich\n\n"
+            "  /proc/sys/kernel/randomize_va_space:\n"
+            "    0 = ASLR deaktiviert (UNSICHER)\n"
+            "    1 = Stack, VDSO, mmap randomisiert\n"
+            "    2 = Stack, VDSO, mmap, Heap randomisiert (EMPFOHLEN)\n\n"
+            "  Prüfen:\n"
+            "    cat /proc/sys/kernel/randomize_va_space\n"
+            "    sysctl kernel.randomize_va_space\n"
+            "  Setzen:\n"
+            "    sysctl -w kernel.randomize_va_space=2\n"
+            "    echo 2 > /proc/sys/kernel/randomize_va_space\n"
+            "  Permanent in /etc/sysctl.conf:\n"
+            "    kernel.randomize_va_space = 2\n\n"
+            "EXEC-SHIELD (historisch, heute durch NX-Bit ersetzt):\n"
+            "  Verhinderte Ausführung von Stack/Heap-Code\n"
+            "  Heute: CPU-Feature NX (No-Execute) / XD (Execute Disable)\n"
+            "  Prüfen: grep nx /proc/cpuinfo\n\n"
+            "WEITERE KERNEL-SICHERHEITS-PARAMETER:\n"
+            "  kernel.dmesg_restrict = 1     dmesg nur für root\n"
+            "  kernel.kptr_restrict = 2      Kernel-Pointer verstecken\n"
+            "  kernel.perf_event_paranoid = 2  perf-Zugriff einschränken\n"
+            "  net.ipv4.conf.all.rp_filter = 1  Reverse-Path-Filter\n"
+            "  net.ipv4.tcp_syncookies = 1   SYN-Flood-Schutz\n"
+            "  fs.suid_dumpable = 0          Kein Core-Dump für SUID-Prozesse\n\n"
+            "APPARMOR / SELINUX:\n"
+            "  Mandatory Access Control (MAC) auf Kernel-Ebene\n"
+            "  AppArmor: aa-status, aa-enforce\n"
+            "  SELinux:  getenforce, setenforce, sestatus"
+        ),
+        syntax       = "cat /proc/sys/kernel/randomize_va_space  |  sysctl kernel.randomize_va_space",
+        example      = (
+            "cat /proc/sys/kernel/randomize_va_space\n"
+            "sysctl kernel.randomize_va_space\n"
+            "sysctl -w kernel.randomize_va_space=2\n"
+            "# Permanent:\n"
+            "echo 'kernel.randomize_va_space = 2' >> /etc/sysctl.conf\n"
+            "sysctl -p\n"
+            "# NX-Bit prüfen:\n"
+            "grep -o 'nx\\|xd' /proc/cpuinfo | head -1"
+        ),
+        task_description = "Prüfe den aktuellen ASLR-Status über sysctl",
+        expected_commands = ["sysctl kernel.randomize_va_space"],
+        hint_text    = "sysctl kernel.randomize_va_space zeigt den ASLR-Status (0=aus, 1=teilweise, 2=voll)",
+        quiz_questions = [
+            QuizQuestion(
+                question   = "Was bedeutet 'kernel.randomize_va_space = 2' in /etc/sysctl.conf?",
+                options    = [
+                    "ASLR ist komplett deaktiviert",
+                    "Nur der Stack wird randomisiert",
+                    "Stack, Heap und mmap werden alle randomisiert (vollständiges ASLR)",
+                    "Das System verwendet 2 GB virtuellen Adressraum",
+                ],
+                correct    = 2,
+                explanation = (
+                    "randomize_va_space Werte:\n"
+                    "  0 = ASLR aus (kein Schutz)\n"
+                    "  1 = Stack, VDSO, mmap randomisiert\n"
+                    "  2 = vollständiges ASLR (Stack, Heap, mmap, VDSO)\n"
+                    "Empfehlung: Immer auf 2 setzen!"
+                ),
+                xp_value   = 15,
+            ),
+            QuizQuestion(
+                question   = "Welche sysctl-Variable aktiviert den SYN-Flood-Schutz?",
+                options    = [
+                    "net.ipv4.tcp_syn_protect = 1",
+                    "net.ipv4.tcp_syncookies = 1",
+                    "kernel.syn_flood = 0",
+                    "net.ipv4.tcp_synflood_protect = 1",
+                ],
+                correct    = 1,
+                explanation = (
+                    "net.ipv4.tcp_syncookies = 1 aktiviert TCP SYN Cookies.\n"
+                    "SYN Cookies schützen vor SYN-Flood-Angriffen (DDoS).\n"
+                    "Bei einem SYN-Flood-Angriff antwortet der Server ohne\n"
+                    "vollständige Connection-State-Tabelle zu führen."
+                ),
+                xp_value   = 15,
+            ),
+        ],
+        exam_tip     = (
+            "KERNEL-HARDENING MERKE:\n"
+            "  randomize_va_space=2 = vollständiges ASLR\n"
+            "  NX-Bit = No-Execute (CPU-Feature)\n"
+            "  dmesg_restrict=1 = dmesg nur für root\n"
+            "  kptr_restrict=2 = Kernel-Pointer versteckt\n"
+            "  tcp_syncookies=1 = SYN-Flood-Schutz"
+        ),
+        memory_tip   = "Merkhilfe: ASLR=Address Space Layout Randomization → randomize_va_space=2 für vollen Schutz",
+        gear_reward  = None,
+        faction_reward = ("Kernel Syndicate", 15),
+    ),
+
+    # ══════════════════════════════════════════════════════════════════════
+    # 13.16 — Linux Namespaces
+    # ══════════════════════════════════════════════════════════════════════
+    Mission(
+        mission_id   = "13.16",
+        chapter      = 13,
+        title        = "Linux Namespaces — Prozess-Isolation im Kernel",
+        mtype        = "SCAN",
+        xp           = 90,
+        speaker      = "NEXUS",
+        story        = (
+            "NEXUS: 'Container-Technologie beginnt im Kernel, Ghost.\n"
+            " Namespaces isolieren. PID, NET, MNT, UTS.\n"
+            " Ein Prozess in seinem eigenen Universum.\n"
+            " unshare erschafft. nsenter betritt. lsns listet.'"
+        ),
+        why_important = (
+            "Namespaces sind Kernel-Grundlage für Container (LPIC-1 101.x).\n"
+            "unshare und nsenter kommen in LPIC-2 und Container-Prüfungen vor.\n"
+            "Verstehe Namespaces — verstehe Docker/podman von innen."
+        ),
+        explanation  = (
+            "LINUX NAMESPACES — ISOLATIONS-MECHANISMUS:\n\n"
+            "NAMESPACE-TYPEN:\n"
+            "  PID   → eigener Prozessbaum (PID 1 im Container)\n"
+            "  NET   → eigenes Netzwerk-Stack (Interfaces, Routing)\n"
+            "  MNT   → eigener Mountpoint-Baum\n"
+            "  UTS   → eigener Hostname & Domainname\n"
+            "  IPC   → eigene Semaphore/Message Queues\n"
+            "  USER  → eigene UID/GID Mappings (rootless Container)\n"
+            "  TIME  → eigene Clock-Offsets (Linux 5.6+)\n\n"
+            "TOOLS:\n"
+            "  lsns                    alle Namespaces auflisten\n"
+            "  lsns -t net             nur Netzwerk-Namespaces\n"
+            "  unshare --pid --fork    neuen PID-Namespace erstellen\n"
+            "  unshare --net --fork    neuen NET-Namespace erstellen\n"
+            "  nsenter -t PID --net    in NET-Namespace von PID eintreten\n"
+            "  nsenter -t PID --all    in alle Namespaces eintreten\n\n"
+            "NAMESPACES IN /PROC:\n"
+            "  ls -la /proc/PID/ns/    Namespace-Links eines Prozesses\n"
+            "  readlink /proc/1/ns/pid PID-Namespace von PID 1"
+        ),
+        syntax       = "lsns  |  unshare [OPTIONS] [PROGRAM]  |  nsenter -t PID [OPTIONS]",
+        example      = (
+            "lsns                           # alle Namespaces\n"
+            "lsns -t net                    # Netzwerk-Namespaces\n"
+            "ls -la /proc/$$/ns/            # eigene Namespaces\n"
+            "unshare --uts --fork hostname neongrid  # neuer UTS-NS\n"
+            "nsenter -t 1234 --net ip addr   # Netzwerk-NS betreten"
+        ),
+        task_description = "Liste alle aktiven Namespaces auf dem System auf",
+        expected_commands = ["lsns"],
+        hint_text    = "lsns zeigt alle Linux-Namespaces mit ihren Typen und Prozess-IDs",
+        quiz_questions = [
+            QuizQuestion(
+                question   = "Welcher Namespace-Typ isoliert den Prozessbaum (PID 1)?",
+                options    = [
+                    "NET Namespace",
+                    "PID Namespace",
+                    "MNT Namespace",
+                    "USER Namespace",
+                ],
+                correct    = 1,
+                explanation = (
+                    "PID-Namespace: Jeder Prozess hat darin seinen eigenen PID-Baum.\n"
+                    "Der erste Prozess im neuen PID-NS hat PID 1 (init).\n"
+                    "Basis für Container-Isolation (Docker, podman, LXC)."
+                ),
+                xp_value   = 15,
+            ),
+        ],
+        exam_tip     = (
+            "LPIC-1 Namespaces:\n"
+            "  lsns = list namespaces\n"
+            "  unshare = neuen Namespace erstellen\n"
+            "  nsenter -t PID = in Namespace eintreten\n"
+            "  /proc/PID/ns/ = Namespace-Links"
+        ),
+        memory_tip   = "Namespace = eigene Sicht. PID=Prozesse, NET=Netzwerk, MNT=Mounts, UTS=Hostname",
+        gear_reward  = None,
+        faction_reward = ("Ghost Processors", 15),
+    ),
+
+    # ══════════════════════════════════════════════════════════════════════
+    # 13.17 — cgroups v2
+    # ══════════════════════════════════════════════════════════════════════
+    Mission(
+        mission_id   = "13.17",
+        chapter      = 13,
+        title        = "cgroups v2 — Ressourcen-Limits im Kernel",
+        mtype        = "CONSTRUCT",
+        xp           = 90,
+        speaker      = "KERNEL-ORAKEL",
+        story        = (
+            "KERNEL-ORAKEL: 'Ein Prozess frisst 100% CPU, Ghost.\n"
+            " Das System stirbt. Aber nicht mit cgroups.\n"
+            " /sys/fs/cgroup/ ist die Schaltzentrale.\n"
+            " Limits setzen. Ressourcen kontrollieren. Ordnung halten.'"
+        ),
+        why_important = (
+            "cgroups v2 sind das Fundament für systemd und Container-Ressourcensteuerung.\n"
+            "LPIC-1 erwartet Grundkenntnisse in cgroups und systemd-cgls.\n"
+            "Docker, Kubernetes und systemd nutzen cgroups intern."
+        ),
+        explanation  = (
+            "CGROUPS V2 — CONTROL GROUPS:\n\n"
+            "KONZEPT:\n"
+            "  cgroups gruppieren Prozesse und begrenzen deren Ressourcen.\n"
+            "  v2 = unified hierarchy (ein Baum statt mehrere)\n"
+            "  Montiert unter: /sys/fs/cgroup/\n\n"
+            "RESSOURCEN-CONTROLLER:\n"
+            "  cpu       CPU-Zeit begrenzen (cpu.max)\n"
+            "  memory    RAM begrenzen (memory.max, memory.high)\n"
+            "  io        Block-I/O begrenzen (io.max)\n"
+            "  cpuset    auf bestimmte CPU-Kerne beschränken\n"
+            "  pids      maximale Prozessanzahl (pids.max)\n\n"
+            "WICHTIGE DATEIEN:\n"
+            "  /sys/fs/cgroup/cgroup.controllers   verfügbare Controller\n"
+            "  /sys/fs/cgroup/cgroup.procs         PIDs in dieser Gruppe\n"
+            "  /sys/fs/cgroup/memory.max           RAM-Limit\n"
+            "  /sys/fs/cgroup/cpu.max              CPU-Quota\n"
+            "  /sys/fs/cgroup/cpuset.cpus          erlaubte CPU-Kerne\n\n"
+            "DIAGNOSE-TOOLS:\n"
+            "  systemd-cgls                cgroup-Baum anzeigen\n"
+            "  systemd-cgtop               cgroup-Ressourcenverbrauch live\n"
+            "  cat /proc/PID/cgroup        cgroup eines Prozesses\n"
+            "  cgget -g memory:/ /         cgroup-Werte lesen (libcgroup)\n\n"
+            "LIMITS SETZEN (manuell):\n"
+            "  mkdir /sys/fs/cgroup/meinelimits\n"
+            "  echo '200000 1000000' > /sys/fs/cgroup/meinelimits/cpu.max\n"
+            "  echo '512M' > /sys/fs/cgroup/meinelimits/memory.max\n"
+            "  echo $PID > /sys/fs/cgroup/meinelimits/cgroup.procs\n\n"
+            "SYSTEMD-INTEGRATION:\n"
+            "  systemctl set-property nginx.service MemoryMax=512M\n"
+            "  systemctl set-property nginx.service CPUQuota=50%\n"
+            "  /etc/systemd/system/nginx.service.d/limits.conf"
+        ),
+        syntax       = "systemd-cgls  |  systemd-cgtop  |  cat /sys/fs/cgroup/...  |  cgget",
+        example      = (
+            "systemd-cgls                          # cgroup-Baum\n"
+            "systemd-cgtop                         # live Ressourcen\n"
+            "cat /proc/$$/cgroup                   # eigene cgroup\n"
+            "cat /sys/fs/cgroup/cgroup.controllers # Controller\n"
+            "ls /sys/fs/cgroup/system.slice/       # systemd-Slice"
+        ),
+        task_description = "Zeige den cgroup-Baum des laufenden Systems",
+        expected_commands = ["systemd-cgls"],
+        hint_text    = "systemd-cgls zeigt den kompletten cgroup-Baum mit allen Prozessen",
+        quiz_questions = [
+            QuizQuestion(
+                question   = "Welche Datei in einer cgroup v2 begrenzt den maximalen RAM-Verbrauch?",
+                options    = [
+                    "memory.limit",
+                    "memory.max",
+                    "cgroup.memory",
+                    "mem.ceiling",
+                ],
+                correct    = 1,
+                explanation = (
+                    "memory.max setzt das harte RAM-Limit einer cgroup.\n"
+                    "Prozesse darüber werden per OOM-Killer beendet.\n"
+                    "memory.high ist das weiche Limit (Drosselung vor OOM).\n"
+                    "systemd verwendet: systemctl set-property MemoryMax="
+                ),
+                xp_value   = 15,
+            ),
+        ],
+        exam_tip     = (
+            "LPIC-1 cgroups:\n"
+            "  /sys/fs/cgroup/ = cgroup v2 Dateisystem\n"
+            "  systemd-cgls = cgroup-Baum anzeigen\n"
+            "  memory.max = RAM-Limit\n"
+            "  cpu.max = CPU-Quota (z.B. '50000 100000' = 50%)\n"
+            "  cgroup.procs = PIDs in der Gruppe"
+        ),
+        memory_tip   = "cgroup = Control Group. /sys/fs/cgroup/ = Steuerung. systemd-cgls = Baum anzeigen.",
+        gear_reward  = None,
+        faction_reward = ("Ghost Processors", 15),
+    ),
+
+    # ══════════════════════════════════════════════════════════════════════
+    # 13.18 — initramfs / initrd
+    # ══════════════════════════════════════════════════════════════════════
+    Mission(
+        mission_id   = "13.18",
+        chapter      = 13,
+        title        = "initramfs — Das Boot-RAM-Dateisystem",
+        mtype        = "DECODE",
+        xp           = 85,
+        speaker      = "VECTOR",
+        story        = (
+            "VECTOR: 'System bootet nicht, Ghost. Root-FS nicht gefunden.\n"
+            " Der LVM-Treiber fehlt in der initramfs.\n"
+            " mkinitramfs — update-initramfs. Dracut auf RHEL.\n"
+            " Ohne initramfs: kein Boot. Ohne Boot: kein System.'"
+        ),
+        why_important = (
+            "initramfs ist das erste Root-Dateisystem nach dem Kernel-Start.\n"
+            "LPIC-1 prüft mkinitramfs, update-initramfs und lsinitramfs.\n"
+            "Fehler in der initramfs führen zu Boot-Fehlern — kritisches Wissen."
+        ),
+        explanation  = (
+            "INITRAMFS — INITIAL RAM FILESYSTEM:\n\n"
+            "KONZEPT:\n"
+            "  initramfs = cpio-Archiv (komprimiert) das in den RAM geladen wird\n"
+            "  Enthält minimales Root-FS für den Boot-Prozess\n"
+            "  Lädt Module: LUKS, LVM, RAID, Netzwerk-FS-Treiber\n"
+            "  Übergibt dann Kontrolle an das echte Root-FS\n\n"
+            "TOOLS (DEBIAN/UBUNTU):\n"
+            "  update-initramfs -u                aktuellen Kernel aktualisieren\n"
+            "  update-initramfs -u -k all         alle installierten Kernels\n"
+            "  update-initramfs -c -k VERSION     neu erstellen (create)\n"
+            "  update-initramfs -d -k VERSION     löschen (delete)\n"
+            "  mkinitramfs -o /boot/initrd.img-$(uname -r) $(uname -r)\n\n"
+            "TOOLS (RHEL/FEDORA):\n"
+            "  dracut -f                          initramfs neu erstellen\n"
+            "  dracut -f --kver $(uname -r)       für bestimmten Kernel\n"
+            "  dracut --list-modules               verfügbare Module\n\n"
+            "INHALT ANZEIGEN:\n"
+            "  lsinitramfs /boot/initrd.img-$(uname -r)   Dateien auflisten\n"
+            "  lsinitramfs -l /boot/initrd.img-$(uname -r) ausführlich\n"
+            "  # Manuell entpacken:\n"
+            "  mkdir /tmp/initrd && cd /tmp/initrd\n"
+            "  unmkinitramfs /boot/initrd.img-$(uname -r) .\n\n"
+            "KONFIGURATION:\n"
+            "  /etc/initramfs-tools/            Konfigurationsverzeichnis\n"
+            "  /etc/initramfs-tools/modules     zusätzliche Module einschließen\n"
+            "  /etc/initramfs-tools/conf.d/     Konfigurations-Fragmente\n"
+            "  /etc/dracut.conf (RHEL)          dracut-Konfiguration"
+        ),
+        syntax       = "update-initramfs -u  |  mkinitramfs -o FILE VERSION  |  lsinitramfs FILE",
+        example      = (
+            "ls /boot/initrd*\n"
+            "lsinitramfs /boot/initrd.img-$(uname -r)\n"
+            "update-initramfs -u\n"
+            "update-initramfs -u -k all\n"
+            "update-initramfs -c -k $(uname -r)\n"
+            "# RHEL:\n"
+            "dracut -f"
+        ),
+        task_description = "Liste den Inhalt der initramfs des laufenden Kernels auf",
+        expected_commands = ["lsinitramfs /boot/initrd.img-$(uname -r)"],
+        hint_text    = "lsinitramfs zeigt alle Dateien im initramfs-Archiv des angegebenen Kernels",
+        quiz_questions = [
+            QuizQuestion(
+                question   = "Welcher Befehl erstellt die initramfs auf einem Debian-System neu?",
+                options    = [
+                    "mkinitrd -f",
+                    "dracut --force",
+                    "update-initramfs -u",
+                    "initramfs-update --rebuild",
+                ],
+                correct    = 2,
+                explanation = (
+                    "update-initramfs -u (update) aktualisiert die initramfs des laufenden Kernels.\n"
+                    "-u = update, -c = create (neu erstellen), -d = delete\n"
+                    "dracut -f ist das RHEL/Fedora-Äquivalent.\n"
+                    "Nach Modul-Änderungen in /etc/initramfs-tools/modules immer ausführen!"
+                ),
+                xp_value   = 15,
+            ),
+        ],
+        exam_tip     = (
+            "LPIC-1 initramfs:\n"
+            "  update-initramfs -u = aktualisieren (Debian)\n"
+            "  update-initramfs -c -k VERSION = neu erstellen\n"
+            "  dracut -f = RHEL/Fedora-Äquivalent\n"
+            "  lsinitramfs = Inhalt anzeigen\n"
+            "  /etc/initramfs-tools/modules = eigene Module hinzufügen"
+        ),
+        memory_tip   = "initramfs = init + RAM + fs. update-initramfs -u = update. dracut -f = RHEL-force.",
+        gear_reward  = None,
+        faction_reward = ("Kernel Syndicate", 15),
+    ),
+
+    # ══════════════════════════════════════════════════════════════════════
+    # 13.19 — Kernel-Parameter beim Booten
+    # ══════════════════════════════════════════════════════════════════════
+    Mission(
+        mission_id   = "13.19",
+        chapter      = 13,
+        title        = "Kernel-Parameter beim Booten — GRUB & /proc/cmdline",
+        mtype        = "SCAN",
+        xp           = 85,
+        speaker      = "CIPHER",
+        story        = (
+            "CIPHER: 'System bootet in Graphik-Modus aber Display bleibt schwarz.\n"
+            " nomodeset im GRUB cmdline — das rettet uns.\n"
+            " /proc/cmdline zeigt was beim letzten Boot übergeben wurde.\n"
+            " Kerne-Parameter sind dein Notfall-Werkzeugkasten, Ghost.'"
+        ),
+        why_important = (
+            "Kernel-Boot-Parameter steuern das Systemverhalten von Anfang an.\n"
+            "LPIC-1 prüft /proc/cmdline, GRUB_CMDLINE_LINUX und wichtige Parameter.\n"
+            "nomodeset, quiet, splash sind klassische Troubleshooting-Parameter."
+        ),
+        explanation  = (
+            "KERNEL-BOOT-PARAMETER:\n\n"
+            "AKTUELL GEBOOTETE PARAMETER ANZEIGEN:\n"
+            "  cat /proc/cmdline         alle Boot-Parameter der aktuellen Session\n"
+            "  Beispiel-Ausgabe:\n"
+            "    BOOT_IMAGE=/vmlinuz-6.1 root=UUID=abc ro quiet splash\n\n"
+            "GRUB KONFIGURATION:\n"
+            "  /etc/default/grub         Haupt-Konfigurationsdatei\n"
+            "  GRUB_CMDLINE_LINUX=''     Parameter für ALLE Kernel-Entries\n"
+            "  GRUB_CMDLINE_LINUX_DEFAULT='quiet splash'  nur Standard-Entry\n"
+            "  Nach Änderung:\n"
+            "    update-grub             oder grub-mkconfig -o /boot/grub/grub.cfg\n\n"
+            "WICHTIGE KERNEL-PARAMETER:\n"
+            "  quiet           wenig Boot-Output (keine dmesg auf Konsole)\n"
+            "  splash          Bootsplash-Screen anzeigen\n"
+            "  nomodeset       KMS (Kernel Mode Setting) deaktivieren\n"
+            "                  → Rettung bei schwarzem Bildschirm\n"
+            "  ro              Root-FS nur lesend mounten (Standard)\n"
+            "  rw              Root-FS sofort schreibend mounten\n"
+            "  single / 1      Single-User-Mode (Rescue)\n"
+            "  init=/bin/bash  direkte Shell ohne init (Recovery)\n"
+            "  mem=2G          RAM auf 2 GB begrenzen\n"
+            "  maxcpus=1       nur 1 CPU verwenden\n"
+            "  acpi=off        ACPI deaktivieren (Kompatibilitätsprobleme)\n"
+            "  noapic          APIC deaktivieren\n"
+            "  elevator=deadline  I/O-Scheduler setzen\n"
+            "  net.ifnames=0   Klassische Netzwerkinterface-Namen (eth0)\n"
+            "  biosdevname=0   udev-basierte Namen deaktivieren\n\n"
+            "PARAMETER TEMPORÄR (nur einmalig):\n"
+            "  GRUB-Menü → Taste 'e' → linux-Zeile bearbeiten → F10\n\n"
+            "PARAMETER DAUERHAFT:\n"
+            "  /etc/default/grub → GRUB_CMDLINE_LINUX_DEFAULT anpassen\n"
+            "  update-grub ausführen"
+        ),
+        syntax       = "cat /proc/cmdline  |  /etc/default/grub  |  update-grub",
+        example      = (
+            "cat /proc/cmdline\n"
+            "cat /etc/default/grub\n"
+            "grep CMDLINE /etc/default/grub\n"
+            "# Parameter dauerhaft hinzufügen:\n"
+            "# In /etc/default/grub:\n"
+            "# GRUB_CMDLINE_LINUX_DEFAULT='quiet splash nomodeset'\n"
+            "update-grub"
+        ),
+        task_description = "Zeige die aktuellen Kernel-Boot-Parameter aus /proc/cmdline",
+        expected_commands = ["cat /proc/cmdline"],
+        hint_text    = "/proc/cmdline enthält alle Kernel-Parameter der aktuellen Boot-Session",
+        quiz_questions = [
+            QuizQuestion(
+                question   = "Welcher Kernel-Parameter deaktiviert Kernel Mode Setting bei Grafik-Problemen?",
+                options    = [
+                    "nographics",
+                    "nomodeset",
+                    "vga=off",
+                    "nogpu",
+                ],
+                correct    = 1,
+                explanation = (
+                    "nomodeset deaktiviert Kernel Mode Setting (KMS).\n"
+                    "KMS ermöglicht dem Kernel direkte Grafikkarten-Ansteuerung.\n"
+                    "Bei Problemen (schwarzer Bildschirm): nomodeset im GRUB-Parameter.\n"
+                    "Wird im GRUB-Menü mit 'e' temporär eingetragen."
+                ),
+                xp_value   = 15,
+            ),
+        ],
+        exam_tip     = (
+            "LPIC-1 Boot-Parameter:\n"
+            "  /proc/cmdline = aktuelle Boot-Parameter\n"
+            "  /etc/default/grub = GRUB_CMDLINE_LINUX_DEFAULT\n"
+            "  quiet = wenig Ausgabe, splash = Bootsplash\n"
+            "  nomodeset = kein KMS (Grafik-Debugging)\n"
+            "  single = Single-User-Mode\n"
+            "  update-grub nach jeder GRUB-Änderung!"
+        ),
+        memory_tip   = "/proc/cmdline = was wurde gebootet. /etc/default/grub = was wird gebootet.",
+        gear_reward  = None,
+        faction_reward = ("Kernel Syndicate", 15),
+    ),
+
+    # ══════════════════════════════════════════════════════════════════════
+    # 13.20 — Treiber-Debugging
+    # ══════════════════════════════════════════════════════════════════════
+    Mission(
+        mission_id   = "13.20",
+        chapter      = 13,
+        title        = "Treiber-Debugging — lspci, lsmod, udevadm, dmesg",
+        mtype        = "DECODE",
+        xp           = 95,
+        speaker      = "NEXUS",
+        story        = (
+            "NEXUS: 'Netzwerkkarte wird nicht erkannt, Ghost.\n"
+            " lspci zeigt die Hardware. Aber welcher Treiber?\n"
+            " lspci -k verrät es. lsmod bestätigt ob er geladen ist.\n"
+            " udevadm monitor zeigt live was passiert. Debugging beginnt.'"
+        ),
+        why_important = (
+            "Hardware-Debugging ist eine Kernkompetenz des Linux-Sysadmins.\n"
+            "LPIC-1 prüft lspci -k, lsmod, modinfo und udevadm info.\n"
+            "dmesg -w zeigt Hardware-Events in Echtzeit."
+        ),
+        explanation  = (
+            "TREIBER-DEBUGGING WORKFLOW:\n\n"
+            "HARDWARE IDENTIFIZIEREN:\n"
+            "  lspci                    PCI-Geräte anzeigen\n"
+            "  lspci -v                 verbose (ausführlich)\n"
+            "  lspci -k                 mit zugehörigem Kernel-Treiber\n"
+            "  lspci -nn                mit Vendor/Device IDs (numerisch)\n"
+            "  lspci -k | grep -A3 'Network'  Netzwerkkarten\n"
+            "  lsusb                    USB-Geräte\n"
+            "  lsusb -v                 verbose\n\n"
+            "LSPCI -K AUSGABE (Beispiel):\n"
+            "  02:00.0 Ethernet controller: Intel Corporation 82574L\n"
+            "    Subsystem: ...\n"
+            "    Kernel driver in use: e1000e\n"
+            "    Kernel modules: e1000e\n\n"
+            "MODUL-STATUS:\n"
+            "  lsmod                    geladene Module\n"
+            "  lsmod | grep e1000       Modul gesucht\n"
+            "  modinfo e1000e           Modul-Details\n"
+            "  modinfo -F firmware e1000e  benötigte Firmware\n\n"
+            "UDEVADM DIAGNOSE:\n"
+            "  udevadm info /dev/sda          Gerät-Attribute\n"
+            "  udevadm info /sys/bus/pci/devices/0000:02:00.0  PCI-Gerät\n"
+            "  udevadm monitor                live Hardware-Events\n"
+            "  udevadm monitor --property     mit Eigenschaften\n"
+            "  udevadm test /sys/block/sda    Regel-Test\n\n"
+            "DMESG FÜR TREIBER-DEBUGGING:\n"
+            "  dmesg -w                 live Kernel-Nachrichten (wie tail -f)\n"
+            "  dmesg | grep -i e1000   Treiber-Nachrichten\n"
+            "  dmesg | grep -i firmware  Firmware-Fehler\n"
+            "  dmesg | grep -i 'error\\|fail'  Allgemeine Fehler\n\n"
+            "TREIBER MANUELL BINDEN:\n"
+            "  echo 'e1000e' > /sys/bus/pci/devices/0000:02:00.0/driver_override\n"
+            "  echo '0000:02:00.0' > /sys/bus/pci/drivers/e1000e/bind"
+        ),
+        syntax       = "lspci -k  |  lsmod  |  modinfo MODULE  |  udevadm info /dev/  |  dmesg -w",
+        example      = (
+            "lspci\n"
+            "lspci -k\n"
+            "lspci -k | grep -A3 'Ethernet'\n"
+            "lsmod | grep e1000\n"
+            "modinfo e1000e\n"
+            "udevadm info /dev/sda\n"
+            "udevadm monitor\n"
+            "dmesg -w\n"
+            "dmesg | grep -i firmware"
+        ),
+        task_description = "Zeige alle PCI-Geräte mit ihren zugehörigen Kernel-Treibern",
+        expected_commands = ["lspci -k"],
+        hint_text    = "lspci -k zeigt PCI-Geräte mit dem aktuell aktiven Kernel-Treiber",
+        quiz_questions = [
+            QuizQuestion(
+                question   = "Was zeigt 'lspci -k' zusätzlich gegenüber dem normalen 'lspci'?",
+                options    = [
+                    "Die IRQ-Nummern der PCI-Geräte",
+                    "Den Kernel-Treiber der für jedes PCI-Gerät aktiv ist",
+                    "Die Speicheradressen der PCI-Geräte",
+                    "Die PCI-Bus-Topologie",
+                ],
+                correct    = 1,
+                explanation = (
+                    "lspci -k zeigt unter jedem Gerät den aktiven Kernel-Treiber:\n"
+                    "  'Kernel driver in use: e1000e'\n"
+                    "  'Kernel modules: e1000e'\n"
+                    "Ideal um zu prüfen ob ein Treiber geladen ist."
+                ),
+                xp_value   = 15,
+            ),
+        ],
+        exam_tip     = (
+            "LPIC-1 Treiber-Debugging:\n"
+            "  lspci -k = PCI + aktiver Treiber\n"
+            "  lsmod = geladene Kernel-Module\n"
+            "  modinfo = Modul-Details (firmware, depends)\n"
+            "  udevadm monitor = live Hardware-Events\n"
+            "  dmesg -w = live Kernel-Log"
+        ),
+        memory_tip   = "lspci -k = 'k'ernel-Treiber. udevadm monitor = live Events. dmesg -w = live Log.",
+        gear_reward  = None,
+        faction_reward = ("Ghost Processors", 15),
+    ),
+
+    # ══════════════════════════════════════════════════════════════════════
+    # 13.21 — /proc Tiefenanalyse
+    # ══════════════════════════════════════════════════════════════════════
+    Mission(
+        mission_id   = "13.21",
+        chapter      = 13,
+        title        = "/proc Tiefenanalyse — PID-Verzeichnisse & Kernel-Infos",
+        mtype        = "DECODE",
+        xp           = 90,
+        speaker      = "KERNEL-ORAKEL",
+        story        = (
+            "KERNEL-ORAKEL: 'Unter /proc lebt der Kernel, Ghost.\n"
+            " Jeder Prozess hat ein Verzeichnis. Jede Datei ist Wissen.\n"
+            " /proc/interrupts zeigt IRQ-Konflikte.\n"
+            " /proc/net/ zeigt Netzwerk-Status. Lese den Kernel.'"
+        ),
+        why_important = (
+            "/proc ist die wichtigste Diagnoseschnittstelle im Linux-Kernel.\n"
+            "LPIC-1 prüft /proc/PID/, /proc/interrupts, /proc/meminfo und /proc/net/.\n"
+            "Ohne /proc-Kenntnisse ist tiefes System-Debugging unmöglich."
+        ),
+        explanation  = (
+            "/PROC TIEFENANALYSE:\n\n"
+            "PROZESS-VERZEICHNISSE:\n"
+            "  /proc/PID/              Verzeichnis für jeden laufenden Prozess\n"
+            "  /proc/PID/cmdline       komplette Befehlszeile (null-getrennt)\n"
+            "  /proc/PID/status        Prozess-Status (State, PID, PPID, Mem)\n"
+            "  /proc/PID/maps          virtuelle Speicher-Mappings\n"
+            "  /proc/PID/fd/           offene File-Deskriptoren (Symlinks)\n"
+            "  /proc/PID/environ       Umgebungsvariablen (null-getrennt)\n"
+            "  /proc/PID/exe           Symlink zur ausführbaren Datei\n"
+            "  /proc/PID/cgroup        cgroup-Zugehörigkeit\n"
+            "  /proc/PID/ns/           Namespace-Symlinks\n"
+            "  /proc/self/             eigener Prozess (Abkürzung)\n\n"
+            "SYSTEM-INFORMATIONEN:\n"
+            "  /proc/interrupts        IRQ-Nutzung pro CPU\n"
+            "  /proc/softirqs          Software-Interrupts\n"
+            "  /proc/meminfo           detaillierte Speicher-Statistiken\n"
+            "  /proc/cpuinfo           CPU-Details (Kerne, Flags, MHz)\n"
+            "  /proc/loadavg           Load Average (1/5/15 Min + Prozessinfo)\n"
+            "  /proc/uptime            Laufzeit + Idle-Zeit in Sekunden\n"
+            "  /proc/vmstat            VM-Statistiken\n"
+            "  /proc/slabinfo          Kernel-Slab-Allocator-Statistiken\n\n"
+            "NETZWERK:\n"
+            "  /proc/net/              Netzwerk-Informationen\n"
+            "  /proc/net/dev           Interface-Statistiken\n"
+            "  /proc/net/tcp           TCP-Verbindungen (hex)\n"
+            "  /proc/net/udp           UDP-Verbindungen\n"
+            "  /proc/net/if_inet6      IPv6-Interfaces\n"
+            "  /proc/net/route         Routing-Tabelle (hex)\n\n"
+            "PRAKTISCHE VERWENDUNG:\n"
+            "  cat /proc/1/cmdline | tr '\\0' ' '   init-Befehlszeile\n"
+            "  ls -la /proc/$$/fd                   eigene FDs\n"
+            "  cat /proc/meminfo | grep Available   freier RAM"
+        ),
+        syntax       = "cat /proc/PID/status  |  cat /proc/interrupts  |  cat /proc/net/dev",
+        example      = (
+            "cat /proc/meminfo\n"
+            "cat /proc/meminfo | grep -i available\n"
+            "cat /proc/interrupts\n"
+            "cat /proc/loadavg\n"
+            "ls /proc/$$/fd\n"
+            "cat /proc/$$/status\n"
+            "cat /proc/net/dev\n"
+            "cat /proc/1/cmdline | tr '\\0' ' '"
+        ),
+        task_description = "Zeige detaillierte Speicher-Informationen aus /proc/meminfo",
+        expected_commands = ["cat /proc/meminfo"],
+        hint_text    = "/proc/meminfo zeigt detaillierte RAM-Statistiken: MemTotal, MemFree, MemAvailable",
+        quiz_questions = [
+            QuizQuestion(
+                question   = "Was enthält /proc/PID/fd/ ?",
+                options    = [
+                    "Die Kernel-Flags des Prozesses",
+                    "Symlinks zu allen geöffneten File-Deskriptoren des Prozesses",
+                    "Die Festplatten-I/O-Statistiken des Prozesses",
+                    "Den vollständigen Quellcode des laufenden Prozesses",
+                ],
+                correct    = 1,
+                explanation = (
+                    "/proc/PID/fd/ enthält Symlinks für jeden offenen File-Deskriptor.\n"
+                    "fd/0 = stdin, fd/1 = stdout, fd/2 = stderr.\n"
+                    "Weitere FDs zeigen auf offene Dateien, Sockets, Pipes.\n"
+                    "Nützlich um zu prüfen welche Dateien ein Prozess offen hat."
+                ),
+                xp_value   = 15,
+            ),
+        ],
+        exam_tip     = (
+            "LPIC-1 /proc:\n"
+            "  /proc/PID/cmdline = Befehlszeile\n"
+            "  /proc/PID/status = Prozess-Zustand\n"
+            "  /proc/PID/fd/ = offene Dateien\n"
+            "  /proc/interrupts = IRQ-Übersicht\n"
+            "  /proc/meminfo = RAM-Details\n"
+            "  /proc/net/dev = Interface-Statistiken"
+        ),
+        memory_tip   = "/proc = Prozesse + Kernel. /proc/PID/ = Prozess-Infos. /proc/net/ = Netzwerk.",
+        gear_reward  = None,
+        faction_reward = ("Ghost Processors", 15),
+    ),
+
+    # ══════════════════════════════════════════════════════════════════════
+    # 13.22 — Kernel-Panic analysieren
+    # ══════════════════════════════════════════════════════════════════════
+    Mission(
+        mission_id   = "13.22",
+        chapter      = 13,
+        title        = "Kernel-Panic — Oops-Messages & kdump analysieren",
+        mtype        = "DECODE",
+        xp           = 100,
+        speaker      = "VECTOR",
+        story        = (
+            "VECTOR: 'System hat sich aufgehängt, Ghost. Kernel-Panic.\n"
+            " Oops-Message im Log. Stack-Trace. Treiber-Fehler.\n"
+            " kdump hat einen Core-Dump gerettet.\n"
+            " Analysiere. Finde den Schuldigen. Verhindere den nächsten Crash.'"
+        ),
+        why_important = (
+            "Kernel-Panic-Analyse ist für Senior-Sysadmins und LPIC-2 wichtig.\n"
+            "LPIC-1 erwartet Grundkenntnisse über Oops-Messages und kernel.panic-Parameter.\n"
+            "kdump/kexec ermöglichen Crash-Dumps für Post-Mortem-Analyse."
+        ),
+        explanation  = (
+            "KERNEL-PANIC & OOPS:\n\n"
+            "KERNEL OOPS:\n"
+            "  Ein Oops ist ein nicht-fataler Kernel-Fehler.\n"
+            "  Der Prozess wird beendet, System läuft weiter.\n"
+            "  Enthält: Fehlercode, Register-Dump, Stack-Trace\n"
+            "  Quelle: dmesg | grep -i oops\n\n"
+            "KERNEL PANIC:\n"
+            "  Fataler Fehler — System friert ein oder startet neu.\n"
+            "  Ursachen: NULL-Pointer, Stack-Overflow, Treiber-Bug\n"
+            "  Anzeige: 'Kernel panic - not syncing: ...'\n\n"
+            "KERNEL PANIC PARAMETER:\n"
+            "  kernel.panic = 0       System friert bei Panic ein (Standard)\n"
+            "  kernel.panic = 10      automatischer Neustart nach 10 Sekunden\n"
+            "  kernel.panic = -1      sofortiger Neustart\n"
+            "  sysctl -w kernel.panic=10\n"
+            "  # Permanent in /etc/sysctl.conf:\n"
+            "    kernel.panic = 10\n\n"
+            "KERNEL OOPS LESEN:\n"
+            "  BUG: unable to handle kernel NULL pointer\n"
+            "  IP: [<ffffffff8123456>] some_function+0x10/0x50\n"
+            "  Call Trace:\n"
+            "    [<ffffffff>] another_function+0x20\n"
+            "  Module: faulty_driver\n\n"
+            "KDUMP / KEXEC:\n"
+            "  kexec = Kernel-in-Kernel laden (für Crash-Kernel)\n"
+            "  kdump = Crash-Dump-Mechanismus\n"
+            "  Ablauf:\n"
+            "    1. Crash-Kernel bei Boot reservieren (crashkernel=512M)\n"
+            "    2. Bei Panic: kexec bootet den Crash-Kernel\n"
+            "    3. Crash-Kernel schreibt Dump nach /var/crash/\n"
+            "  Tools: crash (Debugger), makedumpfile\n\n"
+            "DIAGNOSE-TOOLS:\n"
+            "  dmesg | grep -i 'oops\\|panic\\|bug'\n"
+            "  journalctl -k -p crit\n"
+            "  /var/log/kern.log       Kernel-Log (falls vorhanden)"
+        ),
+        syntax       = "dmesg | grep -i oops  |  sysctl kernel.panic  |  journalctl -k -p crit",
+        example      = (
+            "sysctl kernel.panic\n"
+            "sysctl -w kernel.panic=10\n"
+            "dmesg | grep -i 'oops\\|panic\\|bug'\n"
+            "journalctl -k -p crit\n"
+            "journalctl -k -b -1 | grep -i panic\n"
+            "# kdump status:\n"
+            "systemctl status kdump"
+        ),
+        task_description = "Prüfe den aktuellen kernel.panic-Wert (Auto-Reboot bei Panic)",
+        expected_commands = ["sysctl kernel.panic"],
+        hint_text    = "sysctl kernel.panic zeigt den Wert für Auto-Reboot nach Kernel-Panic (0=kein Neustart)",
+        quiz_questions = [
+            QuizQuestion(
+                question   = "Was bewirkt 'kernel.panic = 10' in /etc/sysctl.conf?",
+                options    = [
+                    "Das System löst nach 10 Sekunden ohne Aktivität eine Panic aus",
+                    "Das System startet nach einer Kernel-Panic automatisch nach 10 Sekunden neu",
+                    "Das System erlaubt maximal 10 gleichzeitige Kernel-Panics",
+                    "Die Panic-Meldung wird 10 Mal auf der Konsole ausgegeben",
+                ],
+                correct    = 1,
+                explanation = (
+                    "kernel.panic = N bedeutet: nach N Sekunden automatisch neu starten.\n"
+                    "kernel.panic = 0 = System friert ein (kein automatischer Neustart).\n"
+                    "kernel.panic = -1 = sofortiger Neustart ohne Verzögerung.\n"
+                    "Produktions-Empfehlung: kernel.panic = 10"
+                ),
+                xp_value   = 15,
+            ),
+        ],
+        exam_tip     = (
+            "LPIC-1 Kernel-Panic:\n"
+            "  kernel.panic = 0 = eingefroren (Standard)\n"
+            "  kernel.panic = N = Neustart nach N Sekunden\n"
+            "  Oops = nicht-fataler Kernel-Fehler\n"
+            "  Panic = fataler Fehler (System stoppt)\n"
+            "  dmesg | grep -i panic = Panics im Log suchen"
+        ),
+        memory_tip   = "kernel.panic=10 = Neustart nach 10s. Oops=überlebbar. Panic=System tot.",
+        gear_reward  = None,
+        faction_reward = ("Ghost Processors", 15),
+    ),
+
+    # ══════════════════════════════════════════════════════════════════════
+    # 13.23 — sysfs & udev Regeln schreiben
+    # ══════════════════════════════════════════════════════════════════════
+    Mission(
+        mission_id   = "13.23",
+        chapter      = 13,
+        title        = "sysfs & udev Regeln — eigene Gerätekonfiguration",
+        mtype        = "CONSTRUCT",
+        xp           = 95,
+        speaker      = "CIPHER",
+        story        = (
+            "CIPHER: 'USB-Gerät bekommt immer einen anderen Namen, Ghost.\n"
+            " /dev/ttyUSB0 heute, /dev/ttyUSB1 morgen.\n"
+            " udev-Regel nach Vendor-ID — immer /dev/neonserial.\n"
+            " Schreibe die Regel. Mache Hardware beherrschbar.'"
+        ),
+        why_important = (
+            "udev-Regeln ermöglichen stabile Gerätennamen und Automatisierung.\n"
+            "LPIC-1 prüft udev-Regelformat, ATTR, KERNEL, SYMLINK und RUN.\n"
+            "Professionelle Umgebungen nutzen udev-Regeln für konsistente /dev-Einträge."
+        ),
+        explanation  = (
+            "UDEV REGELN SCHREIBEN:\n\n"
+            "REGELFORMAT:\n"
+            "  Schlüssel==\"Wert\", Schlüssel==\"Wert\", AKTION+=\"wert\"\n"
+            "  == für Matching, = oder += für Zuweisung\n\n"
+            "RULE-DATEIEN:\n"
+            "  /etc/udev/rules.d/         eigene Regeln (Priorität)\n"
+            "  /usr/lib/udev/rules.d/     System-Regeln\n"
+            "  Nummerierung: 99-custom.rules (höher = später geladen)\n\n"
+            "MATCH-SCHLÜSSEL:\n"
+            "  ACTION      add, remove, change\n"
+            "  SUBSYSTEM   usb, net, block, tty, input, ...\n"
+            "  KERNEL      Gerätenamens-Muster (Wildcards erlaubt)\n"
+            "  ATTR{x}     sysfs-Attribut des Geräts\n"
+            "  ENV{x}      Umgebungsvariable\n"
+            "  DRIVERS     Treiber-Name\n\n"
+            "ZUWEISUNGS-SCHLÜSSEL:\n"
+            "  NAME        Gerätename in /dev\n"
+            "  SYMLINK     Symlink erstellen (+=, mehrere möglich)\n"
+            "  OWNER       Besitzer setzen\n"
+            "  GROUP       Gruppe setzen\n"
+            "  MODE        Dateirechte (z.B. '0660')\n"
+            "  RUN         Programm nach Event ausführen\n"
+            "  LABEL       Sprung-Ziel\n\n"
+            "BEISPIEL-REGELN:\n"
+            "  # USB-Gerät nach Vendor-ID benennen:\n"
+            "  SUBSYSTEM==\"tty\", ATTRS{idVendor}==\"0403\", \\\n"
+            "  ATTRS{idProduct}==\"6001\", SYMLINK+=\"neonserial\"\n\n"
+            "  # Festplatte nach Seriennummer:\n"
+            "  SUBSYSTEM==\"block\", ATTRS{serial}==\"WD123456\", \\\n"
+            "  SYMLINK+=\"disk/backup\"\n\n"
+            "  # Script bei USB-Einstecken:\n"
+            "  ACTION==\"add\", SUBSYSTEM==\"usb\", \\\n"
+            "  RUN+=\"/usr/local/bin/usb-inserted.sh\"\n\n"
+            "DIAGNOSE & RELOAD:\n"
+            "  udevadm info -a /dev/ttyUSB0    Attribute anzeigen\n"
+            "  udevadm test /sys/bus/usb/...   Regel testen\n"
+            "  udevadm control --reload-rules  Regeln neu laden\n"
+            "  udevadm trigger                 Regeln auf Geräte anwenden"
+        ),
+        syntax       = "udevadm info -a /dev/  |  udevadm control --reload-rules  |  udevadm trigger",
+        example      = (
+            "# Attribute eines Geräts anzeigen (für Regelschreiben):\n"
+            "udevadm info -a /dev/ttyUSB0\n"
+            "# Regel testen:\n"
+            "udevadm test $(udevadm info -q path /dev/ttyUSB0)\n"
+            "# Regeln neu laden:\n"
+            "udevadm control --reload-rules\n"
+            "udevadm trigger\n"
+            "# Regeldatei:\n"
+            "ls /etc/udev/rules.d/"
+        ),
+        task_description = "Lade udev-Regeln neu und wende sie auf Geräte an",
+        expected_commands = ["udevadm control --reload-rules"],
+        hint_text    = "udevadm control --reload-rules lädt alle udev-Regeln neu ohne System-Neustart",
+        quiz_questions = [
+            QuizQuestion(
+                question   = "Welcher Schlüssel in einer udev-Regel erstellt einen Symlink in /dev/?",
+                options    = [
+                    "NAME",
+                    "LINK",
+                    "SYMLINK",
+                    "ALIAS",
+                ],
+                correct    = 2,
+                explanation = (
+                    "SYMLINK+= erstellt einen Symlink im /dev/-Verzeichnis.\n"
+                    "Beispiel: SYMLINK+=\"neonserial\" erstellt /dev/neonserial.\n"
+                    "NAME= ändert den Gerätenamen selbst (seltener genutzt).\n"
+                    "+= erlaubt mehrere Symlinks: SYMLINK+=\"link1\" SYMLINK+=\"link2\""
+                ),
+                xp_value   = 15,
+            ),
+        ],
+        exam_tip     = (
+            "LPIC-1 udev-Regeln:\n"
+            "  /etc/udev/rules.d/ = eigene Regeln\n"
+            "  SUBSYSTEM, ATTR{}, KERNEL = Matching\n"
+            "  SYMLINK+= = Symlink erstellen\n"
+            "  RUN+= = Programm ausführen\n"
+            "  udevadm control --reload-rules = Regeln neu laden\n"
+            "  udevadm info -a = Attribute für Regelschreiben"
+        ),
+        memory_tip   = "udev-Regel: MATCH-Keys==\"Wert\" → ACTION-Keys+=\"Wert\". In /etc/udev/rules.d/",
+        gear_reward  = None,
+        faction_reward = ("Ghost Processors", 15),
+    ),
+
+    # ══════════════════════════════════════════════════════════════════════
+    # 13.24 — QUIZ (formerly 13.16)
+    # ══════════════════════════════════════════════════════════════════════
+    Mission(
+        mission_id   = "13.24",
+        chapter      = 13,
+        title        = "QUIZ — Kernel & Hardware Wissenstest",
+        mtype        = "QUIZ",
+        xp           = 150,
+        speaker      = "CIPHER",
+        story        = (
+            "CIPHER: 'Der Kernel-Boss wartet, Ghost.\n"
+            " Vor dem finalen Gefecht: Kernel-Module, sysctl, udev.\n"
+            " Topic 101.1 komplett. Kein Fehler erlaubt.'"
+        ),
+        why_important = "Quiz-Wiederholung für LPIC-1 Prüfung Topic 101.1",
+        explanation   = "Beantworte die Fragen zu Kernel-Modulen und Hardware.",
+        syntax        = "",
+        example       = "",
+        task_description = "Quiz: Kernel & Hardware",
+        expected_commands = [],
+        hint_text     = "",
+        quiz_questions = [
+            QuizQuestion(
+                question   = "Was ist der Unterschied zwischen 'modprobe' und 'insmod'?",
+                options    = [
+                    "A) modprobe ist älter, insmod ist neuer",
+                    "B) modprobe löst Abhängigkeiten auf, insmod nicht",
+                    "C) insmod lädt Module permanent, modprobe temporär",
+                    "D) Kein Unterschied",
+                ],
+                correct    = "B",
+                explanation = (
+                    "modprobe löst Modul-Abhängigkeiten automatisch auf.\n"
+                    "insmod lädt nur das angegebene Modul — ohne Abhängigkeiten.\n"
+                    "Deshalb: modprobe bevorzugen!"
+                ),
+                xp_value   = 30,
+            ),
+            QuizQuestion(
+                question   = "Wie wird ein Kernel-Modul dauerhaft vom Laden abgehalten?",
+                options    = [
+                    "A) rmmod -f MODUL",
+                    "B) 'blacklist MODUL' in /etc/modprobe.d/blacklist.conf",
+                    "C) 'disable MODUL' in /etc/modules",
+                    "D) modprobe --disable MODUL",
+                ],
+                correct    = "B",
+                explanation = (
+                    "'blacklist MODULNAME' in einer Datei unter /etc/modprobe.d/\n"
+                    "verhindert das automatische Laden dauerhaft.\n"
+                    "Für absolute Sperre: 'install MODUL /bin/false'"
+                ),
+                xp_value   = 30,
+            ),
+            QuizQuestion(
+                question   = "Welcher Befehl macht IP-Forwarding TEMPORÄR aktiv?",
+                options    = [
+                    "A) sysctl -p net.ipv4.ip_forward=1",
+                    "B) echo 1 >> /etc/sysctl.conf",
+                    "C) sysctl -w net.ipv4.ip_forward=1",
+                    "D) ip forward enable",
+                ],
+                correct    = "C",
+                explanation = (
+                    "sysctl -w setzt Wert sofort (temporär bis Neustart).\n"
+                    "sysctl -p lädt /etc/sysctl.conf (persistent gespeichert).\n"
+                    "Für permanent: erst in /etc/sysctl.conf eintragen, dann sysctl -p"
+                ),
+                xp_value   = 30,
+            ),
+            QuizQuestion(
+                question   = "Was zeigt 'uname -m'?",
+                options    = [
+                    "A) Die Kernel-Version",
+                    "B) Den Hostnamen",
+                    "C) Die CPU-Architektur (z.B. x86_64)",
+                    "D) Die Uptime",
+                ],
+                correct    = "C",
+                explanation = (
+                    "uname Flags:\n"
+                    "  -r = release (Kernel-Version)\n"
+                    "  -m = machine (Architektur: x86_64, aarch64)\n"
+                    "  -n = nodename (Hostname)\n"
+                    "  -s = sysname (Linux)\n"
+                    "  -a = all (alles)"
+                ),
+                xp_value   = 30,
+            ),
+            QuizQuestion(
+                question   = "Was enthält /proc/sys/?",
+                options    = [
+                    "A) Kernel-Module als Dateien",
+                    "B) Echtzeit-sysctl-Parameter (les- und schreibbar)",
+                    "C) Systemd-Unit-Dateien",
+                    "D) Gerätedateien",
+                ],
+                correct    = "B",
+                explanation = (
+                    "/proc/sys/ spiegelt die sysctl-Parameter.\n"
+                    "Lesen: cat /proc/sys/net/ipv4/ip_forward\n"
+                    "Schreiben: echo 1 > /proc/sys/net/ipv4/ip_forward\n"
+                    "= äquivalent zu sysctl -w net.ipv4.ip_forward=1"
+                ),
+                xp_value   = 30,
+            ),
+        ],
+        exam_tip     = (
+            "LPIC-1 Kernel-Schwerpunkte:\n"
+            "  - modprobe (Deps!) vs insmod (kein Deps)\n"
+            "  - Blacklisting: /etc/modprobe.d/blacklist.conf\n"
+            "  - sysctl -w=temp, /etc/sysctl.conf + sysctl -p=dauerhaft\n"
+            "  - uname: -r=version, -m=arch, -a=alles\n"
+            "  - dmesg -T = mit Zeitstempel"
+        ),
+        memory_tip   = "",
+        gear_reward  = None,
+        faction_reward = ("Kernel Syndicate", 15),
+    ),
+
+    # ══════════════════════════════════════════════════════════════════════
+    # 13.BOSS — KERNEL DAEMON v13.0
+    # ══════════════════════════════════════════════════════════════════════
+    Mission(
+        mission_id   = "13.boss",
+        chapter      = 13,
+        title        = "BOSS — KERNEL DAEMON v13.0",
+        mtype        = "BOSS",
+        xp           = 320,
+        speaker      = "SYSTEM",
+        story        = (
+            "SYSTEM CRITICAL: KERNEL DAEMON v13.0 hat Ring-0 übernommen.\n"
+            "Er hat ein bösartiges Modul geladen. IP-Forwarding aktiviert.\n"
+            "Kernel-Parameter manipuliert. /proc korrumpiert.\n"
+            "Zara Z3R0: 'Entlade sein Modul. Deaktiviere Forwarding.\n"
+            " Blackliste es. Dann lösch ihn aus dem Kernel-Speicher.'"
+        ),
+        why_important = "Abschluss-Boss für Topic 101.1 (Kernel, Module, sysctl)",
+        explanation  = (
+            "BOSS-CHALLENGE: Kernel Gauntlet\n\n"
+            "Deine Mission:\n"
+            "1) Bösartiges Modul identifizieren\n"
+            "2) Modul entladen\n"
+            "3) IP-Forwarding deaktivieren\n"
+            "4) Kernel-Status prüfen\n\n"
+            "KOMMANDOS:\n"
+            "  lsmod | grep evil\n"
+            "  modprobe -r evil_module\n"
+            "  sysctl -w net.ipv4.ip_forward=0\n"
+            "  dmesg -T | tail\n"
+            "  udevadm control --reload-rules"
+        ),
+        syntax       = "",
+        example      = (
+            "lsmod\n"
+            "modprobe -r rootkit_mod\n"
+            "sysctl -w net.ipv4.ip_forward=0\n"
+            "echo 'blacklist rootkit_mod' >> /etc/modprobe.d/blacklist.conf\n"
+            "dmesg -T | grep -i rootkit\n"
+            "uname -r"
+        ),
+        task_description = "BOSS: Deaktiviere IP-Forwarding mit sysctl",
+        expected_commands = ["sysctl -w net.ipv4.ip_forward=0"],
+        hint_text    = "sysctl -w net.ipv4.ip_forward=0 deaktiviert IP-Weiterleitung sofort",
+        exam_tip     = (
+            "LPIC-1 FINAL KERNEL CHECK:\n"
+            "  lsmod → geladene Module\n"
+            "  modprobe -r → Modul entladen\n"
+            "  sysctl -w → sofort ändern\n"
+            "  blacklist → dauerhaft sperren\n"
+            "  dmesg -T → Kernel-Log mit Zeit\n"
+            "  uname -r → Kernel-Version"
+        ),
+        memory_tip   = "Merkhilfe: BOSS = Bring Order to System Stability",
+        gear_reward  = "kernel_beacon",
+        faction_reward = ("Kernel Syndicate", 40),
+    ),
+]

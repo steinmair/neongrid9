@@ -1,0 +1,1466 @@
+"""
+NeonGrid-9 :: Kapitel 21 — NETWORK SERVICES PROTOCOL
+LPIC-1 Topic 108.3 / 109.2 / 109.3 / 109.4
+Netzwerkdienste: NFS, Samba, DHCP, DNS, LDAP, Mail
+
+"In NeonGrid-9 kommunizieren alle Sektoren miteinander.
+ Dateien werden geteilt. Dienste werden entdeckt.
+ Namen werden aufgelöst. Netzwerk ist Blut."
+"""
+
+from engine.mission_engine import Mission, QuizQuestion
+
+CHAPTER_21_MISSIONS: list[Mission] = [
+
+    Mission(
+        mission_id   = "21.01",
+        chapter      = 21,
+        title        = "Network Services — Einführung",
+        mtype        = "SCAN",
+        xp           = 70,
+        speaker      = "DAEMON",
+        story        = (
+            "DAEMON: 'Netzwerkdienste. Der Kitt des Systems.\n"
+            " NFS teilt Dateien. Samba spricht mit Windows.\n"
+            " DHCP vergibt IPs. DNS löst Namen auf.\n"
+            " Alle Dienste brauchen dich. Du brauchst alle Dienste.'"
+        ),
+        why_important = "Netzwerkdienste sind fundamentale LPIC-1 Topic 108-109 Themen.",
+        explanation  = (
+            "NETZWERKDIENSTE ÜBERBLICK:\n\n"
+            "DATEI-SHARING:\n"
+            "  NFS   = Network File System (Unix/Linux)\n"
+            "  Samba = SMB/CIFS (Windows-kompatibel)\n"
+            "  SFTP  = SSH File Transfer Protocol\n\n"
+            "NETZWERK-KONFIGURATION:\n"
+            "  DHCP  = Dynamische IP-Vergabe\n"
+            "  DNS   = Namensauflösung\n"
+            "  NTP   = Zeitsynchronisation\n\n"
+            "VERZEICHNISDIENSTE:\n"
+            "  LDAP  = Lightweight Directory Access Protocol\n"
+            "  NIS   = Network Information Service (veraltet)\n"
+            "  nsswitch = Reihenfolge der Namensauflösung\n\n"
+            "WICHTIGE PORTS:\n"
+            "  NFS: 2049/TCP+UDP\n"
+            "  Samba: 445/TCP (SMB), 139/TCP (NetBIOS)\n"
+            "  DHCP: 67/UDP (Server), 68/UDP (Client)\n"
+            "  DNS: 53/TCP+UDP\n"
+            "  LDAP: 389/TCP, LDAPS: 636/TCP"
+        ),
+        syntax       = "showmount -e NFSSERVER  (NFS-Exporte anzeigen)",
+        example      = "showmount -e localhost && smbclient -L localhost -N",
+        task_description = "Zeige NFS-Export-Info mit showmount -e localhost",
+        expected_commands = ["showmount -e localhost"],
+        hint_text    = "showmount -e SERVER zeigt die NFS-Exporte eines Servers",
+        quiz_questions = [
+            QuizQuestion(
+                question = "Auf welchem Port läuft NFS standardmäßig?",
+                options  = ["2049/TCP+UDP", "445/TCP", "139/TCP", "2048/UDP"],
+                correct  = 0,
+                explanation = "NFS nutzt Port 2049. Samba: 445/TCP (SMB direkt), 139/TCP (NetBIOS).",
+                xp_value = 15,
+            ),
+        ],
+        exam_tip     = "NFS=2049 | Samba=445/139 | DHCP=67/68 | DNS=53 | LDAP=389/636",
+        memory_tip   = "Netzwerkdienste = gemeinsam genutzte Ressourcen im Netz.",
+        gear_reward  = None,
+        faction_reward = ("Net Runners", 20),
+    ),
+
+    Mission(
+        mission_id   = "21.02",
+        chapter      = 21,
+        title        = "NFS: Network File System Client",
+        mtype        = "CONSTRUCT",
+        xp           = 90,
+        speaker      = "DAEMON",
+        story        = (
+            "DAEMON: 'Der Backup-Server teilt /data über NFS.\n"
+            " Mounte es. Nutze es wie ein lokales Verzeichnis.\n"
+            " NFS macht Remote-Dateisysteme transparent.'"
+        ),
+        why_important = (
+            "NFS ist der Standard für Datei-Sharing zwischen Unix/Linux-Systemen.\n"
+            "LPIC-1 testet NFS-Client-Konfiguration und /etc/fstab-Einträge."
+        ),
+        explanation  = (
+            "NFS CLIENT:\n\n"
+            "EXPORTS ANZEIGEN:\n"
+            "  showmount -e NFSSERVER    Verfügbare Exporte anzeigen\n\n"
+            "MANUELL MOUNTEN:\n"
+            "  mount -t nfs SERVER:/export /mnt/nfs\n"
+            "  mount -t nfs4 SERVER:/export /mnt/nfs  (NFSv4)\n"
+            "  mount -o ro SERVER:/export /mnt/nfs    (read-only)\n\n"
+            "/ETC/FSTAB EINTRAG:\n"
+            "  server:/export  /mnt/nfs  nfs  defaults,_netdev  0 0\n"
+            "  _netdev = erst mounten wenn Netzwerk verfügbar\n"
+            "  nfsvers=4,rsize=8192,wsize=8192 = Performance-Optionen\n\n"
+            "NFSV4:\n"
+            "  Einfacher als NFSv3 (kein rpcbind nötig)\n"
+            "  Port 2049 TCP\n"
+            "  mount -t nfs4 server:/ /mnt/nfs\n\n"
+            "UNMOUNTEN:\n"
+            "  umount /mnt/nfs\n"
+            "  umount -l /mnt/nfs  (lazy: wenn nicht mehr belegt)\n\n"
+            "NFS-CLIENT PAKETE:\n"
+            "  apt install nfs-common"
+        ),
+        syntax       = "mount -t nfs SERVER:/export /mnt/nfs",
+        example      = "showmount -e 192.168.1.10 && mount -t nfs4 192.168.1.10:/data /mnt/nfs",
+        task_description = "Zeige NFS-Mounts mit mount | grep nfs",
+        expected_commands = ["mount | grep nfs"],
+        hint_text    = "mount | grep nfs zeigt alle gemounteten NFS-Dateisysteme",
+        quiz_questions = [
+            QuizQuestion(
+                question = "Was bedeutet `_netdev` in einem /etc/fstab NFS-Eintrag?",
+                options  = [
+                    "Erst mounten wenn das Netzwerk verfügbar ist",
+                    "NFS-Version festlegen",
+                    "Mount im Hintergrund",
+                    "Keine feste Mount-Reihenfolge",
+                ],
+                correct  = 0,
+                explanation = "_netdev verhindert Fehler beim Boot — NFS wird erst gemountet wenn das Netzwerk oben ist.",
+                xp_value = 15,
+            ),
+        ],
+        exam_tip     = "mount -t nfs | -t nfs4. _netdev in fstab wichtig! showmount -e = Exporte anzeigen.",
+        memory_tip   = "_netdev = Netzwerk-Gerät. Wartet auf Netzwerk vor dem Mount.",
+        gear_reward  = None,
+        faction_reward = ("Net Runners", 15),
+    ),
+
+    Mission(
+        mission_id   = "21.03",
+        chapter      = 21,
+        title        = "NFS Server: Exporte konfigurieren",
+        mtype        = "CONSTRUCT",
+        xp           = 90,
+        speaker      = "PHANTOM",
+        story        = (
+            "PHANTOM: 'Jetzt die Serverseite. /etc/exports.\n"
+            " Definiere was exportiert wird. Wer zugreifen darf.\n"
+            " exportfs -a aktiviert es.'"
+        ),
+        why_important = (
+            "NFS-Server-Konfiguration über /etc/exports ist LPIC-1 Prüfungsthema.\n"
+            "exportfs -a aktiviert neue Exporte ohne NFS-Neustart."
+        ),
+        explanation  = (
+            "NFS SERVER KONFIGURATION:\n\n"
+            "PAKETE:\n"
+            "  apt install nfs-kernel-server\n\n"
+            "/ETC/EXPORTS SYNTAX:\n"
+            "  /pfad  client(optionen)\n\n"
+            "BEISPIELE:\n"
+            "  /data  192.168.1.0/24(rw,sync,no_subtree_check)\n"
+            "  /home  *(ro,sync)\n"
+            "  /backup  nfsclients(rw,sync,no_root_squash)\n\n"
+            "OPTIONEN:\n"
+            "  rw            Read-Write\n"
+            "  ro            Read-Only\n"
+            "  sync          Schreiben synchron (sicher)\n"
+            "  async         Asynchron (schneller, weniger sicher)\n"
+            "  no_subtree_check  Performanz-Verbesserung\n"
+            "  root_squash   root des Clients → nobody (Standard)\n"
+            "  no_root_squash  root behält root-Rechte (gefährlich!)\n\n"
+            "EXPORTE AKTIVIEREN:\n"
+            "  exportfs -a     Alle Exporte aktivieren\n"
+            "  exportfs -v     Aktive Exporte anzeigen\n"
+            "  exportfs -r     Neu laden\n"
+            "  systemctl start nfs-kernel-server"
+        ),
+        syntax       = "/pfad  client(rw,sync,no_subtree_check)  in /etc/exports",
+        example      = "cat /etc/exports && exportfs -v",
+        task_description = "Zeige NFS-Exporte mit exportfs -v",
+        expected_commands = ["exportfs -v"],
+        hint_text    = "exportfs -v zeigt alle aktiven NFS-Exporte",
+        quiz_questions = [
+            QuizQuestion(
+                question = "Was macht `no_root_squash` in /etc/exports?",
+                options  = [
+                    "root des NFS-Clients behält root-Rechte auf dem Server",
+                    "root wird zu nobody gemappt (Standard: root_squash)",
+                    "kein Squash für normale User",
+                    "Deaktiviert alle Squash-Optionen",
+                ],
+                correct  = 0,
+                explanation = "root_squash (Standard): root→nobody. no_root_squash: root bleibt root. Gefährlich!",
+                xp_value = 15,
+            ),
+        ],
+        exam_tip     = "exportfs -a = aktivieren | exportfs -v = anzeigen | root_squash = Sicherheit",
+        memory_tip   = "squash = quetschen. root_squash = root auf nobody squashen.",
+        gear_reward  = None,
+        faction_reward = ("Net Runners", 15),
+    ),
+
+    Mission(
+        mission_id   = "21.04",
+        chapter      = 21,
+        title        = "Samba: Windows-Dateifreigabe",
+        mtype        = "SCAN",
+        xp           = 90,
+        speaker      = "DAEMON",
+        story        = (
+            "DAEMON: 'Windows im Netz. Samba übersetzt.\n"
+            " SMB/CIFS Protokoll. Linux gibt Ordner frei.\n"
+            " Windows sieht Netzlaufwerke.'"
+        ),
+        why_important = (
+            "Samba ermöglicht Dateifreigabe zwischen Linux und Windows.\n"
+            "LPIC-1 Topic 109.2 — Grundkonfiguration."
+        ),
+        explanation  = (
+            "SAMBA — SMB/CIFS FÜR LINUX:\n\n"
+            "INSTALLATION:\n"
+            "  apt install samba smbclient\n\n"
+            "KONFIGURATION (/etc/samba/smb.conf):\n"
+            "  [global]\n"
+            "    workgroup = WORKGROUP\n"
+            "    server string = NeonGrid File Server\n"
+            "    security = user\n\n"
+            "  [data]\n"
+            "    path = /srv/samba/data\n"
+            "    browseable = yes\n"
+            "    read only = no\n"
+            "    valid users = ghost, alice\n\n"
+            "BENUTZER HINZUFÜGEN:\n"
+            "  smbpasswd -a ghost      Samba-User + Passwort\n"
+            "  smbpasswd -e ghost      Aktivieren\n"
+            "  pdbedit -L              Samba-User auflisten\n\n"
+            "DIENSTE:\n"
+            "  systemctl start smbd nmbd\n"
+            "  testparm               Konfiguration prüfen\n\n"
+            "CLIENT:\n"
+            "  smbclient -L SERVER -N  Freigaben anzeigen\n"
+            "  smbclient //SERVER/share -U user\n"
+            "  mount -t cifs //SERVER/share /mnt -o user=ghost"
+        ),
+        syntax       = "smbclient -L SERVER -N  (Freigaben anzeigen)",
+        example      = "testparm -s && smbclient -L localhost -N",
+        task_description = "Prüfe Samba-Konfiguration mit testparm",
+        expected_commands = ["testparm"],
+        hint_text    = "testparm prüft die /etc/samba/smb.conf auf Fehler",
+        quiz_questions = [
+            QuizQuestion(
+                question = "Welcher Befehl fügt einen Samba-Benutzer mit Passwort hinzu?",
+                options  = [
+                    "smbpasswd -a benutzername",
+                    "adduser --samba benutzername",
+                    "sambauser -add benutzername",
+                    "pdbedit -a benutzername",
+                ],
+                correct  = 0,
+                explanation = "smbpasswd -a = add user. Samba hat eine eigene Passwort-Datenbank (getrennt von /etc/passwd).",
+                xp_value = 15,
+            ),
+        ],
+        exam_tip     = "testparm = Config prüfen. smbpasswd -a = User. smbd+nmbd = Dienste. /etc/samba/smb.conf",
+        memory_tip   = "Samba = Brücke zwischen Linux und Windows. SMB = Server Message Block.",
+        gear_reward  = None,
+        faction_reward = ("Net Runners", 15),
+    ),
+
+    Mission(
+        mission_id   = "21.05",
+        chapter      = 21,
+        title        = "CIFS/Samba mounten mit /etc/fstab",
+        mtype        = "CONSTRUCT",
+        xp           = 80,
+        speaker      = "PHANTOM",
+        story        = (
+            "PHANTOM: 'Das Windows-Laufwerk bei jedem Boot einbinden.\n"
+            " /etc/fstab. cifs-utils. Credentials-Datei.\n"
+            " Kein Passwort im Klartext.'"
+        ),
+        why_important = (
+            "CIFS-Mounts via fstab ermöglichen persistente Windows-Freigaben.\n"
+            "Credentials sicher in separater Datei speichern."
+        ),
+        explanation  = (
+            "CIFS/SAMBA IN /ETC/FSTAB:\n\n"
+            "PAKET:\n"
+            "  apt install cifs-utils\n\n"
+            "MANUELL MOUNTEN:\n"
+            "  mount -t cifs //server/share /mnt -o user=ghost,password=secret\n"
+            "  mount -t cifs //server/share /mnt -o credentials=/etc/samba/creds\n\n"
+            "CREDENTIALS-DATEI (/etc/samba/creds):\n"
+            "  username=ghost\n"
+            "  password=secret\n"
+            "  chmod 600 /etc/samba/creds  (nur root lesen!)\n\n"
+            "/ETC/FSTAB EINTRAG:\n"
+            "  //server/share  /mnt/win  cifs  credentials=/etc/samba/creds,_netdev,uid=1000  0 0\n\n"
+            "OPTIONEN:\n"
+            "  uid=1000        Lokaler Besitzer der Dateien\n"
+            "  gid=1000        Lokale Gruppe\n"
+            "  file_mode=0644  Datei-Berechtigungen\n"
+            "  dir_mode=0755   Verzeichnis-Berechtigungen\n"
+            "  vers=3.0        SMB-Version erzwingen\n"
+            "  _netdev         Wartet auf Netzwerk"
+        ),
+        syntax       = "mount -t cifs //SERVER/SHARE /mnt -o credentials=/etc/samba/creds",
+        example      = "mount -t cifs //192.168.1.5/data /mnt/win -o credentials=/etc/samba/ghost.creds,uid=1000",
+        task_description = "Zeige CIFS-Mounts mit mount | grep cifs",
+        expected_commands = ["mount | grep cifs"],
+        hint_text    = "mount | grep cifs zeigt alle gemounteten CIFS/Samba-Dateisysteme",
+        quiz_questions = [
+            QuizQuestion(
+                question = "Warum sollte man Samba-Credentials in einer separaten Datei speichern?",
+                options  = [
+                    "Um Passwörter nicht im Klartext in /etc/fstab zu haben",
+                    "Samba kann Passwörter in fstab nicht lesen",
+                    "Für bessere Performance",
+                    "Für IPv6-Kompatibilität",
+                ],
+                correct  = 0,
+                explanation = "Passwörter in /etc/fstab sind für alle lesbar. Credentials-Datei kann chmod 600 haben.",
+                xp_value = 15,
+            ),
+        ],
+        exam_tip     = "mount -t cifs. credentials=/file (chmod 600!). _netdev. uid/gid für Besitzer.",
+        memory_tip   = "Credentials-Datei = Safe für Passwörter. chmod 600 = nur root liest.",
+        gear_reward  = None,
+        faction_reward = ("Net Runners", 15),
+    ),
+
+    Mission(
+        mission_id   = "21.06",
+        chapter      = 21,
+        title        = "DHCP Client: dhclient & dhcpcd",
+        mtype        = "SCAN",
+        xp           = 80,
+        speaker      = "DAEMON",
+        story        = (
+            "DAEMON: 'Keine statische IP? DHCP vergibt sie.\n"
+            " dhclient holt eine IP vom Server.\n"
+            " Lease. Verlängerung. Release. Das Protokoll kennen.'"
+        ),
+        why_important = (
+            "DHCP-Client-Konfiguration ist fundamentales Netzwerk-Wissen.\n"
+            "dhclient und NetworkManager sind die Standard-Tools."
+        ),
+        explanation  = (
+            "DHCP CLIENT:\n\n"
+            "DHCLIENT (klassisch):\n"
+            "  dhclient eth0               IP über DHCP beziehen\n"
+            "  dhclient -r eth0            Lease freigeben (release)\n"
+            "  dhclient -v eth0            Verbose\n"
+            "  dhclient -d eth0            Foreground/Debug\n\n"
+            "LEASE-DATEI:\n"
+            "  /var/lib/dhcp/dhclient.leases\n"
+            "  cat /var/lib/dhcp/dhclient.leases\n\n"
+            "NETWORKMANAGER:\n"
+            "  nmcli device status\n"
+            "  nmcli connection show\n"
+            "  nmcli device connect eth0\n"
+            "  nmcli con mod eth0 ipv4.method auto\n\n"
+            "DHCPCD (Alterntive, Raspbian):\n"
+            "  dhcpcd eth0\n"
+            "  dhcpcd -k eth0  (release)\n\n"
+            "DHCP PROZESS (DORA):\n"
+            "  D = Discover  (Client sendet Broadcast)\n"
+            "  O = Offer     (Server bietet IP an)\n"
+            "  R = Request   (Client akzeptiert)\n"
+            "  A = ACK       (Server bestätigt)\n\n"
+            "CONFIG:\n"
+            "  /etc/dhcp/dhclient.conf\n"
+            "  /etc/network/interfaces"
+        ),
+        syntax       = "dhclient eth0  /  dhclient -r eth0",
+        example      = "dhclient -v eth0 && cat /var/lib/dhcp/dhclient.leases | head -20",
+        task_description = "Zeige DHCP-Lease-Infos mit cat /var/lib/dhcp/dhclient.leases | head -20",
+        expected_commands = ["cat /var/lib/dhcp/dhclient.leases"],
+        hint_text    = "cat /var/lib/dhcp/dhclient.leases zeigt aktuelle DHCP-Leases",
+        quiz_questions = [
+            QuizQuestion(
+                question = "Was bedeutet DORA im DHCP-Prozess?",
+                options  = [
+                    "Discover, Offer, Request, ACK",
+                    "Dynamic, Optional, Relay, Address",
+                    "DNS, Options, Router, Address",
+                    "Data, Offer, Reply, Acknowledge",
+                ],
+                correct  = 0,
+                explanation = "DORA: Discover (Broadcast) → Offer (Server) → Request (Client wählt) → ACK (Server bestätigt).",
+                xp_value = 15,
+            ),
+        ],
+        exam_tip     = "dhclient eth0=IP beziehen | dhclient -r=release. DORA = Discover Offer Request ACK.",
+        memory_tip   = "DORA wie Dorothy in Oz: entdecke, erhalte Angebot, beantrage, bestätige.",
+        gear_reward  = None,
+        faction_reward = ("Net Runners", 15),
+    ),
+
+    Mission(
+        mission_id   = "21.07",
+        chapter      = 21,
+        title        = "DNS Resolver: /etc/resolv.conf & systemd-resolved",
+        mtype        = "CONSTRUCT",
+        xp           = 85,
+        speaker      = "PHANTOM",
+        story        = (
+            "PHANTOM: 'DNS. Namen zu IPs. IPs zu Namen.\n"
+            " /etc/resolv.conf. nameserver. search domain.\n"
+            " systemd-resolved. resolvectl.'"
+        ),
+        why_important = (
+            "DNS-Client-Konfiguration ist LPIC-1 Topic 109.4.\n"
+            "/etc/resolv.conf und nsswitch.conf sind Prüfungsthemen."
+        ),
+        explanation  = (
+            "DNS CLIENT KONFIGURATION:\n\n"
+            "/ETC/RESOLV.CONF:\n"
+            "  nameserver 8.8.8.8\n"
+            "  nameserver 1.1.1.1\n"
+            "  search example.com local.lan\n"
+            "  domain example.com\n"
+            "  options ndots:5 timeout:2 attempts:3\n\n"
+            "SYSTEMD-RESOLVED (modern):\n"
+            "  systemctl status systemd-resolved\n"
+            "  resolvectl status\n"
+            "  resolvectl dns eth0 8.8.8.8\n"
+            "  resolvectl flush-caches\n"
+            "  /etc/resolv.conf → Symlink auf /run/systemd/resolve/stub-resolv.conf\n\n"
+            "/ETC/NSSWITCH.CONF:\n"
+            "  hosts: files dns\n"
+            "  → Erst /etc/hosts, dann DNS\n"
+            "  hosts: files mdns4_minimal [NOTFOUND=return] dns\n\n"
+            "/ETC/HOSTS:\n"
+            "  127.0.0.1  localhost\n"
+            "  192.168.1.10  nfsserver nfsserver.local\n"
+            "  → Überschreibt DNS wenn 'files' vor 'dns' in nsswitch\n\n"
+            "DIAGNOSE:\n"
+            "  dig google.com\n"
+            "  host google.com\n"
+            "  nslookup google.com\n"
+            "  getent hosts google.com"
+        ),
+        syntax       = "nameserver IP  (in /etc/resolv.conf)",
+        example      = "cat /etc/resolv.conf && resolvectl status | head -20",
+        task_description = "Zeige DNS-Konfiguration mit cat /etc/resolv.conf",
+        expected_commands = ["cat /etc/resolv.conf"],
+        hint_text    = "cat /etc/resolv.conf zeigt die konfigurierten DNS-Server",
+        quiz_questions = [
+            QuizQuestion(
+                question = "Was definiert `search example.com` in /etc/resolv.conf?",
+                options  = [
+                    "DNS-Suchdomäne: kurze Hostnamen werden mit .example.com erweitert",
+                    "Der DNS-Server bei example.com",
+                    "Sucht nach Hosts mit Namen example.com",
+                    "Die lokale Domain des Rechners",
+                ],
+                correct  = 0,
+                explanation = "search = Suchdomäne. 'ping host' → 'host.example.com' wird automatisch versucht.",
+                xp_value = 15,
+            ),
+        ],
+        exam_tip     = "/etc/resolv.conf: nameserver, search, domain. nsswitch.conf: hosts: files dns.",
+        memory_tip   = "resolv.conf = Wie wird DNS aufgelöst. nsswitch.conf = Wo wird gesucht (Reihenfolge).",
+        gear_reward  = None,
+        faction_reward = ("Net Runners", 15),
+    ),
+
+    Mission(
+        mission_id   = "21.08",
+        chapter      = 21,
+        title        = "DNS dig: Fortgeschrittene Abfragen",
+        mtype        = "SCAN",
+        xp           = 85,
+        speaker      = "DAEMON",
+        story        = (
+            "DAEMON: 'DNS ist mehr als ping. dig.\n"
+            " Record-Types. Reverse-Lookup. Zone-Transfer.\n"
+            " Verstehe was das DNS wirklich sagt.'"
+        ),
+        why_important = (
+            "dig ist das mächtigste DNS-Diagnose-Tool.\n"
+            "LPIC-1 testet dig für verschiedene Record-Types und DNS-Debugging."
+        ),
+        explanation  = (
+            "DIG — DNS LOOKUP UTILITY:\n\n"
+            "GRUNDBEFEHLE:\n"
+            "  dig google.com           A-Record (IPv4)\n"
+            "  dig google.com AAAA      IPv6-Adresse\n"
+            "  dig google.com MX        Mail-Server\n"
+            "  dig google.com NS        Nameserver\n"
+            "  dig google.com TXT       TXT-Record (SPF etc.)\n"
+            "  dig google.com SOA       Start of Authority\n\n"
+            "REVERSE LOOKUP:\n"
+            "  dig -x 8.8.8.8          PTR-Record\n"
+            "  dig -x 2001:4860:4860::8888\n\n"
+            "SPEZIFISCHER DNS-SERVER:\n"
+            "  dig @8.8.8.8 google.com     Bestimmter Resolver\n"
+            "  dig @ns1.google.com google.com\n\n"
+            "KURZE AUSGABE:\n"
+            "  dig +short google.com\n"
+            "  dig +short google.com MX\n\n"
+            "TRACE:\n"
+            "  dig +trace google.com    Vom Root-Server verfolgen\n\n"
+            "HOST (einfachere Alternative):\n"
+            "  host google.com\n"
+            "  host -t MX google.com\n"
+            "  host 8.8.8.8\n\n"
+            "NSLOOKUP (interaktiv):\n"
+            "  nslookup google.com\n"
+            "  nslookup -type=MX google.com"
+        ),
+        syntax       = "dig [@SERVER] HOSTNAME [RECORDTYPE]",
+        example      = "dig @1.1.1.1 google.com MX && dig +short google.com",
+        task_description = "Löse den MX-Record von gmail.com auf: dig gmail.com MX",
+        expected_commands = ["dig gmail.com MX"],
+        hint_text    = "dig domain MX zeigt den Mail-Exchanger-Record",
+        quiz_questions = [
+            QuizQuestion(
+                question = "Welcher DNS-Record-Typ wird für Reverse-DNS (IP→Hostname) genutzt?",
+                options  = ["PTR", "A", "CNAME", "MX"],
+                correct  = 0,
+                explanation = "PTR = Pointer Record für Reverse-DNS. dig -x IP sucht den PTR-Record.",
+                xp_value = 15,
+            ),
+        ],
+        exam_tip     = "dig @SERVER DOMAIN TYPE. +short = nur Antwort. -x = Reverse. +trace = vollständig.",
+        memory_tip   = "A=IPv4 | AAAA=IPv6 | MX=Mail | PTR=Reverse | CNAME=Alias | NS=Nameserver | TXT=Text",
+        gear_reward  = None,
+        faction_reward = ("Net Runners", 15),
+    ),
+
+    Mission(
+        mission_id   = "21.09",
+        chapter      = 21,
+        title        = "LDAP Client: ldapsearch & Verzeichnisdienste",
+        mtype        = "SCAN",
+        xp           = 85,
+        speaker      = "PHANTOM",
+        story        = (
+            "PHANTOM: 'Benutzer-Authentifizierung gegen LDAP.\n"
+            " Zentrale Benutzerverwaltung für hunderte Systeme.\n"
+            " ldapsearch. nsswitch. pam_ldap.'"
+        ),
+        why_important = (
+            "LDAP ist der Standard für zentrale Benutzerverwaltung.\n"
+            "LPIC-1 testet ldapsearch-Grundkenntnisse."
+        ),
+        explanation  = (
+            "LDAP (LIGHTWEIGHT DIRECTORY ACCESS PROTOCOL):\n\n"
+            "KONZEPTE:\n"
+            "  DN  = Distinguished Name (eindeutiger Pfad)\n"
+            "  DC  = Domain Component (dc=example,dc=com)\n"
+            "  OU  = Organizational Unit (ou=users)\n"
+            "  CN  = Common Name (cn=ghost)\n"
+            "  UID = User ID Attribut\n\n"
+            "LDAPSEARCH:\n"
+            "  ldapsearch -H ldap://server -x -b 'dc=example,dc=com'\n"
+            "  -H = LDAP-URL\n"
+            "  -x = einfache Authentifizierung (anonym)\n"
+            "  -b = Base-DN (Suchbasis)\n"
+            "  -D = Bind-DN (Login)\n"
+            "  -W = Passwort eingeben\n"
+            "  -LLL = Ausgabe-Format (keine Kommentare)\n\n"
+            "BENUTZER SUCHEN:\n"
+            "  ldapsearch -x -b 'ou=users,dc=example,dc=com' '(uid=ghost)'\n"
+            "  ldapsearch -x -b 'dc=example,dc=com' '(objectClass=posixAccount)'\n\n"
+            "NSSWITCH FÜR LDAP:\n"
+            "  passwd: files ldap\n"
+            "  group:  files ldap\n"
+            "  shadow: files ldap\n\n"
+            "GETENT MIT LDAP:\n"
+            "  getent passwd ghost    Benutzer finden (inkl. LDAP)\n"
+            "  getent group admins"
+        ),
+        syntax       = "ldapsearch -H ldap://SERVER -x -b 'BASEDN' [FILTER]",
+        example      = "ldapsearch -x -H ldap://localhost -b 'dc=example,dc=com' -LLL '(objectClass=*)' | head -20",
+        task_description = "Zeige ldapsearch-Hilfe mit ldapsearch --help",
+        expected_commands = ["ldapsearch --help"],
+        hint_text    = "ldapsearch --help zeigt alle LDAP-Such-Optionen",
+        quiz_questions = [
+            QuizQuestion(
+                question = "Was bedeutet `-b 'dc=example,dc=com'` bei ldapsearch?",
+                options  = [
+                    "Suchbasis: Durchsuche den LDAP-Baum ab dieser Basis",
+                    "Bind-DN zum Anmelden",
+                    "Filter für bestimmte Attribute",
+                    "Backup der Datenbank",
+                ],
+                correct  = 0,
+                explanation = "-b = base DN. Alle Suchen starten ab diesem Punkt im Verzeichnisbaum.",
+                xp_value = 15,
+            ),
+        ],
+        exam_tip     = "ldapsearch -H=URL -x=anonym -b=BaseDN -D=BindDN -W=Passwort. DC/OU/CN/UID kennen.",
+        memory_tip   = "LDAP DN = Adresse im Verzeichnisbaum. dc=domain, ou=Abteilung, cn=Name.",
+        gear_reward  = None,
+        faction_reward = ("Net Runners", 15),
+    ),
+
+    Mission(
+        mission_id   = "21.10",
+        chapter      = 21,
+        title        = "nsswitch.conf: Namensauflösung konfigurieren",
+        mtype        = "CONSTRUCT",
+        xp           = 85,
+        speaker      = "DAEMON",
+        story        = (
+            "DAEMON: 'Woher kommt die Benutzer-Info? Files? DNS? LDAP?\n"
+            " /etc/nsswitch.conf bestimmt die Reihenfolge.\n"
+            " getent prüft ob es klappt.'"
+        ),
+        why_important = (
+            "/etc/nsswitch.conf steuert die Reihenfolge der Namensauflösung.\n"
+            "LPIC-1 Topic 109.4 — nsswitch ist Prüfungsthema."
+        ),
+        explanation  = (
+            "NSSWITCH.CONF — NAME SERVICE SWITCH:\n\n"
+            "DATEI: /etc/nsswitch.conf\n\n"
+            "SYNTAX: service: source1 source2 [action]\n\n"
+            "TYPISCHE EINTRÄGE:\n"
+            "  passwd:   files systemd\n"
+            "  group:    files systemd\n"
+            "  shadow:   files\n"
+            "  hosts:    files mdns4_minimal [NOTFOUND=return] dns myhostname\n"
+            "  networks: files\n"
+            "  protocols: db files\n"
+            "  services: db files\n\n"
+            "QUELLEN (sources):\n"
+            "  files   /etc/passwd, /etc/hosts etc.\n"
+            "  dns     DNS-Auflösung\n"
+            "  ldap    LDAP-Verzeichnis\n"
+            "  nis     NIS/YP (veraltet)\n"
+            "  db      Berkeley DB\n"
+            "  systemd systemd-resolved etc.\n\n"
+            "AKTIONEN (in eckigen Klammern):\n"
+            "  [NOTFOUND=return]  Wenn nicht gefunden: aufhören (kein weiterer Lookup)\n"
+            "  [SUCCESS=return]   Wenn gefunden: aufhören\n\n"
+            "GETENT — NSSWITCH TESTEN:\n"
+            "  getent passwd ghost      User suchen\n"
+            "  getent hosts google.com  Host-Auflösung\n"
+            "  getent group sudo        Gruppe suchen\n"
+            "  getent services ssh      Service-Port"
+        ),
+        syntax       = "service: source1 source2  (in /etc/nsswitch.conf)",
+        example      = "cat /etc/nsswitch.conf && getent passwd root && getent hosts localhost",
+        task_description = "Zeige nsswitch.conf mit cat /etc/nsswitch.conf",
+        expected_commands = ["cat /etc/nsswitch.conf"],
+        hint_text    = "cat /etc/nsswitch.conf zeigt die Konfiguration der Namensauflösung",
+        quiz_questions = [
+            QuizQuestion(
+                question = "Was bewirkt `hosts: files dns` in /etc/nsswitch.conf?",
+                options  = [
+                    "Erst /etc/hosts prüfen, dann DNS fragen",
+                    "Erst DNS fragen, dann /etc/hosts",
+                    "Nur /etc/hosts nutzen",
+                    "Nur DNS nutzen",
+                ],
+                correct  = 0,
+                explanation = "Reihenfolge von links nach rechts. files=/etc/hosts zuerst, dann dns.",
+                xp_value = 15,
+            ),
+        ],
+        exam_tip     = "nsswitch.conf: Reihenfolge links→rechts. getent testet Auflösung. [NOTFOUND=return]=abbrechen",
+        memory_tip   = "SWITCH = Vermittlung. nsswitch = Vermittlungsstelle für Namensanfragen.",
+        gear_reward  = None,
+        faction_reward = ("Net Runners", 15),
+    ),
+
+    Mission(
+        mission_id   = "21.11",
+        chapter      = 21,
+        title        = "Network Time: chrony & NTP tief",
+        mtype        = "CONSTRUCT",
+        xp           = 80,
+        speaker      = "PHANTOM",
+        story        = (
+            "PHANTOM: 'Zeitstempel sind der Beweis. Forensik. Audit.\n"
+            " Falsche Zeit = Beweise unbrauchbar.\n"
+            " chrony. NTP-Server. Konfiguriere Genauigkeit.'"
+        ),
+        why_important = (
+            "Zeitgenauigkeit ist kritisch für Sicherheit, Logging und Authentifizierung.\n"
+            "chrony ist moderner NTP-Client/-Server. LPIC-1 Topic 108.1."
+        ),
+        explanation  = (
+            "ZEITSYNCHONISATION:\n\n"
+            "TIMEDATECTL (systemd):\n"
+            "  timedatectl                  Status\n"
+            "  timedatectl set-ntp true     NTP aktivieren\n"
+            "  timedatectl set-timezone Europe/Berlin\n\n"
+            "CHRONY:\n"
+            "  chronyd                      Daemon\n"
+            "  chronyc tracking             Synchronisations-Status\n"
+            "  chronyc sources -v           NTP-Server-Liste\n"
+            "  chronyc sourcestats          Statistiken\n"
+            "  chronyc makestep             Sofort anpassen\n\n"
+            "KONFIGURATION (/etc/chrony/chrony.conf):\n"
+            "  server 0.pool.ntp.org iburst\n"
+            "  server 1.pool.ntp.org iburst\n"
+            "  makestep 1.0 3\n"
+            "  rtcsync\n"
+            "  allow 192.168.1.0/24  (als NTP-Server)\n\n"
+            "NTP (NTPD klassisch):\n"
+            "  ntpq -p              Peers anzeigen\n"
+            "  ntpstat              Sync-Status\n"
+            "  /etc/ntp.conf        Konfiguration\n\n"
+            "HARDWARE-UHR:\n"
+            "  hwclock --show       Hardware-Zeit\n"
+            "  hwclock --systohc    System→Hardware synchen"
+        ),
+        syntax       = "chronyc tracking",
+        example      = "timedatectl && chronyc tracking && chronyc sources",
+        task_description = "Zeige Zeitsynchonisations-Status mit timedatectl",
+        expected_commands = ["timedatectl"],
+        hint_text    = "timedatectl zeigt aktuellen Status inkl. NTP-Sync-Status",
+        quiz_questions = [
+            QuizQuestion(
+                question = "Welcher Befehl zeigt die NTP-Synchronisations-Quellen von chrony?",
+                options  = [
+                    "chronyc sources",
+                    "chronyc tracking",
+                    "ntpq -p",
+                    "timedatectl show-sources",
+                ],
+                correct  = 0,
+                explanation = "chronyc sources zeigt alle konfigurierten NTP-Server und deren Status (*=aktiv).",
+                xp_value = 15,
+            ),
+        ],
+        exam_tip     = "timedatectl set-ntp true. chronyc tracking/sources. /etc/chrony/chrony.conf. hwclock.",
+        memory_tip   = "chronyc = chrony control. tracking = wie genau sync. sources = woher die Zeit kommt.",
+        gear_reward  = None,
+        faction_reward = ("Net Runners", 15),
+    ),
+
+    Mission(
+        mission_id   = "21.12",
+        chapter      = 21,
+        title        = "NetworkManager: Verbindungen verwalten",
+        mtype        = "CONSTRUCT",
+        xp           = 85,
+        speaker      = "DAEMON",
+        story        = (
+            "DAEMON: 'CLI oder GUI? nmcli.\n"
+            " NetworkManager — der Standard auf Desktop und Server.\n"
+            " Profile. Verbindungen. WLAN. VPN.'"
+        ),
+        why_important = (
+            "NetworkManager ist auf den meisten modernen Linux-Systemen Standard.\n"
+            "nmcli ermöglicht vollständige Verwaltung über CLI."
+        ),
+        explanation  = (
+            "NETWORKMANAGER CLI (NMCLI):\n\n"
+            "STATUS:\n"
+            "  nmcli general status      NM-Status\n"
+            "  nmcli device status       Interface-Status\n"
+            "  nmcli connection show     Alle Verbindungsprofile\n"
+            "  nmcli connection show --active  Aktive Verbindungen\n\n"
+            "VERBINDUNG AKTIVIEREN:\n"
+            "  nmcli con up 'Wired connection 1'\n"
+            "  nmcli device connect eth0\n"
+            "  nmcli device disconnect eth0\n\n"
+            "NEUE VERBINDUNG:\n"
+            "  nmcli con add type ethernet ifname eth0\n"
+            "  nmcli con mod eth0 ipv4.method manual\n"
+            "  nmcli con mod eth0 ipv4.addresses '192.168.1.100/24'\n"
+            "  nmcli con mod eth0 ipv4.gateway '192.168.1.1'\n"
+            "  nmcli con mod eth0 ipv4.dns '8.8.8.8'\n"
+            "  nmcli con up eth0\n\n"
+            "WLAN:\n"
+            "  nmcli dev wifi list        Verfügbare WLANs\n"
+            "  nmcli dev wifi connect 'SSID' password 'pass'\n\n"
+            "KONFIGURATIONSDATEIEN:\n"
+            "  /etc/NetworkManager/system-connections/*.nmconnection\n"
+            "  nmcli con show PROFIL | grep filename"
+        ),
+        syntax       = "nmcli device status  /  nmcli con show",
+        example      = "nmcli device status && nmcli connection show --active",
+        task_description = "Zeige Netzwerk-Interface-Status mit nmcli device status",
+        expected_commands = ["nmcli device status"],
+        hint_text    = "nmcli device status zeigt alle Netzwerk-Interfaces und ihren Status",
+        quiz_questions = [
+            QuizQuestion(
+                question = "Wie stellt man mit nmcli eine statische IP ein?",
+                options  = [
+                    "nmcli con mod CONN ipv4.method manual && nmcli con mod CONN ipv4.addresses IP/PREFIX",
+                    "nmcli set ip CONN static IP",
+                    "nmcli device set eth0 ip=IP",
+                    "nmcli ipv4 static CONN IP SUBNET",
+                ],
+                correct  = 0,
+                explanation = "ipv4.method manual = statisch. Dann ipv4.addresses, ipv4.gateway, ipv4.dns setzen.",
+                xp_value = 15,
+            ),
+        ],
+        exam_tip     = "nmcli device status | con show | con mod | con up/down. ipv4.method=manual für statisch.",
+        memory_tip   = "nmcli = NetworkManager CLI. device = Physisches Interface. connection = Profil.",
+        gear_reward  = None,
+        faction_reward = ("Net Runners", 15),
+    ),
+
+    Mission(
+        mission_id   = "21.13",
+        chapter      = 21,
+        title        = "iproute2: ip-Befehl Mastery",
+        mtype        = "SCAN",
+        xp           = 90,
+        speaker      = "VECTOR",
+        story        = (
+            "VECTOR: 'ifconfig ist tot. ip lebt.\n"
+            " ip addr, ip route, ip link — das moderne Trio.\n"
+            " Kenne jeden Unter-Befehl. Das Examen fragt es.'"
+        ),
+        why_important = (
+            "iproute2 (ip-Befehl) ist der moderne Ersatz für ifconfig/route/arp.\n"
+            "LPIC-1 Topic 109.2 testet ip addr, ip link, ip route."
+        ),
+        explanation  = (
+            "IPROUTE2 — IP BEFEHL:\n\n"
+            "IP ADDR (IP-Adressen):\n"
+            "  ip addr show                  Alle Interfaces\n"
+            "  ip addr show eth0             Spezifisches Interface\n"
+            "  ip addr add 192.168.1.5/24 dev eth0   IP hinzufügen\n"
+            "  ip addr del 192.168.1.5/24 dev eth0   IP entfernen\n\n"
+            "IP LINK (Interfaces):\n"
+            "  ip link show                  Alle Interfaces\n"
+            "  ip link set eth0 up           Aktivieren\n"
+            "  ip link set eth0 down         Deaktivieren\n"
+            "  ip link set eth0 mtu 9000     MTU setzen\n"
+            "  ip link set eth0 promisc on   Promiscuous Mode\n\n"
+            "IP ROUTE (Routing):\n"
+            "  ip route show                 Routing-Tabelle\n"
+            "  ip route add default via 192.168.1.1\n"
+            "  ip route add 10.0.0.0/8 via 192.168.1.1\n"
+            "  ip route del default\n"
+            "  ip route get 8.8.8.8         Welche Route?\n\n"
+            "IP NEIGH (ARP):\n"
+            "  ip neigh show                 ARP-Tabelle\n"
+            "  ip neigh flush all            ARP-Cache leeren\n\n"
+            "ABKÜRZUNGEN:\n"
+            "  ip a = ip addr\n"
+            "  ip l = ip link\n"
+            "  ip r = ip route"
+        ),
+        syntax       = "ip [addr|link|route|neigh] [show|add|del|set]",
+        example      = "ip addr show && ip route show && ip route get 8.8.8.8",
+        task_description = "Zeige Routing-Tabelle mit ip route show",
+        expected_commands = ["ip route show"],
+        hint_text    = "ip route show zeigt die aktuelle Routing-Tabelle",
+        quiz_questions = [
+            QuizQuestion(
+                question = "Welcher ip-Befehl zeigt die ARP-Tabelle?",
+                options  = [
+                    "ip neigh show",
+                    "ip arp show",
+                    "ip addr show",
+                    "ip link show",
+                ],
+                correct  = 0,
+                explanation = "ip neigh = Nachbar-Tabelle = ARP-Tabelle. Neigh = neighbors.",
+                xp_value = 15,
+            ),
+        ],
+        exam_tip     = "ip a = addr | ip l = link | ip r = route | ip neigh = ARP. ip route get IP = Welche Route?",
+        memory_tip   = "ip ersetzt: ifconfig (addr), route (route), arp (neigh). Alles in einem Tool.",
+        gear_reward  = None,
+        faction_reward = ("Net Runners", 15),
+    ),
+
+    Mission(
+        mission_id   = "21.14",
+        chapter      = 21,
+        title        = "Netzwerk-Bonding & Teaming",
+        mtype        = "SCAN",
+        xp           = 85,
+        speaker      = "PHANTOM",
+        story        = (
+            "PHANTOM: 'Ein Interface ausfallen? Kein Problem.\n"
+            " Bonding. Mehrere NICs als eine.\n"
+            " Redundanz. Load Balancing. HA.'"
+        ),
+        why_important = (
+            "Network Bonding kombiniert mehrere Netzwerk-Interfaces für\n"
+            "Redundanz und höhere Bandbreite. Server-Grundkenntnisse."
+        ),
+        explanation  = (
+            "NETWORK BONDING:\n\n"
+            "BOND-MODI:\n"
+            "  mode=0 (balance-rr)    Round-Robin, Last-Balancing\n"
+            "  mode=1 (active-backup) Aktiv/Backup, Failover\n"
+            "  mode=2 (balance-xor)   XOR-basiertes Load-Balancing\n"
+            "  mode=4 (802.3ad)       LACP, Switch muss es unterstützen\n"
+            "  mode=5 (balance-tlb)   Adaptive Transmit LB\n"
+            "  mode=6 (balance-alb)   Adaptive LB\n\n"
+            "KONFIGURATION (Debian/Ubuntu):\n"
+            "  apt install ifenslave\n"
+            "  # /etc/network/interfaces:\n"
+            "  auto bond0\n"
+            "  iface bond0 inet static\n"
+            "    address 192.168.1.100\n"
+            "    netmask 255.255.255.0\n"
+            "    bond-slaves eth0 eth1\n"
+            "    bond-mode active-backup\n"
+            "    bond-miimon 100\n\n"
+            "STATUS:\n"
+            "  cat /proc/net/bonding/bond0\n"
+            "  ip link show bond0\n\n"
+            "NETWORKMANAGER BONDING:\n"
+            "  nmcli con add type bond ifname bond0 bond.options 'mode=active-backup'\n"
+            "  nmcli con add type bond-slave ifname eth0 master bond0"
+        ),
+        syntax       = "cat /proc/net/bonding/bond0",
+        example      = "cat /proc/net/bonding/bond0 && ip link show bond0",
+        task_description = "Prüfe ob Bond-Interfaces existieren mit cat /proc/net/bonding/ (falls vorhanden)",
+        expected_commands = ["cat /proc/net/bonding/"],
+        hint_text    = "cat /proc/net/bonding/ oder ip link | grep bond zeigt Bond-Interfaces",
+        quiz_questions = [
+            QuizQuestion(
+                question = "Welcher Bond-Mode bietet Failover ohne Load Balancing?",
+                options  = [
+                    "mode=1 (active-backup)",
+                    "mode=0 (balance-rr)",
+                    "mode=4 (802.3ad)",
+                    "mode=6 (balance-alb)",
+                ],
+                correct  = 0,
+                explanation = "active-backup: Eine NIC aktiv, andere Backup. Bei Ausfall: automatischer Wechsel.",
+                xp_value = 15,
+            ),
+        ],
+        exam_tip     = "mode=1=active-backup(Failover) | mode=4=802.3ad(LACP) | /proc/net/bonding/ = Status",
+        memory_tip   = "Bond = gebündeltes Netz. active-backup = Haupt + Notfall. LACP = Switch-koordiniert.",
+        gear_reward  = None,
+        faction_reward = ("Net Runners", 15),
+    ),
+
+    Mission(
+        mission_id   = "21.15",
+        chapter      = 21,
+        title        = "Netzwerk-Diagnose: mtr & ss tief",
+        mtype        = "SCAN",
+        xp           = 85,
+        speaker      = "VECTOR",
+        story        = (
+            "VECTOR: 'traceroute zeigt den Weg. Einmal.\n"
+            " mtr kombiniert ping + traceroute. Kontinuierlich.\n"
+            " ss zeigt alles was lauscht. Jeder Port. Jeder Prozess.'"
+        ),
+        why_important = (
+            "mtr und ss sind die modernen Netzwerk-Diagnose-Tools.\n"
+            "LPIC-1 testet Netzwerk-Troubleshooting und Port-Übersicht."
+        ),
+        explanation  = (
+            "MTR — MEIN TRACEROUTE:\n\n"
+            "  mtr google.com         Interaktiv (live update)\n"
+            "  mtr -n google.com      Ohne DNS\n"
+            "  mtr --report google.com  Bericht (10 Messungen)\n"
+            "  mtr -r -c 10 google.com  Report, 10 Zyklen\n"
+            "  mtr --csv google.com   CSV-Ausgabe\n\n"
+            "OUTPUT:\n"
+            "  Hop = Router auf dem Weg\n"
+            "  Loss% = Paketverlust pro Hop\n"
+            "  Avg = durchschnittliche Latenz\n"
+            "  Best/Wrst = Min/Max Latenz\n\n"
+            "SS — SOCKET STATISTICS:\n"
+            "  ss -tulpn     TCP+UDP Listen, Prozesse, Numerisch\n"
+            "  ss -tnp       TCP, alle States, Prozesse\n"
+            "  ss -t state established  Nur EST.-Verbindungen\n"
+            "  ss -s         Zusammenfassung\n"
+            "  ss -4 -tulpn  Nur IPv4\n"
+            "  ss -6 -tulpn  Nur IPv6\n\n"
+            "SS FILTER:\n"
+            "  ss -t dst 8.8.8.8      Verbindungen zu 8.8.8.8\n"
+            "  ss -t sport = :22      Source-Port 22\n"
+            "  ss -nt | grep LISTEN\n\n"
+            "NETSTAT (klassisch, veraltet):\n"
+            "  netstat -tulpn   wie ss -tulpn\n"
+            "  netstat -rn      Routing-Tabelle"
+        ),
+        syntax       = "ss -tulpn | mtr --report HOSTNAME",
+        example      = "ss -tulpn | grep LISTEN | sort -k5 && mtr --report google.com",
+        task_description = "Zeige alle lauschenden Sockets mit ss -tulpn",
+        expected_commands = ["ss -tulpn"],
+        hint_text    = "ss -tulpn: t=TCP u=UDP l=Listen p=Prozess n=Numerisch",
+        quiz_questions = [
+            QuizQuestion(
+                question = "Was zeigt `ss -s`?",
+                options  = [
+                    "Zusammenfassung aller Socket-Typen und Zustände",
+                    "Alle lauschenden Sockets",
+                    "SSL/TLS-Verbindungen",
+                    "System-Socket-Statistiken",
+                ],
+                correct  = 0,
+                explanation = "-s = summary. Zeigt Gesamtanzahl für TCP, UDP, UNIX, RAW, andere.",
+                xp_value = 15,
+            ),
+        ],
+        exam_tip     = "ss -tulpn = lauschende Ports. mtr = kombinierter ping+traceroute. ss > netstat.",
+        memory_tip   = "mtr = My TRaceroute. Besser als traceroute: kontinuierlich und Verlust sichtbar.",
+        gear_reward  = None,
+        faction_reward = ("Net Runners", 15),
+    ),
+
+    Mission(
+        mission_id   = "21.16",
+        chapter      = 21,
+        title        = "VLAN: Virtuelle Netzwerk-Segmentierung",
+        mtype        = "SCAN",
+        xp           = 85,
+        speaker      = "PHANTOM",
+        story        = (
+            "PHANTOM: 'Segmentierung ohne extra Hardware.\n"
+            " VLANs. 802.1Q. Tagged Frames.\n"
+            " Production und Management getrennt — auf einem Switch.'"
+        ),
+        why_important = (
+            "VLANs sind grundlegendes Netzwerk-Konzept.\n"
+            "Linux kann VLANs ohne Hardware durch 802.1Q-Interfaces verwalten."
+        ),
+        explanation  = (
+            "VLAN AUF LINUX:\n\n"
+            "PAKET:\n"
+            "  apt install vlan\n\n"
+            "VLAN INTERFACE ERSTELLEN:\n"
+            "  ip link add link eth0 name eth0.100 type vlan id 100\n"
+            "  ip link set eth0.100 up\n"
+            "  ip addr add 192.168.100.1/24 dev eth0.100\n\n"
+            "MODPROBE 8021Q:\n"
+            "  modprobe 8021q              VLAN-Kernel-Modul laden\n"
+            "  lsmod | grep 8021q          Prüfen\n\n"
+            "VCONFIG (klassisch):\n"
+            "  vconfig add eth0 100        VLAN 100 auf eth0\n"
+            "  vconfig rem eth0.100        Entfernen\n\n"
+            "/ETC/NETWORK/INTERFACES:\n"
+            "  auto eth0.100\n"
+            "  iface eth0.100 inet static\n"
+            "    address 192.168.100.1\n"
+            "    netmask 255.255.255.0\n"
+            "    vlan-raw-device eth0\n\n"
+            "NETWORKMANAGER:\n"
+            "  nmcli con add type vlan ifname eth0.100 dev eth0 id 100\n\n"
+            "VLAN ANZEIGEN:\n"
+            "  cat /proc/net/vlan/config\n"
+            "  ip link show type vlan"
+        ),
+        syntax       = "ip link add link eth0 name eth0.100 type vlan id 100",
+        example      = "modprobe 8021q && ip link show type vlan",
+        task_description = "Zeige VLAN-Interfaces mit ip link show type vlan",
+        expected_commands = ["ip link show type vlan"],
+        hint_text    = "ip link show type vlan zeigt alle VLAN-Interfaces",
+        quiz_questions = [
+            QuizQuestion(
+                question = "Welches Kernel-Modul muss für 802.1Q VLANs geladen sein?",
+                options  = [
+                    "8021q",
+                    "vlan",
+                    "ieee8021q",
+                    "vlan8021q",
+                ],
+                correct  = 0,
+                explanation = "8021q ist das Kernel-Modul für IEEE 802.1Q VLAN-Tagging.",
+                xp_value = 15,
+            ),
+        ],
+        exam_tip     = "modprobe 8021q. ip link add ... type vlan id ID. eth0.VLANID Namenskonvention.",
+        memory_tip   = "VLAN = Virtual LAN. 802.1Q = Standard. eth0.100 = eth0 mit VLAN 100 Tag.",
+        gear_reward  = None,
+        faction_reward = ("Net Runners", 15),
+    ),
+
+    Mission(
+        mission_id   = "21.17",
+        chapter      = 21,
+        title        = "Network Bridges: Software-Bridges",
+        mtype        = "CONSTRUCT",
+        xp           = 80,
+        speaker      = "DAEMON",
+        story        = (
+            "DAEMON: 'VMs brauchen Netzwerk-Zugang.\n"
+            " Bridge-Interface. Layer-2-Switch in Software.\n"
+            " KVM, LXC, Docker — alle nutzen Bridges.'"
+        ),
+        why_important = (
+            "Network Bridges verbinden virtuelle und physische Netzwerke.\n"
+            "Fundamental für Virtualisierung und Container-Networking."
+        ),
+        explanation  = (
+            "LINUX NETWORK BRIDGES:\n\n"
+            "BRIDGE ERSTELLEN:\n"
+            "  ip link add br0 type bridge\n"
+            "  ip link set br0 up\n"
+            "  ip link set eth0 master br0\n"
+            "  ip addr add 192.168.1.100/24 dev br0\n\n"
+            "BRIDGE-UTILS (klassisch):\n"
+            "  apt install bridge-utils\n"
+            "  brctl addbr br0\n"
+            "  brctl addif br0 eth0\n"
+            "  brctl show\n"
+            "  brctl showmacs br0\n\n"
+            "BRIDGE STATUS:\n"
+            "  bridge link show\n"
+            "  bridge vlan show\n"
+            "  cat /sys/class/net/br0/bridge/stp_state\n\n"
+            "/ETC/NETWORK/INTERFACES (Debian):\n"
+            "  auto br0\n"
+            "  iface br0 inet static\n"
+            "    bridge_ports eth0\n"
+            "    address 192.168.1.100\n"
+            "    netmask 255.255.255.0\n"
+            "    gateway 192.168.1.1\n"
+            "    bridge_stp off\n\n"
+            "NETWORKMANAGER:\n"
+            "  nmcli con add type bridge ifname br0\n"
+            "  nmcli con add type bridge-slave ifname eth0 master br0"
+        ),
+        syntax       = "ip link add br0 type bridge && ip link set eth0 master br0",
+        example      = "ip link show type bridge && bridge link show",
+        task_description = "Zeige Bridge-Interfaces mit ip link show type bridge",
+        expected_commands = ["ip link show type bridge"],
+        hint_text    = "ip link show type bridge zeigt alle Software-Bridge-Interfaces",
+        quiz_questions = [
+            QuizQuestion(
+                question = "Wofür werden Linux Network Bridges hauptsächlich verwendet?",
+                options  = [
+                    "Virtualisierung: VMs und Container mit physischem Netz verbinden",
+                    "VPN-Tunnel aufbauen",
+                    "IP-Adressen aufteilen",
+                    "Firewall-Regeln anwenden",
+                ],
+                correct  = 0,
+                explanation = "Bridges verbinden Layer-2-Netzwerke. KVM, LXC, Docker nutzen Bridges für VM-Networking.",
+                xp_value = 15,
+            ),
+        ],
+        exam_tip     = "brctl addbr/addif (klassisch). ip link add type bridge (modern). bridge link show.",
+        memory_tip   = "Bridge = Software-Switch. Verbindet physische und virtuelle Interfaces auf Layer 2.",
+        gear_reward  = None,
+        faction_reward = ("Net Runners", 15),
+    ),
+
+    Mission(
+        mission_id   = "21.18",
+        chapter      = 21,
+        title        = "NIS/YP: Network Information Service",
+        mtype        = "SCAN",
+        xp           = 75,
+        speaker      = "PHANTOM",
+        story        = (
+            "PHANTOM: 'Veraltet aber im Examen präsent. NIS.\n"
+            " Network Information Service. ypbind. ypcat.\n"
+            " Wisse was es ist — auch wenn du es nie nutzt.'"
+        ),
+        why_important = (
+            "NIS (Yellow Pages) ist veraltet, aber noch in LPIC-1 Lehrplan.\n"
+            "Verständnis des Konzepts und der Tools ist Prüfungsanforderung."
+        ),
+        explanation  = (
+            "NIS (NETWORK INFORMATION SERVICE / YELLOW PAGES):\n\n"
+            "KONZEPT:\n"
+            "  Zentrale Verwaltung von: passwd, group, hosts, services etc.\n"
+            "  Veraltet — ersetzt durch LDAP, FreeIPA, Kerberos\n"
+            "  Sicherheitsprobleme: Daten unverschlüsselt!\n\n"
+            "KOMPONENTEN:\n"
+            "  ypserv   NIS-Server-Daemon\n"
+            "  ypbind   NIS-Client-Daemon (bindet an Server)\n"
+            "  ypcat    NIS-Datenbank lesen\n"
+            "  ypmatch  Einzelnen Eintrag suchen\n"
+            "  ypwhich  Welcher NIS-Server?\n\n"
+            "CLIENT-KONFIGURATION:\n"
+            "  /etc/yp.conf: domain nisdomainname\n"
+            "                ypserver 192.168.1.1\n"
+            "  domainname NISDOMAIN\n"
+            "  ypbind\n\n"
+            "NSSWITCH MIT NIS:\n"
+            "  passwd: files nis\n"
+            "  group:  files nis\n"
+            "  hosts:  files nis dns\n\n"
+            "NIS MAPS:\n"
+            "  ypcat passwd         Passwort-DB abrufen\n"
+            "  ypcat -k hosts       Hosts-DB mit Keys\n"
+            "  ypmatch ghost passwd  Einzelnen Eintrag"
+        ),
+        syntax       = "ypcat MAP  (NIS-Datenbank lesen)",
+        example      = "ypwhich && ypcat passwd | head -5",
+        task_description = "Zeige ypcat-Hilfe mit ypcat --help",
+        expected_commands = ["ypcat --help"],
+        hint_text    = "ypcat --help oder man ypcat für NIS-Dokumentation",
+        quiz_questions = [
+            QuizQuestion(
+                question = "Was ist die moderne Ablösung von NIS?",
+                options  = [
+                    "LDAP (z.B. OpenLDAP oder FreeIPA)",
+                    "NFS",
+                    "Kerberos allein",
+                    "DHCP",
+                ],
+                correct  = 0,
+                explanation = "LDAP (FreeIPA, ActiveDirectory, OpenLDAP) hat NIS abgelöst. Verschlüsselt und sicherer.",
+                xp_value = 15,
+            ),
+        ],
+        exam_tip     = "ypbind=Client | ypserv=Server | ypcat=Daten lesen | ypmatch=Einzelner Eintrag",
+        memory_tip   = "YP = Yellow Pages (NIS ursprünglicher Name). Veraltet! Aber LPIC-1 kennt es noch.",
+        gear_reward  = None,
+        faction_reward = ("Net Runners", 10),
+    ),
+
+    Mission(
+        mission_id   = "21.19",
+        chapter      = 21,
+        title        = "Autofs: Automatische Einbindung",
+        mtype        = "CONSTRUCT",
+        xp           = 85,
+        speaker      = "DAEMON",
+        story        = (
+            "DAEMON: 'Dutzende NFS-Mounts. Alle beim Boot?\n"
+            " Autofs. On-demand mounting.\n"
+            " Nur wenn jemand zugreift. Automatisch. Effizient.'"
+        ),
+        why_important = (
+            "Autofs bindet Dateisysteme automatisch beim Zugriff ein\n"
+            "und trennt sie nach Inaktivität. Effizient für viele NFS-Mounts."
+        ),
+        explanation  = (
+            "AUTOFS — AUTOMATISCHE EINBINDUNG:\n\n"
+            "INSTALLATION:\n"
+            "  apt install autofs\n\n"
+            "MASTER-KONFIGURATION (/etc/auto.master):\n"
+            "  /mnt/nfs  /etc/auto.nfs  --timeout=60\n"
+            "  /home     /etc/auto.home\n"
+            "  /-        /etc/auto.direct  (direkte Einbindung)\n\n"
+            "MAP-DATEI (/etc/auto.nfs):\n"
+            "  data  -rw,sync  nfsserver:/data\n"
+            "  backup  -ro    nfsserver:/backup\n"
+            "  → Zugriff auf /mnt/nfs/data → automatisch gemountet\n\n"
+            "DIREKTE MAP (/etc/auto.direct):\n"
+            "  /opt/remote  -rw  nfsserver:/opt\n"
+            "  → Exakter Pfad statt Verzeichnis-Prefix\n\n"
+            "DIENST:\n"
+            "  systemctl start autofs\n"
+            "  systemctl enable autofs\n\n"
+            "TIMEOUT:\n"
+            "  --timeout=300  Nach 5min Inaktivität: unmount\n\n"
+            "TEST:\n"
+            "  ls /mnt/nfs/data     Triggert automatisches Mount\n"
+            "  df -h               Zeigt gemountete FS"
+        ),
+        syntax       = "/mnt/punkt  /etc/auto.map  --timeout=60  (in /etc/auto.master)",
+        example      = "cat /etc/auto.master && systemctl status autofs",
+        task_description = "Zeige autofs-Konfiguration mit cat /etc/auto.master",
+        expected_commands = ["cat /etc/auto.master"],
+        hint_text    = "cat /etc/auto.master zeigt die autofs-Haupt-Konfiguration",
+        quiz_questions = [
+            QuizQuestion(
+                question = "Was ist der Hauptvorteil von autofs gegenüber /etc/fstab für NFS?",
+                options  = [
+                    "Mounts erfolgen on-demand beim Zugriff und werden nach Inaktivität wieder getrennt",
+                    "Autofs ist schneller als fstab",
+                    "Autofs unterstützt mehr Dateisystem-Typen",
+                    "Autofs braucht kein root",
+                ],
+                correct  = 0,
+                explanation = "Autofs: lazy mount (nur bei Zugriff) + auto-unmount (nach Timeout). Weniger Ressourcen.",
+                xp_value = 15,
+            ),
+        ],
+        exam_tip     = "auto.master: Mountpunkt Map Optionen. Map-Datei: Kürzel Optionen Server:/pfad.",
+        memory_tip   = "Autofs = Lazy Mount. Wie eine automatische Tür: öffnet nur wenn jemand kommt.",
+        gear_reward  = None,
+        faction_reward = ("Net Runners", 15),
+    ),
+
+    Mission(
+        mission_id   = "21.20",
+        chapter      = 21,
+        title        = "Netzwerk-Konfigurationsdateien Übersicht",
+        mtype        = "SCAN",
+        xp           = 80,
+        speaker      = "VECTOR",
+        story        = (
+            "VECTOR: 'Alle Konfigurationsdateien. Alle Orte.\n"
+            " Wo konfiguriert welche Distribution was?\n"
+            " Übersicht ist der Unterschied zwischen Profi und Anfänger.'"
+        ),
+        why_important = (
+            "Kenntnis der Netzwerk-Konfigurationsdateien verschiedener\n"
+            "Linux-Distributionen ist wichtiges LPIC-1 Prüfungswissen."
+        ),
+        explanation  = (
+            "NETZWERK-KONFIGURATIONSDATEIEN:\n\n"
+            "DEBIAN/UBUNTU:\n"
+            "  /etc/network/interfaces        Klassisch\n"
+            "  /etc/network/interfaces.d/     Fragmente\n"
+            "  /etc/netplan/*.yaml            Netplan (Ubuntu 18+)\n"
+            "  /etc/NetworkManager/           NM-Konfiguration\n\n"
+            "RED HAT/CENTOS/FEDORA:\n"
+            "  /etc/sysconfig/network         Allgemein\n"
+            "  /etc/sysconfig/network-scripts/ifcfg-eth0  Interface\n"
+            "  (Neuer: NetworkManager überall)\n\n"
+            "GEMEINSAME DATEIEN:\n"
+            "  /etc/hostname              Rechnername\n"
+            "  /etc/hosts                 Lokale Namen\n"
+            "  /etc/resolv.conf           DNS-Resolver\n"
+            "  /etc/nsswitch.conf         Namensauflösung\n"
+            "  /etc/gai.conf              IPv6/IPv4 Präferenz\n\n"
+            "NETPLAN (Ubuntu 18+):\n"
+            "  /etc/netplan/*.yaml\n"
+            "  netplan apply              Konfiguration anwenden\n"
+            "  netplan try                Test (30s Rollback)\n"
+            "  netplan generate           Generiert NM/systemd-networkd Config\n\n"
+            "HOSTNAME SETZEN:\n"
+            "  hostnamectl set-hostname neongrid\n"
+            "  hostname -f  (vollständiger Name)"
+        ),
+        syntax       = "hostnamectl set-hostname NAME  /  netplan apply",
+        example      = "cat /etc/hostname && hostname -f && cat /etc/hosts",
+        task_description = "Zeige Hostname-Info mit hostnamectl",
+        expected_commands = ["hostnamectl"],
+        hint_text    = "hostnamectl zeigt den vollständigen Hostname und System-Info",
+        quiz_questions = [
+            QuizQuestion(
+                question = "Welche Datei konfiguriert Netzwerk-Interfaces auf klassischen Debian-Systemen?",
+                options  = [
+                    "/etc/network/interfaces",
+                    "/etc/sysconfig/network",
+                    "/etc/netplan/01-netcfg.yaml",
+                    "/etc/NetworkManager/system-connections/",
+                ],
+                correct  = 0,
+                explanation = "/etc/network/interfaces ist die klassische Debian/Ubuntu Netzwerk-Konfiguration.",
+                xp_value = 15,
+            ),
+        ],
+        exam_tip     = "Debian: /etc/network/interfaces. RHEL: /etc/sysconfig/network-scripts/. Ubuntu: netplan.",
+        memory_tip   = "Jede Distro hat ihr Verzeichnis. Aber /etc/resolv.conf und /etc/hosts sind überall gleich.",
+        gear_reward  = None,
+        faction_reward = ("Net Runners", 15),
+    ),
+
+    Mission(
+        mission_id   = "21.quiz",
+        chapter      = 21,
+        title        = "QUIZ — Network Services Protocol",
+        mtype        = "QUIZ",
+        xp           = 200,
+        speaker      = "SYSTEM",
+        story        = (
+            "SYSTEM: 'Network Services Quiz initialisiert.\n"
+            " NFS, Samba, DHCP, DNS, LDAP, nsswitch.\n"
+            " Beweise dein Netzwerk-Wissen.'"
+        ),
+        why_important = "Prüfungsvorbereitung: Netzwerkdienste und Client-Konfiguration.",
+        explanation  = "Quiz über alle Network Services Themen.",
+        syntax       = "",
+        example      = "",
+        task_description = "Beantworte alle Netzwerkdienst-Fragen.",
+        expected_commands = [],
+        hint_text    = "NFS, Samba, DHCP DORA, DNS Records, nsswitch, LDAP",
+        quiz_questions = [
+            QuizQuestion(
+                question = "Was ist der Unterschied zwischen NFS und Samba?",
+                options  = [
+                    "NFS ist für Unix/Linux (NFS-Protokoll), Samba für Windows-Kompatibilität (SMB/CIFS)",
+                    "NFS ist moderner als Samba",
+                    "Samba ist nur für lokale Netzwerke",
+                    "NFS ist verschlüsselt, Samba nicht",
+                ],
+                correct  = 0,
+                explanation = "NFS = Unix-Standard. Samba = SMB/CIFS für Windows-Interoperabilität.",
+                xp_value = 25,
+            ),
+            QuizQuestion(
+                question = "Was macht `getent hosts google.com`?",
+                options  = [
+                    "Löst den Hostnamen über nsswitch auf (files/dns/ldap je nach Konfig)",
+                    "Nur DNS-Abfrage",
+                    "Nur /etc/hosts prüfen",
+                    "Ping gegen google.com senden",
+                ],
+                correct  = 0,
+                explanation = "getent nutzt nsswitch.conf: prüft alle konfigurierten Quellen in der Reihenfolge.",
+                xp_value = 25,
+            ),
+            QuizQuestion(
+                question = "Welcher NFS-Export-Option bewirkt, dass root als nobody gemappt wird?",
+                options  = [
+                    "root_squash (Standard)",
+                    "no_root_squash",
+                    "all_squash",
+                    "user_squash",
+                ],
+                correct  = 0,
+                explanation = "root_squash ist die Standard-Option. root-Zugriff vom Client → nobody auf Server.",
+                xp_value = 25,
+            ),
+            QuizQuestion(
+                question = "Welcher Befehl prüft die Samba-Konfiguration auf Fehler?",
+                options  = [
+                    "testparm",
+                    "smbd --check",
+                    "smbclient --test",
+                    "samba-check",
+                ],
+                correct  = 0,
+                explanation = "testparm liest /etc/samba/smb.conf und meldet Konfigurationsfehler.",
+                xp_value = 25,
+            ),
+        ],
+        exam_tip     = "NFS exports in /etc/exports. exportfs -a. Samba testparm. DHCP DORA. nsswitch Reihenfolge.",
+        memory_tip   = "Network Services = geteilte Ressourcen. NFS=Dateien(Unix), Samba=Dateien(Windows).",
+        gear_reward  = "net_runners_badge",
+        faction_reward = ("Net Runners", 30),
+    ),
+
+    Mission(
+        mission_id   = "21.boss",
+        chapter      = 21,
+        title        = "BOSS: NET DAEMON v21.0",
+        mtype        = "BOSS",
+        xp           = 300,
+        speaker      = "DAEMON",
+        story        = (
+            "DAEMON: 'Ich bin NET DAEMON. Ich kontrolliere jede Verbindung.\n"
+            " NFS. Samba. DHCP. DNS. LDAP.\n"
+            " Du kennst die Protokolle. Du kennst die Ports.\n"
+            " Beweise es — bevor das Netz dich verschluckt!'"
+        ),
+        why_important = "Abschluss-Boss für Netzwerkdienste — testet alle Network-Services-Kenntnisse.",
+        explanation  = (
+            "NETWORK SERVICES ABSCHLUSS:\n\n"
+            "Du solltest jetzt können:\n"
+            "  ✓ NFS Client und Server konfigurieren\n"
+            "  ✓ Samba für Windows-Freigaben einrichten\n"
+            "  ✓ DHCP-Prozess (DORA) verstehen\n"
+            "  ✓ DNS mit dig debuggen\n"
+            "  ✓ nsswitch.conf konfigurieren\n"
+            "  ✓ LDAP-Grundbefehle (ldapsearch)\n"
+            "  ✓ NetworkManager mit nmcli verwalten\n"
+            "  ✓ chrony für Zeitsync konfigurieren\n"
+            "  ✓ iproute2 vollständig beherrschen\n"
+            "  ✓ Autofs für lazy mounting nutzen\n\n"
+            "LETZTER BEFEHL:\n"
+            "  ss -tulpn | grep -E 'nfs|smb|ldap|dhcp'"
+        ),
+        syntax       = "ss -tulpn && exportfs -v && testparm",
+        example      = "ss -tulpn | grep LISTEN | sort && dig +short google.com",
+        task_description = "Führe finalen Netzwerkdienst-Audit durch: ss -tulpn",
+        expected_commands = ["ss -tulpn"],
+        hint_text    = "ss -tulpn zeigt alle lauschenden Netzwerkdienste",
+        quiz_questions = [
+            QuizQuestion(
+                question = "Welche drei Befehle zeigen den Status der wichtigsten Netzwerkdienste?",
+                options  = [
+                    "ss -tulpn, exportfs -v, testparm",
+                    "ps aux, top, htop",
+                    "ping, dig, traceroute",
+                    "ip addr, ip route, ip neigh",
+                ],
+                correct  = 0,
+                explanation = "ss -tulpn (Ports), exportfs -v (NFS), testparm (Samba) = Netzwerkdienst-Diagnose.",
+                xp_value = 30,
+            ),
+        ],
+        exam_tip     = "Network Services ABGESCHLOSSEN. NFS/Samba/DNS/DHCP/LDAP = LPIC-1 Topic 109 komplett.",
+        memory_tip   = "Netzwerkdienste = geteilte Ressourcen und Services im Netz.",
+        gear_reward  = "net_runners_badge",
+        faction_reward = ("Net Runners", 60),
+    ),
+]
