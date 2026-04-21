@@ -2068,6 +2068,25 @@ CHAPTER_9_MISSIONS: list[Mission] = [
                 explanation = "SSH (Secure Shell) lauscht auf TCP Port 22.\nPort 23 = Telnet (UNSICHER — kein Encryption) | SSH ist der sichere Ersatz.",
                 xp_value    = 30,
             ),
+            QuizQuestion(
+                question    = "Was ist der Zweck von /etc/nsswitch.conf?",
+                options     = [
+                    "A) Netzwerk-Interface-Konfiguration",
+                    "B) Reihenfolge der Namensauflösung (files, dns, ldap...)",
+                    "C) SSH-Server-Konfiguration",
+                    "D) Firewall-Regelset",
+                ],
+                correct     = "B",
+                explanation = "/etc/nsswitch.conf steuert die Suchreihenfolge für hosts, passwd, group etc. 'hosts: files dns' = erst /etc/hosts, dann DNS.",
+                xp_value    = 30,
+            ),
+            QuizQuestion(
+                question    = "Welcher DNS-Record-Typ ordnet einem Hostnamen eine IPv4-Adresse zu?",
+                options     = ["A) MX", "B) AAAA", "C) A", "D) CNAME"],
+                correct     = "C",
+                explanation = "A-Record: Hostname → IPv4. AAAA-Record: Hostname → IPv6. MX: Mailserver. CNAME: Alias auf anderen Hostnamen. PTR: Reverse-Lookup.",
+                xp_value    = 25,
+            ),
         ],
         exam_tip     = (
             "LPIC-1 FINAL NET CHECK:\n"
