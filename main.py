@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 ╔══════════════════════════════════════════════════════════════════╗
-║  NEONGRID-9 :: LPIC-1 COMBAT TRAINING SYSTEM                   ║
+║  NEONGRID-9 :: Linux COMBAT TRAINING SYSTEM                   ║
 ║  Version 1.0  |  Sektor 101 — Kapitel 1-3                      ║
 ║                                                                  ║
 ║  "The system does not care who you are.                         ║
@@ -73,7 +73,7 @@ CHAPTERS = [
     (15, CHAPTER_15_MISSIONS, "110.1", "SECURITY PROTOCOL","SUID, SSH-Härtung, GPG, fail2ban, sudo & LUKS"),
     (16, CHAPTER_16_MISSIONS, "107.3", "LOCALE MATRIX",    "Locale, Zeitzonen, X11, CUPS & Desktop"),
     (17, CHAPTER_17_MISSIONS, "105.1", "SHELL ENV",        "Startup-Dateien, PATH, Aliases, History & PS1"),
-    (18, CHAPTER_18_MISSIONS, "ALL",   "EXAM PROTOCOL",   "LPIC-1 Zertifizierungsprüfung — alle Topics"),
+    (18, CHAPTER_18_MISSIONS, "ALL",   "EXAM PROTOCOL",   "Linux Zertifizierungsprüfung — alle Topics"),
     (19, CHAPTER_19_MISSIONS, "102.6/103.6", "GHOST PROTOCOL II", "Container & Virtualization"),
     (20, CHAPTER_20_MISSIONS, "109.4/110.1", "FIREWALL DOMINION", "iptables, nftables, VPN & Netzwerk-Sicherheit"),
     (21, CHAPTER_21_MISSIONS, "109.2/109.4", "NETWORK SERVICES", "NFS, Samba, DHCP, DNS, LDAP & Netzwerkdienste"),
@@ -151,7 +151,7 @@ def show_title_screen():
    ╚═════╝ ╚═╝  ╚═╝╚═╝╚═════╝ ╚═╝   ╚════╝  """ + C.RESET)
     print()
     print(C.CYAN + "  " + "═" * 44 + C.RESET)
-    print(C.YELLOW + "   LPIC-1 COMBAT TRAINING SYSTEM  v1.0" + C.RESET)
+    print(C.YELLOW + "   Linux COMBAT TRAINING SYSTEM  v1.0" + C.RESET)
     print(C.GRAY  + '   "The system does not care who you are."' + C.RESET)
     print(C.CYAN + "  " + "═" * 44 + C.RESET)
     print()
@@ -182,7 +182,7 @@ def show_story_prologue():
         delay=0.02, color=C.MAGENTA
     )
     typewrite(
-        '  "Ich werde dich zum LPIC-1 Certified Ghost machen."',
+        '  "Ich werde dich zum Linux Certified Ghost machen."',
         delay=0.02, color=C.MAGENTA
     )
     typewrite(
@@ -337,7 +337,7 @@ def about_screen():
 """ + C.RESET)
 
     print(C.CYAN + "  " + "─" * 66 + C.RESET)
-    print(C.WHITE + "  LPIC-1 COMBAT TRAINING SYSTEM  ::  Version 1.0" + C.RESET)
+    print(C.WHITE + "  Linux COMBAT TRAINING SYSTEM  ::  Version 1.0" + C.RESET)
     print(C.GRAY  + '  "The system does not care who you are. Only what you know."' + C.RESET)
     print(C.CYAN + "  " + "─" * 66 + C.RESET)
 
@@ -347,9 +347,9 @@ def about_screen():
     print(f"  Quiz-Fragen      {total_questions:>6}")
     print(f"  Erreichbare XP   {total_xp:>6,}")
     print(f"  Gear-Items       {len(GEAR_CATALOG):>6}")
-    print(f"  LPIC-1 Version   {'5.0':>6}")
+    print(f"  Linux Version   {'5.0':>6}")
 
-    print(C.YELLOW + "\n  LPIC-1 TOPICS\n" + C.RESET)
+    print(C.YELLOW + "\n  Linux TOPICS\n" + C.RESET)
     for ch_id, ch_missions, ch_topic, ch_title, ch_sub in CHAPTERS:
         xp = sum(m.xp for m in ch_missions)
         print(f"  {C.CYAN}Kap.{ch_id:>2}{C.RESET}  {ch_title:<18}"
@@ -373,7 +373,7 @@ def about_screen():
     print()
     print(C.WHITE  + "  Zertifizierungsstandard" + C.RESET)
     print(C.GRAY   + "    Linux Professional Institute  —  lpi.org" + C.RESET)
-    print(C.GRAY   + "    LPIC-1 Version 5.0  (Exams 101 + 102)" + C.RESET)
+    print(C.GRAY   + "    Linux Version 5.0  (Exams 101 + 102)" + C.RESET)
     print()
     print(C.WHITE  + "  Technologie" + C.RESET)
     print(C.GRAY   + "    Python 3.10+  —  pure stdlib  —  keine Dependencies" + C.RESET)
@@ -439,7 +439,7 @@ def game_hub():
         print(C.WHITE + "  AKTIONEN\n" + C.RESET)
         print(C.CYAN  + "  [s]" + C.RESET + "  Charakterstatus")
         print(C.CYAN  + "  [i]" + C.RESET + "  Inventar & Gear")
-        print(C.CYAN  + "  [r]" + C.RESET + "  LPIC-1 Readiness Report")
+        print(C.CYAN  + "  [r]" + C.RESET + "  Linux Readiness Report")
         print(C.CYAN  + "  [x]" + C.RESET + "  Review Mode (Spaced Repetition)")
         print(C.CYAN  + "  [e]" + C.RESET + "  Exam Mode — 90 Min Prüfungssimulation")
         print(C.CYAN  + "  [v]" + C.RESET + "  Speichern")
@@ -489,7 +489,7 @@ def game_hub():
         elif choice in ("i", "inv", "inventar"):
             show_inventory()
         elif choice in ("r", "readiness", "report"):
-            show_lpic_readiness()
+            show_linux_readiness()
         elif choice in ("x", "review"):
             review_mode()
         elif choice in ("e", "exam"):
@@ -517,7 +517,7 @@ def chapter_menu(ch_id: int):
     prefix = str(ch_id) + "."
 
     while True:
-        chapter_header(ch_id, ch_title, f"LPIC-1 Topic {ch_topic} — {ch_sub}")
+        chapter_header(ch_id, ch_title, f"Linux Topic {ch_topic} — {ch_sub}")
 
         player = GAME.player
         print(C.WHITE + "  Missionen:\n" + C.RESET)
@@ -776,7 +776,7 @@ def _show_chapter_complete(ch_id: int, ch_title: str, ch_topic: str):
             "PS1: \\u=User \\h=Host \\w=Pfad \\$=$ oder # | PS2=Fortsetzungsprompt",
         ],
         18: [
-            "LPIC-1: 2 Prüfungen (101 + 102) | je 90 Minuten | 500/800 Punkte zum Bestehen",
+            "Linux: 2 Prüfungen (101 + 102) | je 90 Minuten | 500/800 Punkte zum Bestehen",
             "Exam 101: Hardware, Boot, Kernel, Pakete, Shell, Dateisysteme",
             "Exam 102: Scripting, Desktop, User, Logs, Netzwerk, Sicherheit",
             "Prüfungs-Anmeldung: lpi.org | Gültigkeitsdauer: 5 Jahre",
@@ -787,7 +787,7 @@ def _show_chapter_complete(ch_id: int, ch_title: str, ch_topic: str):
             "Topic 107: useradd -m | /etc/shadow | chage -l | crontab */15",
             "Topic 109: ip route | ss -tulpn | authorized_keys | ssh -L Forwarding",
             "Topic 110: find -perm -4000 | PermitRootLogin no | gpg -d | visudo",
-            "Du hast alle 18 Kapitel abgeschlossen — LPIC-1 bereit!",
+            "Du hast alle 18 Kapitel abgeschlossen — Linux bereit!",
         ],
         19: [
             "Namespaces: PID NET MNT UTS IPC USER CGROUP — Isolation für Container",
@@ -868,7 +868,7 @@ def _show_chapter_complete(ch_id: int, ch_title: str, ch_topic: str):
     for item in recap:
         print(C.GREEN + f"  ✓  {item}" + C.RESET)
     print()
-    print(C.YELLOW + f"  ╔═[ LPIC-1 STATUS ]" + C.RESET)
+    print(C.YELLOW + f"  ╔═[ Linux STATUS ]" + C.RESET)
     print(C.YELLOW + f"  ║  Topic {ch_topic}: ABGESCHLOSSEN ✓" + C.RESET)
     # Nächstes Kapitel anzeigen
     next_ch = next((c for c in CHAPTERS if c[0] == ch_id + 1), None)
@@ -888,11 +888,11 @@ def show_player_status():
     prompt_continue()
 
 
-def show_lpic_readiness():
-    """LPIC-1 Readiness Report — pro Topic, Quiz-Genauigkeit, Gesamtbewertung."""
+def show_linux_readiness():
+    """Linux Readiness Report — pro Topic, Quiz-Genauigkeit, Gesamtbewertung."""
     clear()
     player = GAME.player
-    print(C.NEON + "\n  LPIC-1 READINESS REPORT\n" + C.RESET)
+    print(C.NEON + "\n  Linux READINESS REPORT\n" + C.RESET)
     print(C.GRAY + "  ─" * 35 + C.RESET)
 
     total_missions = sum(len(m) for _, m, *_ in CHAPTERS)
@@ -962,7 +962,7 @@ def show_lpic_readiness():
 
     readiness_score = int(overall_pct * 0.5 + overall_acc * 0.5)
     if readiness_score >= 80:
-        r_color, r_verdict = C.SUCCESS, "LPIC-1 BEREIT ✓"
+        r_color, r_verdict = C.SUCCESS, "Linux BEREIT ✓"
     elif readiness_score >= 62:
         r_color, r_verdict = C.YELLOW,  "FAST BEREIT — weiter üben"
     else:
@@ -984,15 +984,15 @@ def show_lpic_readiness():
 
 
 def timed_exam_mode():
-    """LPIC-1 Prüfungssimulation — 90 Minuten, 60 Fragen, LPIC-Scoring."""
+    """Linux Prüfungssimulation — 90 Minuten, 60 Fragen, LPIC-Scoring."""
     clear()
     player = GAME.player
     EXAM_LIMIT = 90 * 60  # 5400 Sekunden
 
-    print(C.NEON + "\n  LPIC-1 PRÜFUNGSSIMULATION\n" + C.RESET)
+    print(C.NEON + "\n  Linux PRÜFUNGSSIMULATION\n" + C.RESET)
     print(C.CYAN + "  " + "─" * 60 + C.RESET)
     print(f"\n  {C.WHITE}Regelwerk:{C.RESET}")
-    print(f"  {C.GRAY}• 60 Fragen aus allen LPIC-1 Topics")
+    print(f"  {C.GRAY}• 60 Fragen aus allen Linux Topics")
     print(f"  • 90 Minuten Zeitlimit")
     print(f"  • Bestehensgrenze: 500 / 800 Punkte (62,5%)")
     print(f"  • Jede richtige Antwort = ~13 Punkte")
@@ -1001,8 +1001,8 @@ def timed_exam_mode():
     quiz_bonus = player.gear_bonus("quiz_xp")
     if quiz_bonus > 1.0:
         print(C.GREEN + f"  ✓ Ghost Mask: +{int((quiz_bonus-1)*100)}% Quiz-XP" + C.RESET)
-    if "lpic1_badge" in player.inventory:
-        print(C.YELLOW + "  ✓ LPIC-1 Badge: +5% auf alle XP" + C.RESET)
+    if "linux_badge" in player.inventory:
+        print(C.YELLOW + "  ✓ Linux Badge: +5% auf alle XP" + C.RESET)
     print()
     print(C.DANGER + "  [ENTER] Prüfung starten  |  [q] Abbrechen\n" + C.RESET)
 
@@ -1031,7 +1031,7 @@ def timed_exam_mode():
 
     clear()
     print(C.NEON + "\n  ╔══════════════════════════════════════════════════╗")
-    print(         "  ║   LPIC-1 EXAM — START                           ║")
+    print(         "  ║   Linux EXAM — START                           ║")
     print(         "  ║   90 Minuten | 60 Fragen | 500/800 zum Bestehen ║")
     print(         "  ╚══════════════════════════════════════════════════╝\n" + C.RESET)
     time.sleep(1.5)
@@ -1053,7 +1053,7 @@ def timed_exam_mode():
         prog_bar = C.SUCCESS + "█" * progress_pct + C.GRAY + "░" * (30 - progress_pct) + C.RESET
 
         clear()
-        print(f"  {C.NEON}LPIC-1 EXAM{C.RESET}   "
+        print(f"  {C.NEON}Linux EXAM{C.RESET}   "
               f"{prog_bar}  "
               f"{C.YELLOW}Frage {q_num:>2}/60{C.RESET}   "
               f"{t_color}⏱ {r_mm:02d}:{r_ss:02d}{C.RESET}")
@@ -1095,10 +1095,10 @@ def timed_exam_mode():
     wrong_count      = answered - correct_count
     unanswered       = 60 - answered
 
-    # LPIC-1 Punkte: 800 Punkte max, linear auf 60 Fragen gemappt
+    # Linux Punkte: 800 Punkte max, linear auf 60 Fragen gemappt
     # Punkte pro richtiger Antwort = 800/60 ≈ 13.33
-    lpic_score = int(correct_count * 800 / 60)
-    passed     = lpic_score >= 500
+    linux_score = int(correct_count * 800 / 60)
+    passed     = linux_score >= 500
     accuracy   = int(correct_count / answered * 100) if answered else 0
 
     # XP für den Spieler
@@ -1130,7 +1130,7 @@ def timed_exam_mode():
 
     print(verdict_color + verdict_art + C.RESET)
     print()
-    print(C.NEON + "  LPIC-1 PRÜFUNGSERGEBNIS\n" + C.RESET)
+    print(C.NEON + "  Linux PRÜFUNGSERGEBNIS\n" + C.RESET)
     print(C.CYAN + "  " + "─" * 54 + C.RESET)
     print(f"\n  {'Fragen beantwortet:':<26} {answered}/60")
     print(f"  {'Richtig:':<26} {C.SUCCESS}{correct_count}{C.RESET}")
@@ -1143,7 +1143,7 @@ def timed_exam_mode():
     print(C.CYAN + "  " + "─" * 54 + C.RESET)
 
     score_bar_w = 40
-    score_filled = int(lpic_score / 800 * score_bar_w)
+    score_filled = int(linux_score / 800 * score_bar_w)
     pass_pos     = int(500 / 800 * score_bar_w)
     bar_chars    = list(C.GRAY + "░" * score_bar_w + C.RESET)
     score_bar    = ""
@@ -1156,15 +1156,15 @@ def timed_exam_mode():
             score_bar += C.GRAY + "░"
     score_bar += C.RESET
 
-    print(f"\n  LPIC-1 PUNKTE:  {verdict_color}{lpic_score:>3} / 800{C.RESET}  "
+    print(f"\n  Linux PUNKTE:  {verdict_color}{linux_score:>3} / 800{C.RESET}  "
           f"(Bestehensgrenze: 500)")
     print(f"  {score_bar}")
     print(f"  {'0':>2}{'':>17}500{'':>15}800")
 
     if passed:
-        print(C.SUCCESS + f"\n  ✓  BESTANDEN — Du würdest die echte LPIC-1 Prüfung bestehen!\n" + C.RESET)
+        print(C.SUCCESS + f"\n  ✓  BESTANDEN — Du würdest die echte Linux Prüfung bestehen!\n" + C.RESET)
     else:
-        deficit = 500 - lpic_score
+        deficit = 500 - linux_score
         need    = int(deficit * 60 / 800) + 1
         print(C.DANGER + f"\n  ✗  NICHT BESTANDEN — {deficit} Punkte fehlen ({need} weitere korrekte Antworten)\n" + C.RESET)
 

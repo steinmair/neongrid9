@@ -1,10 +1,10 @@
 """
 NeonGrid-9 :: Kapitel 18 — EXAM PROTOCOL
-LPIC-1 Prüfungssimulation — alle Topics 101–110
+Linux Prüfungssimulation — alle Topics 101–110
 
 "Das ist kein Training mehr, Ghost.
  Das ist die echte Prüfung.
- LPIC-1: 60 Fragen, 90 Minuten, 500 Punkte zum Bestehen.
+ Linux: 60 Fragen, 90 Minuten, 500 Punkte zum Bestehen.
  Du hast 17 Kapitel trainiert.
  Jetzt zeigst du, was du gelernt hast."
 """
@@ -29,7 +29,7 @@ CHAPTER_18_MISSIONS: list[Mission] = [
             " 12 Fragen. Keine Hilfen. Kein Hint.\n"
             " Zeig, was du weißt.'"
         ),
-        why_important = "LPIC-1 Exam 101: Topics 101.1 / 101.2 / 101.3",
+        why_important = "Linux Exam 101: Topics 101.1 / 101.2 / 101.3",
         ascii_art = """
   ███████╗██╗  ██╗ █████╗ ███╗   ███╗    ██████╗ ██████╗  ██████╗ ████████╗ ██████╗  ██████╗ ██████╗ ██╗
   ██╔════╝╚██╗██╔╝██╔══██╗████╗ ████║    ██╔══██╗██╔══██╗██╔═══██╗╚══██╔══╝██╔═══██╗██╔════╝██╔═══██╗██║
@@ -42,7 +42,7 @@ CHAPTER_18_MISSIONS: list[Mission] = [
   > LPI-101 exam mode. 60 questions. 60 minutes. 500/800 to pass.""",
         story_transitions = [
             "17 Kapitel hinter dir. Das Wissen sitzt. Jetzt der Test.",
-            "LPIC-1: zwei Prüfungen, je 500/800 Punkte. Keine Lücken.",
+            "Linux: zwei Prüfungen, je 500/800 Punkte. Keine Lücken.",
             "Examinator wartet. Keine Hints. Keine zweite Chance.",
             "NeonGrid-9 hat dich vorbereitet. Beweise es.",
         ],
@@ -185,7 +185,7 @@ CHAPTER_18_MISSIONS: list[Mission] = [
             " Und Pakete — dpkg, apt, rpm.\n"
             " 12 Fragen. Die Uhr läuft.'"
         ),
-        why_important = "LPIC-1 Exam 101: Topics 102.4 / 102.5 / 104.1 / 104.5",
+        why_important = "Linux Exam 101: Topics 102.4 / 102.5 / 104.1 / 104.5",
         explanation  = "",
         syntax       = "",
         example      = "",
@@ -320,7 +320,7 @@ CHAPTER_18_MISSIONS: list[Mission] = [
             " TCP/IP, DNS, SSH, Firewall.\n"
             " 12 Fragen. Fokus.'"
         ),
-        why_important = "LPIC-1 Exam 101/102: Topics 103.2 / 103.5 / 103.6 / 109.1-109.4",
+        why_important = "Linux Exam 101/102: Topics 103.2 / 103.5 / 103.6 / 109.1-109.4",
         explanation  = "",
         syntax       = "",
         example      = "",
@@ -465,7 +465,7 @@ CHAPTER_18_MISSIONS: list[Mission] = [
             " Bash-Scripting.\n"
             " 12 Fragen. Du bist fast durch.'"
         ),
-        why_important = "LPIC-1 Exam 102: Topics 105.1 / 105.2 / 107.1 / 107.2 / 108.1 / 108.2",
+        why_important = "Linux Exam 102: Topics 105.1 / 105.2 / 107.1 / 107.2 / 108.1 / 108.2",
         explanation  = "",
         syntax       = "",
         example      = "",
@@ -620,7 +620,7 @@ CHAPTER_18_MISSIONS: list[Mission] = [
             " 12 Fragen. Das ist der schwierigste Block.\n"
             " Konzentriere dich.'"
         ),
-        why_important = "LPIC-1 Exam 102: Topics 105.1 / 107.3 / 110.1 / 110.2 / 110.3",
+        why_important = "Linux Exam 102: Topics 105.1 / 107.3 / 110.1 / 110.2 / 110.3",
         explanation  = "",
         syntax       = "",
         example      = "",
@@ -785,7 +785,7 @@ CHAPTER_18_MISSIONS: list[Mission] = [
             "Das Fundament. Ohne dieses Wissen bricht alles.\n\n"
             "EXAMINATOR: 'Tiefenprüfung beginnt.'"
         ),
-        why_important = "Domain 101 macht ~20% der LPIC-101-Prüfung aus. Hardware-IDs, Boot-Sequenz, SysVinit vs systemd und Kernel-Parameter sind garantierte Prüfungsthemen.",
+        why_important = "Domain 101 macht ~20% der Linux01-Prüfung aus. Hardware-IDs, Boot-Sequenz, SysVinit vs systemd und Kernel-Parameter sind garantierte Prüfungsthemen.",
         explanation   = (
             "Prüfungsblock 6 testet die gesamte Domain 101 in der Tiefe:\n"
             "• 101.1: BIOS/UEFI, POST, IRQ, DMA, /proc, /sys, /dev\n"
@@ -872,7 +872,7 @@ CHAPTER_18_MISSIONS: list[Mission] = [
             " dpkg, apt, rpm, yum/dnf, zypper, Shared Libraries.\n"
             " 10 Fragen. Zeig was du weißt.'"
         ),
-        why_important = "LPIC-1 Exam 101: Topic 102 — Linux Installation & Package Management",
+        why_important = "Linux Exam 101: Topic 102 — Linux Installation & Package Management",
         explanation  = "",
         syntax       = "",
         example      = "",
@@ -987,7 +987,7 @@ CHAPTER_18_MISSIONS: list[Mission] = [
             " Textfilter, Streams, Prozesse, Signale, Prioritäten.\n"
             " 10 Fragen. Kein Netz. Kein Hint.'"
         ),
-        why_important = "LPIC-1 Exam 101: Topic 103 — GNU and Unix Commands",
+        why_important = "Linux Exam 101: Topic 103 — GNU and Unix Commands",
         explanation  = "",
         syntax       = "",
         example      = "",
@@ -1117,7 +1117,7 @@ CHAPTER_18_MISSIONS: list[Mission] = [
             " Partitionierung, ext4, XFS, LVM, fstab, Links.\n"
             " 10 Fragen. Konzentrier dich.'"
         ),
-        why_important = "LPIC-1 Exam 101: Topic 104 — Devices, Linux Filesystems, FHS",
+        why_important = "Linux Exam 101: Topic 104 — Devices, Linux Filesystems, FHS",
         explanation  = "",
         syntax       = "",
         example      = "",
@@ -1242,7 +1242,7 @@ CHAPTER_18_MISSIONS: list[Mission] = [
             " Variablen, Konditionen, Schleifen, Funktionen, Expansionen.\n"
             " 10 Fragen. Kein Debugger. Nur dein Kopf.'"
         ),
-        why_important = "LPIC-1 Exam 102: Topic 105 — Shells and Shell Scripting",
+        why_important = "Linux Exam 102: Topic 105 — Shells and Shell Scripting",
         explanation  = "",
         syntax       = "",
         example      = "",
@@ -1367,7 +1367,7 @@ CHAPTER_18_MISSIONS: list[Mission] = [
             " Benutzer, Gruppen, Cron, Locale, Zeitdienste, Drucker.\n"
             " 10 Fragen. Administrator-Level.'"
         ),
-        why_important = "LPIC-1 Exam 102: Topic 107 — Administrative Tasks",
+        why_important = "Linux Exam 102: Topic 107 — Administrative Tasks",
         explanation  = "",
         syntax       = "",
         example      = "",
@@ -1492,7 +1492,7 @@ CHAPTER_18_MISSIONS: list[Mission] = [
             " Boot, systemd, Logging, Zeitdienste, Drucker, MTA.\n"
             " 10 Fragen. System-Administration auf Expert-Level.'"
         ),
-        why_important = "LPIC-1 Exam 102: Topic 108 — Essential System Services",
+        why_important = "Linux Exam 102: Topic 108 — Essential System Services",
         explanation  = "",
         syntax       = "",
         example      = "",
@@ -1622,7 +1622,7 @@ CHAPTER_18_MISSIONS: list[Mission] = [
             " IP, Routing, DNS, SSH, Firewall — alles.\n"
             " 10 Fragen. Das Netz kennt keine Gnade.'"
         ),
-        why_important = "LPIC-1 Exam 102: Topic 109 — Networking Fundamentals",
+        why_important = "Linux Exam 102: Topic 109 — Networking Fundamentals",
         explanation  = "",
         syntax       = "",
         example      = "",
@@ -1758,7 +1758,7 @@ CHAPTER_18_MISSIONS: list[Mission] = [
             " SUID, SSH, GPG, sudo, LUKS, fail2ban, OpenSSL.\n"
             " 10 Fragen. Kein Pardon.'"
         ),
-        why_important = "LPIC-1 Exam 102: Topic 110 — Security",
+        why_important = "Linux Exam 102: Topic 110 — Security",
         explanation  = "",
         syntax       = "",
         example      = "",
@@ -1903,7 +1903,7 @@ CHAPTER_18_MISSIONS: list[Mission] = [
             " lspci, lsusb, /proc, /sys — vollständige Abdeckung.\n"
             " Dieser Block ist Pflicht für Exam 101.'"
         ),
-        why_important = "LPIC-1 Exam 101 Topic 101.1 Hardware-Erkennung hat hohe Prüfungsrelevanz.",
+        why_important = "Linux Exam 101 Topic 101.1 Hardware-Erkennung hat hohe Prüfungsrelevanz.",
         explanation  = "Tiefgehende Prüfungsvorbereitung für Hardware und Geräteverwaltung.",
         syntax       = "",
         example      = "",
@@ -1976,7 +1976,7 @@ CHAPTER_18_MISSIONS: list[Mission] = [
             " Variablen, Schleifen, Funktionen, getopts.\n"
             " Topic 105.2 — vollständige Prüfungssimulation.'"
         ),
-        why_important = "LPIC-1 Exam 102 Topic 105.2 Bash-Scripting ist prüfungsrelevant.",
+        why_important = "Linux Exam 102 Topic 105.2 Bash-Scripting ist prüfungsrelevant.",
         explanation  = "Prüfungsvorbereitung für Bash-Scripting.",
         syntax       = "",
         example      = "",
@@ -2054,7 +2054,7 @@ CHAPTER_18_MISSIONS: list[Mission] = [
             " Der letzte Block vor dem Endkampf.\n"
             " Topic 109 — advanced.'"
         ),
-        why_important = "LPIC-1 Topic 109 Networking ist ein Schwerpunkt in Exam 102.",
+        why_important = "Linux Topic 109 Networking ist ein Schwerpunkt in Exam 102.",
         explanation  = "Prüfungsvorbereitung für Netzwerk-Konfiguration und -Diagnose.",
         syntax       = "",
         example      = "",
@@ -2099,7 +2099,7 @@ CHAPTER_18_MISSIONS: list[Mission] = [
                 xp_value = 20,
             ),
             QuizQuestion(
-                question = "Welche DNS-Record-Typen sollte man für LPIC-1 kennen?",
+                question = "Welche DNS-Record-Typen sollte man für Linux kennen?",
                 options  = [
                     "A (IPv4), AAAA (IPv6), MX (Mail), PTR (Reverse), CNAME (Alias), NS (Nameserver)",
                     "A, B, C, D (Adressklassen)",
@@ -2132,7 +2132,7 @@ CHAPTER_18_MISSIONS: list[Mission] = [
             " Alle Topics. Schnelle Fragen. Keine Zeit zum Überlegen.\n"
             " Das echte Exam hat 60 Fragen in 90 Minuten. Das hier — 5 in 2.'"
         ),
-        why_important = "Prüfungssimulation: schnelle Fragen-Beantwortung über alle LPIC-1 Topics.",
+        why_important = "Prüfungssimulation: schnelle Fragen-Beantwortung über alle Linux Topics.",
         explanation  = "Speed Round — alle Topics gemischt.",
         syntax       = "",
         example      = "",
@@ -2179,14 +2179,14 @@ CHAPTER_18_MISSIONS: list[Mission] = [
                 xp_value = 25,
             ),
             QuizQuestion(
-                question = "Wie viele Punkte braucht man um LPIC-1 zu bestehen?",
+                question = "Wie viele Punkte braucht man um Linux zu bestehen?",
                 options  = ["500 von 800", "600 von 1000", "70% von 100", "450 von 600"],
                 correct  = 0,
                 explanation = "500/800 Punkte pro Prüfung (101 und 102). 90 Minuten, ~60 Fragen jeweils.",
                 xp_value = 25,
             ),
         ],
-        exam_tip     = "LPIC-1 = 500/800 pro Exam. 90 Min. 2 Exams (101+102). Gültig 5 Jahre.",
+        exam_tip     = "Linux = 500/800 pro Exam. 90 Min. 2 Exams (101+102). Gültig 5 Jahre.",
         memory_tip   = "Speed Round trainiert Exam-Geschwindigkeit. Im echten Exam: ~1.5 Min/Frage.",
         gear_reward  = None,
         faction_reward = ("Kernel Syndicate", 15),
@@ -2207,7 +2207,7 @@ CHAPTER_18_MISSIONS: list[Mission] = [
             " mdadm, LVM, btrfs, RAID-Level — kein Nachschlagen.\n"
             " 8 Fragen. Kein Fehler erlaubt.'"
         ),
-        why_important = "LPIC-1 Exam 101: Topics 104.1 / 104.2 — Storage, RAID, LVM",
+        why_important = "Linux Exam 101: Topics 104.1 / 104.2 — Storage, RAID, LVM",
         explanation  = "",
         syntax       = "",
         example      = "",
@@ -2350,7 +2350,7 @@ CHAPTER_18_MISSIONS: list[Mission] = [
             " docker, podman, systemd-nspawn, KVM.\n"
             " Die moderne Infrastruktur wartet.'"
         ),
-        why_important = "LPIC-1 Exam 102: Virtualisierung und Container-Grundlagen",
+        why_important = "Linux Exam 102: Virtualisierung und Container-Grundlagen",
         explanation  = "",
         syntax       = "",
         example      = "",
@@ -2508,7 +2508,7 @@ CHAPTER_18_MISSIONS: list[Mission] = [
             " iptables, nftables, fail2ban, LUKS.\n"
             " NeonGrid-9 wird angegriffen. Halte die Linie.'"
         ),
-        why_important = "LPIC-1 Exam 102: Topics 110.1/110.2 — Security & Firewall",
+        why_important = "Linux Exam 102: Topics 110.1/110.2 — Security & Firewall",
         explanation  = "",
         syntax       = "",
         example      = "",
@@ -2661,7 +2661,7 @@ CHAPTER_18_MISSIONS: list[Mission] = [
             " NFS, Samba, DHCP, LDAP, DNS.\n"
             " Das Netzwerk hält NeonGrid-9 am Leben.'"
         ),
-        why_important = "LPIC-1 Exam 102: Topics 108.x/109.x — Netzwerkdienste",
+        why_important = "Linux Exam 102: Topics 108.x/109.x — Netzwerkdienste",
         explanation  = "",
         syntax       = "",
         example      = "",
@@ -2784,7 +2784,7 @@ CHAPTER_18_MISSIONS: list[Mission] = [
             " PAM, nsswitch, chage, limits.conf.\n"
             " Wer darf was — und wie lange.'"
         ),
-        why_important = "LPIC-1 Exam 102: Topics 107.x — User & Group Management",
+        why_important = "Linux Exam 102: Topics 107.x — User & Group Management",
         explanation  = "",
         syntax       = "",
         example      = "",
@@ -2939,7 +2939,7 @@ CHAPTER_18_MISSIONS: list[Mission] = [
             " journald, rsyslog, cron, systemd-timer.\n"
             " Was passiert wann — und wer schreibt es auf.'"
         ),
-        why_important = "LPIC-1 Exam 102: Topics 108.2 / 107.2 — Logging & Scheduling",
+        why_important = "Linux Exam 102: Topics 108.2 / 107.2 — Logging & Scheduling",
         explanation  = "",
         syntax       = "",
         example      = "",
@@ -3093,7 +3093,7 @@ CHAPTER_18_MISSIONS: list[Mission] = [
             " Module, /proc, sysctl, udev, dmesg.\n"
             " Das Herz des Systems — kenn es.'"
         ),
-        why_important = "LPIC-1 Exam 101: Topics 101.1/101.2/102.6 — Kernel, Hardware & Modules",
+        why_important = "Linux Exam 101: Topics 101.1/101.2/102.6 — Kernel, Hardware & Modules",
         explanation  = "",
         syntax       = "",
         example      = "",
@@ -3246,7 +3246,7 @@ CHAPTER_18_MISSIONS: list[Mission] = [
             " Shell Scripting Advanced: Arrays, Funktionen, Fehlerbehandlung, getopts.\n"
             " Das ist das Finale. Zeig alles was du weißt.'"
         ),
-        why_important = "LPIC-1 Exam 102: Topic 105.2 — Customize or Write Shell Scripts",
+        why_important = "Linux Exam 102: Topic 105.2 — Customize or Write Shell Scripts",
         explanation  = "",
         syntax       = "",
         example      = "",
@@ -3391,12 +3391,12 @@ CHAPTER_18_MISSIONS: list[Mission] = [
     ),
 
     # ══════════════════════════════════════════════════════════════════════
-    # 18.BOSS — FINAL EXAM — LPIC-1 CERTIFICATION
+    # 18.BOSS — FINAL EXAM — Linux CERTIFICATION
     # ══════════════════════════════════════════════════════════════════════
     Mission(
         mission_id   = "18.boss",
         chapter      = 18,
-        title        = "BOSS: FINAL EXAM — LPIC-1 CERTIFICATION",
+        title        = "BOSS: FINAL EXAM — Linux CERTIFICATION",
         mtype        = "BOSS",
         xp           = 625,
         speaker      = "EXAMINATOR",
@@ -3405,17 +3405,17 @@ CHAPTER_18_MISSIONS: list[Mission] = [
             " 60 Prüfungsfragen beantwortet.\n"
             " Du kennst Hardware, Boot, Dateisysteme, Prozesse,\n"
             " Netzwerk, Benutzer, Logs, Scripting, Sicherheit.\n"
-            " Das ist NeonGrid-9. Das ist LPIC-1.\n"
+            " Das ist NeonGrid-9. Das ist Linux.\n"
             " Eine letzte Frage — die härteste.\n"
             " Beweise, dass du bereit bist.'"
         ),
         why_important = (
-            "LPIC-1 ist der weltweit anerkannte Einstiegs-Zertifizierungsstandard\n"
+            "Linux ist der weltweit anerkannte Einstiegs-Zertifizierungsstandard\n"
             "für Linux-Systemadministration. 2 Prüfungen: 101 und 102.\n"
             "Je 60 Minuten, ~60 Fragen, 500/800 Punkte zum Bestehen (62.5%)."
         ),
         explanation  = (
-            "LPIC-1 Prüfungs-Überblick:\n"
+            "Linux Prüfungs-Überblick:\n"
             "\n"
             "Exam 101 (LPI-101):\n"
             "  Topic 101: Systemarchitektur (Hardware, Boot, Kernel)\n"
@@ -3449,13 +3449,13 @@ CHAPTER_18_MISSIONS: list[Mission] = [
   ┌─ EXAM STATUS ────────────────────────────────┐
   │  LPI-101: PENDING    ::  LPI-102: PENDING    │
   │  17 Chapters: CLEARED ::  XP: MAXIMUM       │
-  │  Score Target: 500/800  ::  LPIC-1: AWAITS  │
+  │  Score Target: 500/800  ::  Linux: AWAITS  │
   └──────────────────────────────────────────────┘
 
   ⚡ CHAOSWERK FACTION :: CHAPTER 18 FINAL BOSS ⚡""",
         story_transitions = [
             "EXAMINATOR lädt die härtesten Fragen. Du hast alles gelernt.",
-            "17 Kapitel. 500 Missionen. Ein Ziel: LPIC-1 bestehen.",
+            "17 Kapitel. 500 Missionen. Ein Ziel: Linux bestehen.",
             "Zara sieht zu. Das gesamte NeonGrid-9 hält den Atem an.",
             "Eine Frage. Die letzte. Deine Antwort entscheidet alles.",
         ],
@@ -3463,7 +3463,7 @@ CHAPTER_18_MISSIONS: list[Mission] = [
         example      = "# lpi.org → Candidate → Register → Exam 101 → Exam 102",
         task_description = (
             "FINALE PRÜFUNG: Eine letzte Frage.\n"
-            "Zeige deine LPIC-1 Bereitschaft.\n"
+            "Zeige deine Linux Bereitschaft.\n"
             "Führe 'uname -a' aus — das Fundament von allem."
         ),
         expected_commands = ["uname -a"],
@@ -3475,14 +3475,14 @@ CHAPTER_18_MISSIONS: list[Mission] = [
         hint_text    = "uname -a zeigt alle Systeminformationen — Kernel, Host, Arch",
         quiz_questions = [
             QuizQuestion(
-                question    = "Wie viele Punkte braucht man zum Bestehen einer LPIC-1-Prüfung?",
+                question    = "Wie viele Punkte braucht man zum Bestehen einer Linux-Prüfung?",
                 options     = ["400 von 800", "500 von 800 (62,5%)", "600 von 800", "700 von 800"],
                 correct     = 1,
-                explanation = "LPIC-1 Bestehenskriterium: 500 von 800 Punkten (62,5%).\nJede der zwei Prüfungen (LPI-101 und LPI-102) muss einzeln bestanden werden.",
+                explanation = "Linux Bestehenskriterium: 500 von 800 Punkten (62,5%).\nJede der zwei Prüfungen (LPI-101 und LPI-102) muss einzeln bestanden werden.",
                 xp_value    = 25,
             ),
             QuizQuestion(
-                question    = "Welche Topics deckt LPIC-1 Exam 101 (LPI-101) ab?",
+                question    = "Welche Topics deckt Linux Exam 101 (LPI-101) ab?",
                 options     = ["Topics 101-104 (Systemarchitektur, Installation, Befehle, Geräte)", "Topics 105-110 (Shells, Desktop, Admin, Dienste, Netz, Sicherheit)", "Alle Topics 101-110", "Nur Networking und Security"],
                 correct     = 0,
                 explanation = "LPI-101: Topics 101-104 (Hardware, Boot, Linux-Installation, Pakete, Befehle, Dateisysteme).\nLPI-102: Topics 105-110 (Shells, Desktop, Admin, Dienste, Netzwerk, Sicherheit).",
@@ -3496,7 +3496,7 @@ CHAPTER_18_MISSIONS: list[Mission] = [
                 xp_value    = 25,
             ),
             QuizQuestion(
-                question    = "Auf der LPIC-1-Prüfung bekommst du eine Frage über einen Befehl den du nicht kennst. Was ist die beste Strategie?",
+                question    = "Auf der Linux-Prüfung bekommst du eine Frage über einen Befehl den du nicht kennst. Was ist die beste Strategie?",
                 options     = [
                     "Eliminierung falscher Antworten: man-page-Konventionen, bekannte Flag-Muster (-v verbose, -r recursive, -n dry-run) und Ausschluss offensichtlicher Fallen nutzen",
                     "Immer die längste Antwort wählen",
@@ -3504,11 +3504,11 @@ CHAPTER_18_MISSIONS: list[Mission] = [
                     "Frage überspringen und am Ende zurückkehren",
                 ],
                 correct     = 0,
-                explanation = "Eliminierung ist die stärkste Test-Strategie: Falsche Flags ausschließen, POSIX-Konventionen anwenden. Auf LPIC-1 gibt es keine Punktabzüge — immer eine Antwort geben. Option C (mittlere) ist ein Mythos.",
+                explanation = "Eliminierung ist die stärkste Test-Strategie: Falsche Flags ausschließen, POSIX-Konventionen anwenden. Auf Linux gibt es keine Punktabzüge — immer eine Antwort geben. Option C (mittlere) ist ein Mythos.",
                 xp_value    = 30,
             ),
             QuizQuestion(
-                question    = "Welche LPIC-1 Topic-Nummer deckt 'Grundlegende Dateiverwaltung' (ls, cp, mv, find, file) ab?",
+                question    = "Welche Linux Topic-Nummer deckt 'Grundlegende Dateiverwaltung' (ls, cp, mv, find, file) ab?",
                 options     = [
                     "Topic 103.3",
                     "Topic 104.2",
@@ -3520,9 +3520,9 @@ CHAPTER_18_MISSIONS: list[Mission] = [
                 xp_value    = 30,
             ),
         ],
-        exam_tip     = "LPIC-1: 2 Prüfungen (101+102) | je 90 Min | 500/800 Punkte | lpi.org anmelden",
-        memory_tip   = "NeonGrid-9 deckt alle LPIC-1 v5.0 Topics ab — du bist bereit.",
-        gear_reward  = "lpic1_badge",
+        exam_tip     = "Linux: 2 Prüfungen (101+102) | je 90 Min | 500/800 Punkte | lpi.org anmelden",
+        memory_tip   = "NeonGrid-9 deckt alle Linux v5.0 Topics ab — du bist bereit.",
+        gear_reward  = "linux_badge",
         faction_reward = ("Kernel Syndicate", 100),
     ),
 ]

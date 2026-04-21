@@ -121,8 +121,8 @@ GEAR_CATALOG = {
     },
 
     # ── Legendäres Gear ───────────────────────────────────────────────────────
-    "lpic1_badge": {
-        "name":   "LPIC-1 Badge",
+    "linux_badge": {
+        "name":   "Linux Badge",
         "desc":   "+5% auf ALLE XP-Gewinne. Prestige-Item. Nur eines im Spiel.",
         "boost":  "all_xp",
         "rarity": "legendary",
@@ -250,10 +250,10 @@ class Player:
             item_id, mult = bonuses[boost_type]
             if item_id in self.inventory:
                 base = mult
-        # LPIC-1 Badge: +5% auf alles (additiv nach anderen Boni)
-        if "lpic1_badge" in self.inventory and base > 1.0:
+        # Linux Badge: +5% auf alles (additiv nach anderen Boni)
+        if "linux_badge" in self.inventory and base > 1.0:
             base += 0.05
-        elif "lpic1_badge" in self.inventory:
+        elif "linux_badge" in self.inventory:
             base = 1.05
         return base
 

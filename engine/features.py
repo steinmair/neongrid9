@@ -99,7 +99,7 @@ ACHIEVEMENTS = {
     # Late game
     'all_bosses': Achievement(
         id='all_bosses',
-        name='LPIC-1 Master',
+        name='Linux Master',
         description='Defeat all 22 boss missions.',
         xp_reward=5000,
         icon='👑'
