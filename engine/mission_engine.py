@@ -240,6 +240,43 @@ class MissionRunner:
                 unlocked.append(ach)
                 self.player.add_xp(ach.xp_reward)
 
+        # New achievement triggers
+        if len(self.player.completed_missions) == 100:
+            ach = self.player.achievements.unlock('quest_marathon')
+            if ach:
+                unlocked.append(ach)
+                self.player.add_xp(ach.xp_reward)
+
+        if self.player.level >= 10:
+            ach = self.player.achievements.unlock('level_ten')
+            if ach:
+                unlocked.append(ach)
+                self.player.add_xp(ach.xp_reward)
+
+        # Check for chapter masters (5+ chapters complete)
+        chapters_complete = len(set(m.split('.')[0] for m in self.player.completed_missions))
+        if chapters_complete >= 5:
+            ach = self.player.achievements.unlock('chapter_master')
+            if ach:
+                unlocked.append(ach)
+                self.player.add_xp(ach.xp_reward)
+
+        # Check for all factions at level 2+
+        from engine.features import calculate_level
+        faction_levels = [calculate_level(rep) for rep in self.player.reputation.values()]
+        if all(lvl >= 2 for lvl in faction_levels):
+            ach = self.player.achievements.unlock('all_factions')
+            if ach:
+                unlocked.append(ach)
+                self.player.add_xp(ach.xp_reward)
+
+        # Check for gear collector (10+ items)
+        if len(self.player.inventory) >= 10:
+            ach = self.player.achievements.unlock('gear_collector')
+            if ach:
+                unlocked.append(ach)
+                self.player.add_xp(ach.xp_reward)
+
         if unlocked:
             show_achievements(unlocked)
 

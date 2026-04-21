@@ -141,6 +141,64 @@ ACHIEVEMENTS = {
         xp_reward=800,
         icon='🏆'
     ),
+
+    # New achievements for polish
+    'perfect_streak': Achievement(
+        id='perfect_streak',
+        name='Flawless Victory',
+        description='Answer 10 consecutive quiz questions correctly.',
+        xp_reward=400,
+        icon='🎯'
+    ),
+    'no_hints': Achievement(
+        id='no_hints',
+        name='Self-Reliant',
+        description='Complete a mission without using any hints.',
+        xp_reward=150,
+        icon='💪'
+    ),
+    'all_factions': Achievement(
+        id='all_factions',
+        name='Diplomat',
+        description='Reach level 2+ with all 5 factions.',
+        xp_reward=1200,
+        icon='🤝'
+    ),
+    'gear_collector': Achievement(
+        id='gear_collector',
+        name='Arsenal Master',
+        description='Collect 10+ different gear items.',
+        xp_reward=500,
+        icon='⚡'
+    ),
+    'quest_marathon': Achievement(
+        id='quest_marathon',
+        name='Grinder',
+        description='Complete 100+ missions.',
+        xp_reward=1500,
+        icon='🔄'
+    ),
+    'chapter_master': Achievement(
+        id='chapter_master',
+        name='Scholar',
+        description='Complete all missions in 5 different chapters.',
+        xp_reward=2000,
+        icon='📚'
+    ),
+    'level_ten': Achievement(
+        id='level_ten',
+        name='Rising Power',
+        description='Reach level 10 (Net Runner).',
+        xp_reward=1000,
+        icon='⬆️'
+    ),
+    'jackpot': Achievement(
+        id='jackpot',
+        name='Lucky Strike',
+        description='Earn 1000+ XP in a single playthrough session.',
+        xp_reward=300,
+        icon='🍀'
+    ),
 }
 
 
