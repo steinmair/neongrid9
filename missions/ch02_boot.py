@@ -1354,6 +1354,11 @@ CHAPTER_2_MISSIONS = [
             "Lies die aktiven Kernel-Boot-Parameter aus."
         ),
         expected_commands=["fdisk -l /dev/nvme0n1", "update-grub", "cat /proc/cmdline"],
+        hints = [
+            "Das Verzeichnis oder die Datei befinden sich unter '/dev/nvme0n1'. Der Befehl beginnt mit 'fdisk'.",
+            "Versuche: fdisk -l /dev/nvme0n1",
+            "Der vollständige Befehl: fdisk -l /dev/nvme0n1",
+        ],
         quiz_questions=[
             QuizQuestion(
                 question="System bootet nicht: GRUB zeigt 'grub rescue>'. Erster Schritt?",

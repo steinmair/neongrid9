@@ -1480,6 +1480,11 @@ CHAPTER_22_MISSIONS: list[Mission] = [
         example      = "cat /proc/mdstat && vgs && lvs -a && df -h",
         task_description = "Führe finalen Storage-Audit durch: df -h && blkid",
         expected_commands = ["df -h"],
+        hints = [
+            "Der Befehl 'df' ist der richtige Ansatz für diese Boss-Phase.",
+            "Versuche: df -h",
+            "Der vollständige Befehl: df -h",
+        ],
         hint_text    = "df -h zeigt den Speicher-Status aller Dateisysteme",
         quiz_questions = [
             QuizQuestion(

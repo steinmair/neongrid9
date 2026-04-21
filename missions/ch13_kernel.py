@@ -2608,6 +2608,11 @@ CHAPTER_13_MISSIONS: list[Mission] = [
         ),
         task_description = "BOSS: Deaktiviere IP-Forwarding mit sysctl",
         expected_commands = ["sysctl -w net.ipv4.ip_forward=0"],
+        hints = [
+            "Der Befehl 'sysctl' ist der richtige Ansatz für diese Boss-Phase.",
+            "Versuche: sysctl -w net.ipv4.ip_forward=0",
+            "Der vollständige Befehl: sysctl -w net.ipv4.ip_forward=0",
+        ],
         hint_text    = "sysctl -w net.ipv4.ip_forward=0 deaktiviert IP-Weiterleitung sofort",
         quiz_questions    = [
             QuizQuestion(

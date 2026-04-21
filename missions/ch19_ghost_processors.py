@@ -1234,6 +1234,11 @@ CHAPTER_19_MISSIONS: list[Mission] = [
             "Zeige den Virtualisierungstyp an."
         ),
         expected_commands = ["systemd-detect-virt", "lsns", "machinectl"],
+        hints = [
+            "Ein Auflistungsbefehl wie 'systemd-detect-virt' wird benötigt.",
+            "Der Befehl selbst ist: systemd-detect-virt",
+            "Der vollständige Befehl: systemd-detect-virt",
+        ],
         hint_text    = "systemd-detect-virt — welche Virtualisierungsebene läuft?",
         quiz_questions = [
             QuizQuestion(

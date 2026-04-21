@@ -2176,6 +2176,11 @@ CHAPTER_10_MISSIONS: list[Mission] = [
         ],
         task_description = "BOSS: Entsperre den gesperrten Account 'ghost'",
         expected_commands = ["passwd -u ghost"],
+        hints = [
+            "Der Befehl 'passwd' ist der richtige Ansatz für diese Boss-Phase.",
+            "Versuche: passwd -u ghost",
+            "Der vollständige Befehl: passwd -u ghost",
+        ],
         hint_text    = "passwd -u ghost entsperrt (unlock) einen gesperrten Benutzer-Account",
         quiz_questions    = [
             QuizQuestion(

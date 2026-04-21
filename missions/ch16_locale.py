@@ -1689,6 +1689,11 @@ CHAPTER_16_MISSIONS: list[Mission] = [
             "Zeige alle installierten Locales an."
         ),
         expected_commands = ["locale -a"],
+        hints = [
+            "Ein Auflistungsbefehl wie 'locale' wird benötigt.",
+            "Versuche: locale -a",
+            "Der vollständige Befehl: locale -a",
+        ],
         hint_text    = "locale -a listet alle installierten Locales auf",
         quiz_questions = [
             QuizQuestion(

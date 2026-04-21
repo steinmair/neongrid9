@@ -1981,6 +1981,11 @@ CHAPTER_12_MISSIONS: list[Mission] = [
         ],
         task_description = "BOSS: Bereinige das System — entferne Paket 'backdoor-agent' vollständig inkl. Config",
         expected_commands = ["apt purge backdoor-agent"],
+        hints = [
+            "Ein Auflistungsbefehl wie 'apt' wird benötigt.",
+            "Versuche: apt purge backdoor-agent",
+            "Der vollständige Befehl: apt purge backdoor-agent",
+        ],
         hint_text    = "apt purge entfernt Paket UND Konfigurationsdateien vollständig",
         quiz_questions    = [
             QuizQuestion(

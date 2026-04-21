@@ -3467,6 +3467,11 @@ CHAPTER_18_MISSIONS: list[Mission] = [
             "Führe 'uname -a' aus — das Fundament von allem."
         ),
         expected_commands = ["uname -a"],
+        hints = [
+            "Ein Auflistungsbefehl wie 'uname' wird benötigt.",
+            "Versuche: uname -a",
+            "Der vollständige Befehl: uname -a",
+        ],
         hint_text    = "uname -a zeigt alle Systeminformationen — Kernel, Host, Arch",
         quiz_questions = [
             QuizQuestion(

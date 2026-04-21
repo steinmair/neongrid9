@@ -2785,6 +2785,11 @@ CHAPTER_14_MISSIONS: list[Mission] = [
         ),
         task_description = "BOSS: Prüfe die Skript-Syntax von cleanup.sh ohne Ausführung",
         expected_commands = ["bash -n cleanup.sh"],
+        hints = [
+            "Der Befehl 'bash' ist der richtige Ansatz für diese Boss-Phase.",
+            "Versuche: bash -n cleanup.sh",
+            "Der vollständige Befehl: bash -n cleanup.sh",
+        ],
         hint_text    = "bash -n SKRIPT prüft die Syntax ohne das Skript auszuführen (dry-run)",
         quiz_questions    = [
             QuizQuestion(

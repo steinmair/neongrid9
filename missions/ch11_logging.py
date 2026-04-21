@@ -2096,6 +2096,11 @@ CHAPTER_11_MISSIONS: list[Mission] = [
         ],
         task_description = "BOSS: Aktiviere NTP-Synchronisation mit timedatectl",
         expected_commands = ["timedatectl set-ntp true"],
+        hints = [
+            "Der Befehl 'timedatectl' ist der richtige Ansatz für diese Boss-Phase.",
+            "Versuche: timedatectl set-ntp true",
+            "Der vollständige Befehl: timedatectl set-ntp true",
+        ],
         hint_text    = "timedatectl set-ntp true aktiviert automatische Zeitsynchronisation via NTP",
         quiz_questions    = [
             QuizQuestion(

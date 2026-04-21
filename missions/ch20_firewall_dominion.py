@@ -1479,6 +1479,11 @@ CHAPTER_20_MISSIONS: list[Mission] = [
         example      = "iptables -L -n -v && nft list ruleset && ss -tulpn",
         task_description = "Führe den finalen Firewall-Audit durch: iptables -L -n -v",
         expected_commands = ["iptables -L -n -v"],
+        hints = [
+            "Ein Auflistungsbefehl wie 'iptables' wird benötigt.",
+            "Versuche: iptables -L -n ...",
+            "Der vollständige Befehl: iptables -L -n -v",
+        ],
         hint_text    = "iptables -L -n -v — zeige alle Firewall-Regeln",
         quiz_questions = [
             QuizQuestion(

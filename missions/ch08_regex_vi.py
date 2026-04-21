@@ -2369,6 +2369,11 @@ CHAPTER_8_MISSIONS: list[Mission] = [
         ],
         task_description = "BOSS: Zeige UIDs >= 1000 aus /etc/passwd mit awk",
         expected_commands = ["awk -F: '$3 >= 1000 {print $1}' /etc/passwd"],
+        hints = [
+            "Das Verzeichnis oder die Datei befinden sich unter '/etc/passwd'. Der Befehl beginnt mit 'awk'.",
+            "Versuche: awk -F: '$3 ...",
+            "Der vollständige Befehl: awk -F: '$3 >= 1000 {print $1}' /etc/passwd",
+        ],
         hint_text    = "awk -F: setzt Trennzeichen, $3 ist die UID-Spalte, >= 1000 = normale User",
         quiz_questions    = [
             QuizQuestion(

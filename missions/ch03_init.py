@@ -2089,6 +2089,11 @@ CHAPTER_3_MISSIONS = [
             "systemctl list-units --state=failed",
             "systemctl set-default multi-user.target",
         ],
+        hints=[
+            "Du brauchst drei systemctl-Befehle für die drei Phasen: Default-Target anzeigen, fehlerhafte Units prüfen, Target setzen.",
+            "Versuche: systemctl get-default (Phase 1), systemctl list-units --state=failed (Phase 2), systemctl set-default multi-user.target (Phase 3)",
+            "Der vollständige Befehl: systemctl get-default && systemctl list-units --state=failed && systemctl set-default multi-user.target",
+        ],
         quiz_questions=[
             QuizQuestion(
                 question="System startet in GUI obwohl es ein Server sein soll. Lösung?",

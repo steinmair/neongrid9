@@ -1675,6 +1675,11 @@ CHAPTER_15_MISSIONS: list[Mission] = [
             "Prüfe Login-History mit 'last'."
         ),
         expected_commands = ["last"],
+        hints = [
+            "Der Befehl 'last' ist der richtige Ansatz für diese Boss-Phase.",
+            "Der Befehl selbst ist: last",
+            "Der vollständige Befehl: last",
+        ],
         hint_text    = "last zeigt die Login-History aus /var/log/wtmp",
         quiz_questions = [
             QuizQuestion(

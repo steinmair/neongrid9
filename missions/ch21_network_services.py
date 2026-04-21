@@ -1486,6 +1486,11 @@ CHAPTER_21_MISSIONS: list[Mission] = [
         example      = "ss -tulpn | grep LISTEN | sort && dig +short google.com",
         task_description = "Führe finalen Netzwerkdienst-Audit durch: ss -tulpn",
         expected_commands = ["ss -tulpn"],
+        hints = [
+            "Der Befehl 'ss' ist der richtige Ansatz für diese Boss-Phase.",
+            "Versuche: ss -tulpn",
+            "Der vollständige Befehl: ss -tulpn",
+        ],
         hint_text    = "ss -tulpn zeigt alle lauschenden Netzwerkdienste",
         quiz_questions = [
             QuizQuestion(

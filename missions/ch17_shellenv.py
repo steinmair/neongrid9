@@ -1781,6 +1781,11 @@ CHAPTER_17_MISSIONS: list[Mission] = [
             "Zeige alle definierten Aliases an."
         ),
         expected_commands = ["alias"],
+        hints = [
+            "Der Befehl 'alias' ist der richtige Ansatz für diese Boss-Phase.",
+            "Der Befehl selbst ist: alias",
+            "Der vollständige Befehl: alias",
+        ],
         hint_text    = "alias zeigt alle definierten Aliases — prüfe auf verdächtige Einträge",
         quiz_questions = [
             QuizQuestion(

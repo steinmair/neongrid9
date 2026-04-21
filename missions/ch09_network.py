@@ -2045,6 +2045,11 @@ CHAPTER_9_MISSIONS: list[Mission] = [
         ],
         task_description = "BOSS: Zeige alle lauschenden Ports mit Prozessinformationen",
         expected_commands = ["ss -tulpn"],
+        hints = [
+            "Der Befehl 'ss' ist der richtige Ansatz für diese Boss-Phase.",
+            "Versuche: ss -tulpn",
+            "Der vollständige Befehl: ss -tulpn",
+        ],
         hint_text    = "ss -tulpn = TCP+UDP, nur Listening, mit Prozessen, numerisch",
         quiz_questions = [
             QuizQuestion(
