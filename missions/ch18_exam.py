@@ -1896,7 +1896,7 @@ CHAPTER_18_MISSIONS: list[Mission] = [
         chapter      = 18,
         title        = "Exam Block 15 — Hardware Deep Dive",
         mtype        = "QUIZ",
-        xp           = 200,
+        xp           = 130,
         speaker      = "EXAMINATOR",
         story        = (
             "EXAMINATOR: 'Hardware-Layer. Die Grundlage von allem.\n"
@@ -1969,7 +1969,7 @@ CHAPTER_18_MISSIONS: list[Mission] = [
         chapter      = 18,
         title        = "Exam Block 16 — Scripting Deep Dive",
         mtype        = "QUIZ",
-        xp           = 200,
+        xp           = 130,
         speaker      = "EXAMINATOR",
         story        = (
             "EXAMINATOR: 'Bash-Scripting. Der Kleber des Systems.\n"
@@ -2047,7 +2047,7 @@ CHAPTER_18_MISSIONS: list[Mission] = [
         chapter      = 18,
         title        = "Exam Block 17 — Netzwerk Advanced",
         mtype        = "QUIZ",
-        xp           = 200,
+        xp           = 130,
         speaker      = "EXAMINATOR",
         story        = (
             "EXAMINATOR: 'Netzwerk. TCP/IP, Subnetting, Routing.\n"
@@ -2125,7 +2125,7 @@ CHAPTER_18_MISSIONS: list[Mission] = [
         chapter      = 18,
         title        = "Exam Block 18 — Speed Round: Alle Topics",
         mtype        = "QUIZ",
-        xp           = 250,
+        xp           = 160,
         speaker      = "EXAMINATOR",
         story        = (
             "EXAMINATOR: 'Letzter Test vor dem Boss. Speed Round.\n"
