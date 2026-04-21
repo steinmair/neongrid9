@@ -47,6 +47,28 @@ CHAPTER_21_MISSIONS: list[Mission] = [
             "  DNS: 53/TCP+UDP\n"
             "  LDAP: 389/TCP, LDAPS: 636/TCP"
         ),
+        ascii_art = """
+  ███╗   ██╗███████╗████████╗██╗    ██╗ ██████╗ ██████╗ ██╗  ██╗
+  ████╗  ██║██╔════╝╚══██╔══╝██║    ██║██╔═══██╗██╔══██╗██║ ██╔╝
+  ██╔██╗ ██║█████╗     ██║   ██║ █╗ ██║██║   ██║██████╔╝█████╔╝
+  ██║╚██╗██║██╔══╝     ██║   ██║███╗██║██║   ██║██╔══██╗██╔═██╗
+  ██║ ╚████║███████╗   ██║   ╚███╔███╔╝╚██████╔╝██║  ██║██║  ██╗
+  ╚═╝  ╚═══╝╚══════╝   ╚═╝    ╚══╝╚══╝  ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝
+      ███████╗███████╗██████╗ ██╗   ██╗██╗ ██████╗███████╗███████╗
+      ██╔════╝██╔════╝██╔══██╗██║   ██║██║██╔════╝██╔════╝██╔════╝
+      ███████╗█████╗  ██████╔╝██║   ██║██║██║     █████╗  ███████╗
+      ╚════██║██╔══╝  ██╔══██╗╚██╗ ██╔╝██║██║     ██╔══╝  ╚════██║
+      ███████║███████╗██║  ██║ ╚████╔╝ ██║╚██████╗███████╗███████║
+      ╚══════╝╚══════╝╚═╝  ╚═╝  ╚═══╝  ╚═╝ ╚═════╝╚══════╝╚══════╝
+
+  [ CHAPTER 21 :: NETWORK SERVICES ]
+  > NFS/Samba/DHCP/DNS/LDAP stack initializing...""",
+        story_transitions = [
+            "Netzwerkdienste halten das Grid zusammen. NFS teilt Dateien.",
+            "Samba spricht mit Windows. DHCP gibt Adressen. DNS übersetzt Namen.",
+            "LDAP zentralisiert Identitäten. Ein Baum für alle Accounts.",
+            "Net Daemon kontrolliert alle Verbindungen. Beherrsch die Dienste.",
+        ],
         syntax       = "showmount -e NFSSERVER  (NFS-Exporte anzeigen)",
         example      = "showmount -e localhost && smbclient -L localhost -N",
         task_description = "Zeige NFS-Export-Info mit showmount -e localhost",
@@ -1439,6 +1461,27 @@ CHAPTER_21_MISSIONS: list[Mission] = [
             "LETZTER BEFEHL:\n"
             "  ss -tulpn | grep -E 'nfs|smb|ldap|dhcp'"
         ),
+        ascii_art    = """
+  ███╗   ██╗███████╗████████╗    ██████╗  █████╗ ███████╗███╗   ███╗ ██████╗ ███╗   ██╗
+  ████╗  ██║██╔════╝╚══██╔══╝    ██╔══██╗██╔══██╗██╔════╝████╗ ████║██╔═══██╗████╗  ██║
+  ██╔██╗ ██║█████╗     ██║       ██║  ██║███████║█████╗  ██╔████╔██║██║   ██║██╔██╗ ██║
+  ██║╚██╗██║██╔══╝     ██║       ██║  ██║██╔══██║██╔══╝  ██║╚██╔╝██║██║   ██║██║╚██╗██║
+  ██║ ╚████║███████╗   ██║       ██████╔╝██║  ██║███████╗██║ ╚═╝ ██║╚██████╔╝██║ ╚████║
+  ╚═╝  ╚═══╝╚══════╝   ╚═╝       ╚═════╝ ╚═╝  ╚═╝╚══════╝╚═╝     ╚═╝ ╚═════╝ ╚═╝  ╚═══╝
+
+  ┌─ NETWORK SERVICES STATUS ────────────────────┐
+  │  NFS: EXPORTING ALL  ::  Samba: OPEN SHARE   │
+  │  DNS: POISONED       ::  DHCP: ROGUE SERVER  │
+  │  LDAP: ANONYMOUS     ::  nmcli: CHAOS        │
+  └──────────────────────────────────────────────┘
+
+  ⚡ CHAOSWERK FACTION :: CHAPTER 21 BOSS ⚡""",
+        story_transitions = [
+            "NET DAEMON korrumpiert NFS-Exports. showmount zeigt alles offen.",
+            "Samba-Config gebrochen. testparm findet den Fehler. Du fixst ihn.",
+            "DHCP-Rogue-Server verteilt falsche IPs. journalctl -u isc-dhcp entlarvt ihn.",
+            "DNS poisoned. dig +trace zeigt den richtigen Pfad. Daemon eliminiert.",
+        ],
         syntax       = "ss -tulpn && exportfs -v && testparm",
         example      = "ss -tulpn | grep LISTEN | sort && dig +short google.com",
         task_description = "Führe finalen Netzwerkdienst-Audit durch: ss -tulpn",

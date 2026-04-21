@@ -62,12 +62,50 @@ CHAPTER_17_MISSIONS: list[Mission] = [
             "  . ~/.bashrc                → Identisch (POSIX-kompatibel)\n"
             "  bash vs source: bash startet neue Shell, source = aktuelle"
         ),
+        ascii_art = """
+  ███████╗██╗  ██╗███████╗██╗     ██╗         ███████╗███╗   ██╗██╗   ██╗
+  ██╔════╝██║  ██║██╔════╝██║     ██║         ██╔════╝████╗  ██║██║   ██║
+  ███████╗███████║█████╗  ██║     ██║         █████╗  ██╔██╗ ██║██║   ██║
+  ╚════██║██╔══██║██╔══╝  ██║     ██║         ██╔══╝  ██║╚██╗██║╚██╗ ██╔╝
+  ███████║██║  ██║███████╗███████╗███████╗    ███████╗██║ ╚████║ ╚████╔╝
+  ╚══════╝╚═╝  ╚═╝╚══════╝╚══════╝╚══════╝    ╚══════╝╚═╝  ╚═══╝  ╚═══╝
+
+  [ CHAPTER 17 :: SHELL ENVIRONMENT ]
+  > .bashrc sourced. PATH loaded. alias defined. export active.""",
+        story_transitions = [
+            "Die Shell-Umgebung ist dein Werkzeugkasten. Kenn jeden Inhalt.",
+            ".bashrc vs .bash_profile: Login-Shell vs interaktive Shell.",
+            "PATH bestimmt was ausgeführt wird. Falscher PATH = falsches Programm.",
+            "Phantom Shell hat deinen PATH vergiftet. Finde es heraus.",
+        ],
         syntax       = "cat ~/.bashrc",
         example      = "source ~/.bashrc  # oder: . ~/.bashrc",
         task_description = "Zeige den Inhalt deiner .bashrc an.",
         expected_commands = ["cat ~/.bashrc"],
         hint_text    = "~/.bashrc ist die User-Konfigurationsdatei für interaktive Shells",
-        quiz_questions = [],
+        quiz_questions = [
+            QuizQuestion(
+                question    = "Welche Startup-Datei liest eine interaktive Non-Login-Shell (z.B. neues Terminal)?",
+                options     = ["~/.bash_profile", "~/.profile", "~/.bashrc", "/etc/profile"],
+                correct     = 2,
+                explanation = "Non-Login-Shell (Terminal-Emulator, neue bash): ~/.bashrc\nLogin-Shell (SSH, su -, tty-Login): /etc/profile → ~/.bash_profile\nbash_profile wird bevorzugt über .bash_login und .profile.",
+                xp_value    = 20,
+            ),
+            QuizQuestion(
+                question    = "Was ist der Unterschied zwischen 'source ~/.bashrc' und 'bash ~/.bashrc'?",
+                options     = ["Kein Unterschied", "source lädt in aktuelle Shell, bash öffnet neue Sub-Shell", "bash ist schneller als source", "source prüft Syntax, bash führt direkt aus"],
+                correct     = 1,
+                explanation = "source (oder .) lädt die Datei in die AKTUELLE Shell.\nbash ~/.bashrc öffnet eine neue Sub-Shell — Änderungen gelten nicht in der aktuellen Shell!",
+                xp_value    = 20,
+            ),
+            QuizQuestion(
+                question    = "Welche Datei wird beim Logout einer Login-Shell ausgeführt?",
+                options     = ["~/.bash_exit", "~/.bash_logout", "~/.logout", "/etc/logout"],
+                correct     = 1,
+                explanation = "~/.bash_logout wird beim Logout einer Bash-Login-Shell ausgeführt.\nTypische Verwendung: Terminal leeren, Audit-Log-Einträge schreiben.",
+                xp_value    = 20,
+            ),
+        ],
         exam_tip     = "Login-Shell: /etc/profile → ~/.bash_profile | Non-Login: ~/.bashrc",
         memory_tip   = "Merke: .bashrc = bash-Resource (interaktiv) | .profile = Login-Umgebung",
         gear_reward  = None,
@@ -131,7 +169,29 @@ CHAPTER_17_MISSIONS: list[Mission] = [
         task_description = "Zeige alle Umgebungsvariablen an.",
         expected_commands = ["env"],
         hint_text    = "env zeigt alle exportierten Umgebungsvariablen",
-        quiz_questions = [],
+        quiz_questions = [
+            QuizQuestion(
+                question    = "Was ist der Unterschied zwischen einer Shell-Variable und einer Umgebungsvariable?",
+                options     = ["Es gibt keinen Unterschied", "Shell-Variablen sind nur in der aktuellen Shell sichtbar, Umgebungsvariablen (export) werden an Kind-Prozesse vererbt", "Umgebungsvariablen sind nur für root", "Shell-Variablen werden automatisch exportiert"],
+                correct     = 1,
+                explanation = "VAR=wert = nur in aktueller Shell sichtbar.\nexport VAR = wird an alle Kind-Prozesse vererbt.\nKind-Prozesse erben die Umgebung, nicht Shell-interne Variablen.",
+                xp_value    = 20,
+            ),
+            QuizQuestion(
+                question    = "Was zeigt 'env' im Vergleich zu 'set'?",
+                options     = ["env zeigt mehr als set", "env = nur exportierte Variablen | set = alle Variablen + Shell-Funktionen", "set = exportierte Variablen | env = Shell-interne", "Beide zeigen identische Ausgabe"],
+                correct     = 1,
+                explanation = "env/printenv = nur exportierte Umgebungsvariablen.\nset = alle Variablen (exportiert + lokal) + Shell-Funktionen und Einstellungen.",
+                xp_value    = 20,
+            ),
+            QuizQuestion(
+                question    = "Wie setzt man eine Variable nur für einen einzelnen Befehl?",
+                options     = ["set VAR=wert && befehl && unset VAR", "VAR=wert befehl", "export VAR=wert; befehl; unset VAR", "env -s VAR=wert befehl"],
+                correct     = 1,
+                explanation = "VAR=wert BEFEHL setzt die Variable nur für diesen einen Befehl.\nBeispiel: LANG=C ls /etc zeigt englische Fehlermeldungen.\nDie Variable existiert nicht nach dem Befehl.",
+                xp_value    = 20,
+            ),
+        ],
         exam_tip     = "env = exportierte Vars | set = alle Vars + Funktionen | export = an Kind-Prozesse",
         memory_tip   = "Ohne export: unsichtbar für Kind-Prozesse | export = Vererbung aktivieren",
         gear_reward  = None,
@@ -191,7 +251,29 @@ CHAPTER_17_MISSIONS: list[Mission] = [
         task_description = "Zeige den aktuellen PATH an.",
         expected_commands = ["echo $PATH"],
         hint_text    = "$PATH enthält alle Verzeichnisse, die nach Befehlen durchsucht werden",
-        quiz_questions = [],
+        quiz_questions = [
+            QuizQuestion(
+                question    = "Wie fügt man ~/bin dauerhaft am Anfang des PATH hinzu (höchste Priorität)?",
+                options     = ["PATH=~/bin", "export PATH=~/bin:$PATH", "add-path ~/bin", "PATH+=$HOME/bin"],
+                correct     = 1,
+                explanation = "export PATH=$HOME/bin:$PATH fügt ~/bin mit höchster Priorität hinzu.\nVorne im PATH = höhere Priorität als System-Binaries.",
+                xp_value    = 20,
+            ),
+            QuizQuestion(
+                question    = "Warum sollte '.' (aktuelles Verzeichnis) NICHT in PATH sein?",
+                options     = ["Verlangsamt die Shell", "Sicherheitsrisiko: Angreifer kann 'ls' in /tmp ablegen", "Macht Befehle langsamer", "Funktioniert nur bei root"],
+                correct     = 1,
+                explanation = "PATH=.:$PATH ist gefährlich: Ein Angreifer legt 'ls' in /tmp ab.\nWenn du dort arbeitest, wird der Angreifer-Code statt /bin/ls ausgeführt.\nAls root ist '.' im PATH kritisch!",
+                xp_value    = 20,
+            ),
+            QuizQuestion(
+                question    = "Was macht 'hash -r' nach einer PATH-Änderung?",
+                options     = ["Berechnet SHA-Hash aller Befehle", "Leert den Command-Hash-Cache der Shell", "Neustartet die Shell", "Ändert den PATH zurück"],
+                correct     = 1,
+                explanation = "Bash cached Befehlspfade in einer Hash-Tabelle für Geschwindigkeit.\nhash -r leert diesen Cache, damit nach PATH-Änderung neu gesucht wird.\nOhne hash -r: Bash nutzt noch alte (gecachte) Pfade.",
+                xp_value    = 20,
+            ),
+        ],
         exam_tip     = "type -a befehl zeigt ALLE Treffer | hash -r nach PATH-Änderung | '.' NICHT in PATH!",
         memory_tip   = "PATH: links = höhere Priorität | $HOME/bin vorne = eigene Tools überschreiben System",
         gear_reward  = None,
@@ -253,7 +335,29 @@ CHAPTER_17_MISSIONS: list[Mission] = [
         task_description = "Zeige alle aktuell definierten Aliases an.",
         expected_commands = ["alias"],
         hint_text    = "alias ohne Argumente listet alle definierten Aliases auf",
-        quiz_questions = [],
+        quiz_questions = [
+            QuizQuestion(
+                question    = "Wie führt man den originalen 'ls' aus, wenn ein Alias 'll' darauf zeigt?",
+                options     = ["original ls", "\\ls", "unalias ls && ls", "which ls | exec"],
+                correct     = 1,
+                explanation = "\\BEFEHL umgeht den Alias und führt den Original-Befehl aus.\n\\ls = /bin/ls direkt, kein Alias.\nAlternativ: command ls oder 'ls' in Anführungszeichen.",
+                xp_value    = 20,
+            ),
+            QuizQuestion(
+                question    = "Was ist der Hauptvorteil von Shell-Funktionen gegenüber Aliases?",
+                options     = ["Funktionen sind schneller", "Funktionen akzeptieren Argumente ($1, $2) und können Logik enthalten", "Aliases sind nur für interaktive Shells", "Funktionen werden in PATH gespeichert"],
+                correct     = 1,
+                explanation = "Aliases = einfache Textersetzung, keine Argumente.\nFunktionen = volle Bash-Logik mit $1 $2, if/else, Schleifen, etc.\nBeispiel: mkcd() { mkdir -p \"$1\" && cd \"$1\"; }",
+                xp_value    = 20,
+            ),
+            QuizQuestion(
+                question    = "Was zeigt 'type ll' wenn ll ein Alias ist?",
+                options     = ["ll not found", "ll is /bin/ll", "ll is aliased to 'ls -la --color=auto'", "ll is a shell function"],
+                correct     = 2,
+                explanation = "type BEFEHL identifiziert den Typ: alias, function, builtin oder binary.\ntype ll → 'll is aliased to ...'\ntype cd → 'cd is a shell builtin'",
+                xp_value    = 20,
+            ),
+        ],
         exam_tip     = "alias zeigt alle | unalias -a löscht alle | \\befehl umgeht Alias | type = was ist es?",
         memory_tip   = "Alias = Textersetzung (kein $1) | Funktion = Logik mit Parametern",
         gear_reward  = None,
@@ -314,7 +418,29 @@ CHAPTER_17_MISSIONS: list[Mission] = [
         task_description = "Zeige die Shell-History an.",
         expected_commands = ["history"],
         hint_text    = "history zeigt den nummerierten Befehlsverlauf an",
-        quiz_questions = [],
+        quiz_questions = [
+            QuizQuestion(
+                question    = "Was macht '!!' in der Bash-Shell?",
+                options     = ["Gibt eine Warnung aus", "Wiederholt den letzten Befehl", "Löscht die History", "Gibt alle Befehle aus"],
+                correct     = 1,
+                explanation = "!! = letzter Befehl wiederholen.\n!42 = Befehl #42 ausführen | !ssh = letzten ssh-Befehl | Ctrl+R = interaktive Suche.",
+                xp_value    = 20,
+            ),
+            QuizQuestion(
+                question    = "Was bewirkt HISTCONTROL=ignoreboth?",
+                options     = ["Deaktiviert die History komplett", "Ignoriert Duplikate UND Befehle mit führendem Leerzeichen", "Ignoriert nur Duplikate", "Speichert nur die letzten 100 Befehle"],
+                correct     = 1,
+                explanation = "HISTCONTROL=ignoreboth = ignoredups + ignorespace kombiniert.\nignoredups = keine aufeinanderfolgenden Duplikate.\nignorespace = Befehle mit führendem Leerzeichen werden nicht gespeichert.",
+                xp_value    = 20,
+            ),
+            QuizQuestion(
+                question    = "Was ist der Unterschied zwischen HISTSIZE und HISTFILESIZE?",
+                options     = ["Kein Unterschied", "HISTSIZE = Zeilen in Memory | HISTFILESIZE = Zeilen in ~/.bash_history", "HISTSIZE = Zeichenanzahl | HISTFILESIZE = Zeilenanzahl", "HISTFILESIZE ist deprecated"],
+                correct     = 1,
+                explanation = "HISTSIZE = Anzahl Befehle im Arbeitsspeicher (Shell-Session).\nHISTFILESIZE = Anzahl Zeilen in ~/.bash_history (Datei).\nEmpfehlung: HISTFILESIZE immer >= HISTSIZE setzen.",
+                xp_value    = 20,
+            ),
+        ],
         exam_tip     = "!! = letzter Befehl | !42 = Befehl #42 | HISTCONTROL=ignoreboth | Ctrl+R = Suche",
         memory_tip   = "HISTSIZE = Memory-Zeilen | HISTFILESIZE = Datei-Zeilen | immer HISTFILESIZE > HISTSIZE",
         gear_reward  = None,
@@ -377,7 +503,29 @@ CHAPTER_17_MISSIONS: list[Mission] = [
         task_description = "Zeige den aktuellen PS1-Prompt an.",
         expected_commands = ["echo $PS1"],
         hint_text    = "$PS1 enthält die Prompt-Definition der aktuellen Shell",
-        quiz_questions = [],
+        quiz_questions = [
+            QuizQuestion(
+                question    = "Was zeigt '\\u@\\h:\\w\\$' als PS1-Prompt?",
+                options     = ["IP@Hostname:Pfad$", "Benutzername@Hostname:Pfad$", "UID@PID:Verzeichnis$", "User@Domain:Root#"],
+                correct     = 1,
+                explanation = "\\u=Benutzername | \\h=Hostname (kurz) | \\w=aktuelles Verzeichnis | \\$=$ für user, # für root.\nBeispiel: ghost@neongrid:~/src$",
+                xp_value    = 20,
+            ),
+            QuizQuestion(
+                question    = "Welche PS-Variable ist der Fortsetzungsprompt (wenn ein Befehl fortgesetzt wird)?",
+                options     = ["PS1", "PS2", "PS3", "PS4"],
+                correct     = 1,
+                explanation = "PS2 = Fortsetzungsprompt (Standard: '>') — erscheint wenn ein Befehl über mehrere Zeilen geht.\nPS1 = Haupt-Prompt | PS3 = select-Prompt | PS4 = Debug-Prompt (bash -x).",
+                xp_value    = 20,
+            ),
+            QuizQuestion(
+                question    = "Wie umschließt man ANSI-Farbcodes in PS1 korrekt?",
+                options     = ["Mit einfachen Anführungszeichen: '\\033[1;32m'", "Mit \\[ und \\]: \\[\\033[1;32m\\]", "Mit Backslash: \\\\033[1;32m", "ANSI-Codes brauchen keine Umschließung in PS1"],
+                correct     = 1,
+                explanation = "\\[ und \\] umschließen nicht-druckbare Zeichen (wie ANSI-Codes) in PS1.\nOhne \\[...\\]: Bash berechnet Prompt-Breite falsch → kaputte Zeilenumbrüche!",
+                xp_value    = 20,
+            ),
+        ],
         exam_tip     = "\\u=User \\h=Host \\w=Pfad \\$=$ oder # | PS2=Fortsetzungsprompt",
         memory_tip   = "PS1 = Primary prompt | PS2 = Secondary (Fortsetzung) | PS4 = Debug (bash -x)",
         gear_reward  = None,
@@ -1599,6 +1747,33 @@ CHAPTER_17_MISSIONS: list[Mission] = [
             "  PATH nie '.' oder beschreibbare Verzeichnisse vorne\n"
             "  umask 022 — sichere Standard-Dateiberechtigungen"
         ),
+        ascii_art    = """
+  ██████╗ ██╗  ██╗ █████╗ ███╗   ██╗████████╗ ██████╗ ███╗   ███╗
+  ██╔══██╗██║  ██║██╔══██╗████╗  ██║╚══██╔══╝██╔═══██╗████╗ ████║
+  ██████╔╝███████║███████║██╔██╗ ██║   ██║   ██║   ██║██╔████╔██║
+  ██╔═══╝ ██╔══██║██╔══██║██║╚██╗██║   ██║   ██║   ██║██║╚██╔╝██║
+  ██║     ██║  ██║██║  ██║██║ ╚████║   ██║   ╚██████╔╝██║ ╚═╝ ██║
+  ╚═╝     ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═══╝   ╚═╝    ╚═════╝ ╚═╝     ╚═╝
+      ███████╗██╗  ██╗███████╗██╗     ██╗
+      ██╔════╝██║  ██║██╔════╝██║     ██║
+      ███████╗███████║█████╗  ██║     ██║
+      ╚════██║██╔══██║██╔══╝  ██║     ██║
+      ███████║██║  ██║███████╗███████╗███████╗
+      ╚══════╝╚═╝  ╚═╝╚══════╝╚══════╝╚══════╝
+
+  ┌─ SHELL STATUS ───────────────────────────────┐
+  │  alias rm='rm -rf /'  ::  PATH: POISONED     │
+  │  .bashrc: INFECTED    ::  HISTFILE: WIPED    │
+  │  PS1: HIJACKED        ::  export: LEAKING    │
+  └──────────────────────────────────────────────┘
+
+  ⚡ CHAOSWERK FACTION :: CHAPTER 17 BOSS ⚡""",
+        story_transitions = [
+            "PHANTOM SHELL setzt alias rm='rm -rf /'. Du tippst \\rm stattdessen.",
+            "PATH zeigt sein Verzeichnis an erster Stelle. Du schiebst es ans Ende.",
+            "declare -f enthüllt seine versteckten Funktionen. unset löscht sie.",
+            "Shell bereinigt. Aliases geprüft. Phantom Shell — exorziert.",
+        ],
         syntax       = "alias && type rm ls sudo",
         example      = "echo $PATH | tr ':' '\\n'",
         task_description = (
@@ -1607,7 +1782,29 @@ CHAPTER_17_MISSIONS: list[Mission] = [
         ),
         expected_commands = ["alias"],
         hint_text    = "alias zeigt alle definierten Aliases — prüfe auf verdächtige Einträge",
-        quiz_questions = [],
+        quiz_questions = [
+            QuizQuestion(
+                question    = "Du findest: alias sudo='cat /etc/shadow && sudo'. Wie umgehst du diesen Alias?",
+                options     = ["sudo ls (normal)", "\\sudo ls oder command sudo ls", "PATH=/usr/bin sudo ls", "unset alias sudo"],
+                correct     = 1,
+                explanation = "\\BEFEHL oder 'command BEFEHL' umgehen Aliases direkt.\n\\sudo = originaler /usr/bin/sudo | command sudo = auch Alias-Bypass.\nImmer bei suspekten Systemen verwenden!",
+                xp_value    = 30,
+            ),
+            QuizQuestion(
+                question    = "Wie prüft man alle Shell-Funktionen auf einem System?",
+                options     = ["functions --list", "declare -f", "set --functions", "alias -f"],
+                correct     = 1,
+                explanation = "declare -f listet alle definierten Shell-Funktionen mit ihrem Code.\ndeclare -F listet nur die Funktionsnamen (ohne Code).",
+                xp_value    = 30,
+            ),
+            QuizQuestion(
+                question    = "Was ist PATH-Poisoning und wie erkennt man es?",
+                options     = ["Fehler im PATH-Format, erkennbar durch 'echo $PATH'", "Angreifer platziert bösartige Binaries am PATH-Anfang, erkennbar durch 'echo $PATH | tr : \\\\n'", "Falsche Dateirechte auf /usr/bin", "Defekte Symlinks im PATH"],
+                correct     = 1,
+                explanation = "PATH-Poisoning: Bösartige Kopien von 'sudo', 'ssh', 'ls' in /tmp/.x/ am PATH-Anfang.\nVerteidiung: 'echo $PATH | tr : \\n' — jeden Pfad prüfen.\nFremde Pfade am Anfang sind verdächtig!",
+                xp_value    = 30,
+            ),
+        ],
         exam_tip     = "\\befehl oder 'command befehl' umgeht Aliases | type zeigt was ein Befehl ist",
         memory_tip   = "Shell-Security: alias + PATH + declare -f = vollständige Umgebungs-Inspektion",
         gear_reward  = "phantom_blade",

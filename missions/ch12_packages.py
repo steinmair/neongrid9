@@ -67,6 +67,22 @@ CHAPTER_12_MISSIONS: list[Mission] = [
             "  dpkg --configure -a       alle halb-konfigurierten Pakete\n"
             "  dpkg --force-depends -i   Abhängigkeiten ignorieren"
         ),
+        ascii_art = """
+  ██████╗  █████╗  ██████╗██╗  ██╗ █████╗  ██████╗ ███████╗███████╗
+  ██╔══██╗██╔══██╗██╔════╝██║ ██╔╝██╔══██╗██╔════╝ ██╔════╝██╔════╝
+  ██████╔╝███████║██║     █████╔╝ ███████║██║  ███╗█████╗  ███████╗
+  ██╔═══╝ ██╔══██║██║     ██╔═██╗ ██╔══██║██║   ██║██╔══╝  ╚════██║
+  ██║     ██║  ██║╚██████╗██║  ██╗██║  ██║╚██████╔╝███████╗███████║
+  ╚═╝     ╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝ ╚══════╝╚══════╝
+
+  [ CHAPTER 12 :: PACKAGE MANAGEMENT ]
+  > apt/dpkg/rpm matrix online. Dependency graph resolving...""",
+        story_transitions = [
+            "Software kommt in Paketen. Pakete haben Abhängigkeiten.",
+            "dpkg installiert rohe .deb. apt löst Abhängigkeiten auf.",
+            "rpm, yum, dnf — andere Distros, gleiche Idee.",
+            "Kein unkontrolliertes apt install. Versteh was du installierst.",
+        ],
         syntax       = "dpkg -i PKG.deb  |  dpkg -l  |  dpkg -s PKG  |  dpkg -L PKG",
         example      = (
             "dpkg -l\n"
@@ -1942,6 +1958,27 @@ CHAPTER_12_MISSIONS: list[Mission] = [
             "apt autoremove\n"
             "rpm -qa  # auf RPM-Systemen"
         ),
+        ascii_art    = """
+  ██████╗  █████╗  ██████╗██╗  ██╗██████╗  ██████╗  ██████╗ ██████╗
+  ██╔══██╗██╔══██╗██╔════╝██║ ██╔╝██╔══██╗██╔═══██╗██╔═══██╗██╔══██╗
+  ██████╔╝███████║██║     █████╔╝ ██║  ██║██║   ██║██║   ██║██████╔╝
+  ██╔══██╗██╔══██║██║     ██╔═██╗ ██║  ██║██║   ██║██║   ██║██╔══██╗
+  ██████╔╝██║  ██║╚██████╗██║  ██╗██████╔╝╚██████╔╝╚██████╔╝██║  ██║
+  ╚═════╝ ╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝╚═════╝  ╚═════╝  ╚═════╝ ╚═╝  ╚═╝
+
+  ┌─ PACKAGE MANAGER COMPROMISED ─────────────────────────────────────┐
+  │  apt update :: MIRROR POISONED   backdoor-agent: INSTALLED       │
+  │  dpkg -l :: 666 UNKNOWN PACKAGES  rpm: DATABASE CORRUPTED        │
+  │  /var/cache/apt: TAINTED   pip: MALICIOUS PACKAGES INJECTED      │
+  └───────────────────────────────────────────────────────────────────┘
+
+                    ⚡ CHAOSWERK FACTION :: CHAPTER 12 BOSS ⚡""",
+        story_transitions = [
+            "Backdoor-Agent installiert sich schneller als du löschen kannst.",
+            "dpkg -l zeigt seine Tarnung. apt purge trifft ihn tief.",
+            "Dependency-Tree hält ihn am Leben. apt autoremove schneidet frei.",
+            "Letztes Paket. Konfiguration gelöscht. System sauber.",
+        ],
         task_description = "BOSS: Bereinige das System — entferne Paket 'backdoor-agent' vollständig inkl. Config",
         expected_commands = ["apt purge backdoor-agent"],
         hint_text    = "apt purge entfernt Paket UND Konfigurationsdateien vollständig",

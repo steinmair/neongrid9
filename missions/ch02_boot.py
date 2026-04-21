@@ -44,6 +44,22 @@ CHAPTER_2_MISSIONS = [
             "     Startet alle Dienste\n"
             "     Login-Prompt erscheint"
         ),
+        ascii_art = """
+  ██████╗  ██████╗  ██████╗ ████████╗    ███████╗███████╗ ██████╗
+  ██╔══██╗██╔═══██╗██╔═══██╗╚══██╔══╝    ██╔════╝██╔════╝██╔═══██╗
+  ██████╔╝██║   ██║██║   ██║   ██║       ███████╗█████╗  ██║   ██║
+  ██╔══██╗██║   ██║██║   ██║   ██║       ╚════██║██╔══╝  ██║▄▄ ██║
+  ██████╔╝╚██████╔╝╚██████╔╝   ██║       ███████║███████╗╚██████╔╝
+  ╚═════╝  ╚═════╝  ╚═════╝    ╚═╝       ╚══════╝╚══════╝ ╚══▀▀═╝
+
+  [ CHAPTER 02 :: BOOT SEQUENCE ]
+  > BIOS/UEFI → Bootloader → Kernel → init... loading.""",
+        story_transitions = [
+            "Das System erwacht. POST abgeschlossen. GRUB lädt.",
+            "Kernel dekomprimiert sich. initramfs entfaltet sich im RAM.",
+            "PID 1 startet. Die Welt des Systems nimmt Form an.",
+            "Boot abgeschlossen. Jetzt lernst du, was dahinter steckt.",
+        ],
         syntax="# Boot-Reihenfolge prüfen:\ndmesg | head -20\njournalctl -b --no-pager | head -30",
         example=(
             "$ dmesg | head -5\n"
@@ -1136,6 +1152,7 @@ CHAPTER_2_MISSIONS = [
         mtype="QUIZ", xp=25, chapter=2,
         speaker="KERNEL-ORAKEL",
         story="Das Orakel warnt dich: GRUB Legacy und GRUB2 — häufige Verwechslung.",
+        why_important="GRUB Legacy vs GRUB2 ist eine der häufigsten Prüfungsfallen in LPIC-1: unterschiedliche Konfigurationsdateien, unterschiedliche Befehle.",
         quiz_questions=[
             QuizQuestion(
                 question="Wo liegt die Konfigurationsdatei von GRUB Legacy (GRUB 1)?",
@@ -1182,6 +1199,7 @@ CHAPTER_2_MISSIONS = [
         title="Prüfungsfalle: initrd vs initramfs",
         mtype="QUIZ", xp=25, chapter=2,
         speaker="KERNEL-ORAKEL",
+        why_important="initrd vs initramfs ist LPIC-1-Prüfungswissen: unterschiedliche Implementierungen des frühen Userspace, der Kernel-Module vor dem Root-Mount lädt.",
         quiz_questions=[
             QuizQuestion(
                 question="Was ist der technische Unterschied zwischen initrd und initramfs?",
@@ -1214,6 +1232,29 @@ CHAPTER_2_MISSIONS = [
         speaker="DAEMON",
         boss_name="DEAD BOOT — System Startet Nicht",
         boss_desc="Das System bootet nicht. Drei Phasen. Repariere jeden Fehler.",
+        ascii_art="""
+  ██████╗ ███████╗ █████╗ ██████╗     ██████╗  ██████╗  ██████╗ ████████╗
+  ██╔══██╗██╔════╝██╔══██╗██╔══██╗    ██╔══██╗██╔═══██╗██╔═══██╗╚══██╔══╝
+  ██║  ██║█████╗  ███████║██║  ██║    ██████╔╝██║   ██║██║   ██║   ██║
+  ██║  ██║██╔══╝  ██╔══██║██║  ██║    ██╔══██╗██║   ██║██║   ██║   ██║
+  ██████╔╝███████╗██║  ██║██████╔╝    ██████╔╝╚██████╔╝╚██████╔╝   ██║
+  ╚═════╝ ╚══════╝╚═╝  ╚═╝╚═════╝     ╚═════╝  ╚═════╝  ╚═════╝   ╚═╝
+
+  ┌─ BOOT SEQUENCE FAILED ────────────────────────────────────────────┐
+  │  GRUB Error 15: File not found                                    │
+  │  Kernel panic - not syncing: VFS: Unable to mount root fs         │
+  │  initrd: MISSING                                                  │
+  │  >> Recovery Mode: [MANUAL INTERVENTION REQUIRED]                 │
+  └───────────────────────────────────────────────────────────────────┘
+
+                    ⚡ CHAOSWERK FACTION :: CHAPTER 2 BOSS ⚡""",
+        story_transitions = [
+            "DEAD BOOT starrt dich an. Kein GRUB-Menü. Nur Stille.",
+            "grub-install läuft. Der Daemon versucht es zu stoppen.",
+            "initramfs rebuild. Kernel-Parameter gesetzt. Fast da.",
+            "Letzter Reboot. Entweder bootet es — oder nicht.",
+        ],
+        why_important="Boot-Recovery ist eine kritische Sysadmin-Fähigkeit. GRUB reparieren, Kernel-Parameter debuggen und initramfs verstehen sind LPIC-1-Kern-Skills.",
         story=(
             "Das Schlimmste ist eingetreten.\n"
             "System bootet nicht. GRUB defekt. Kernel nicht gefunden.\n"

@@ -10,7 +10,8 @@ from typing import List, Dict, Any, Optional, Callable
 from engine.display import (
     C, clear, mission_header, show_story, show_code, show_info,
     show_warn, show_error, show_success, show_exam_tip, show_memory_tip,
-    show_xp_gain, xp_bar, prompt_continue, prompt_input, boss_intro, level_up_screen
+    show_xp_gain, xp_bar, prompt_continue, prompt_input, boss_intro, level_up_screen,
+    show_ascii_art, show_transition
 )
 from engine.player import Player
 from engine.terminal_sim import run_terminal
@@ -34,6 +35,10 @@ class Mission:
     mtype: str                          # SCAN / INFILTRATE / DECODE / CONSTRUCT / REPAIR / QUIZ / BOSS
     xp: int
     chapter: int
+
+    # Visuals
+    ascii_art: str = ""                              # Neon ASCII art für Mission-Einstieg
+    story_transitions: List[str] = field(default_factory=list)  # Kurze Übergänge zwischen Sektionen
 
     # Story + Lerninhalt
     story: str = ""
@@ -83,25 +88,35 @@ class MissionRunner:
         clear()
         mission_header(mission.mission_id, mission.title, mission.xp, mission.mtype)
 
+        tr = mission.story_transitions  # shorthand
+
+        # 0. ASCII Art
+        if mission.ascii_art:
+            show_ascii_art(mission.ascii_art)
+
         # 1. Story-Einstieg
         if mission.story:
             show_story(mission.speaker, mission.story)
+            if tr: show_transition(tr[0] if len(tr) > 0 else "")
             prompt_continue()
 
         # 2. Warum wichtig
         if mission.why_important:
             print(C.YELLOW + "  ── WARUM WICHTIG? " + "─" * 49 + C.RESET)
             show_info(mission.why_important)
+            if tr: show_transition(tr[1] if len(tr) > 1 else "")
 
         # 3. Erklärung
         if mission.explanation:
             print(C.CYAN + "  ── ERKLÄRUNG " + "─" * 53 + C.RESET)
             show_info(mission.explanation)
+            if tr: show_transition(tr[2] if len(tr) > 2 else "")
 
         # 4. Syntax
         if mission.syntax:
             print(C.CYAN + "  ── SYNTAX " + "─" * 57 + C.RESET)
             show_code(mission.syntax)
+            if tr: show_transition(tr[3] if len(tr) > 3 else "")
 
         # 5. Beispiel
         if mission.example:
@@ -267,6 +282,9 @@ class MissionRunner:
 
         clear()
         mission_header(mission.mission_id, mission.title, mission.xp, "BOSS")
+
+        if mission.ascii_art:
+            show_ascii_art(mission.ascii_art, C.DANGER)
 
         if mission.story:
             show_story(mission.speaker, mission.story)

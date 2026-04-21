@@ -41,12 +41,50 @@ CHAPTER_15_MISSIONS: list[Mission] = [
             "Bekannte legitime SUID: /usr/bin/sudo /usr/bin/passwd /usr/bin/su\n"
             "Verdächtig: Editoren, Shell-Interpreter, cp, find, vim mit SUID!"
         ),
+        ascii_art = """
+  ███████╗███████╗ ██████╗██╗   ██╗██████╗ ██╗████████╗██╗   ██╗
+  ██╔════╝██╔════╝██╔════╝██║   ██║██╔══██╗██║╚══██╔══╝╚██╗ ██╔╝
+  ███████╗█████╗  ██║     ██║   ██║██████╔╝██║   ██║    ╚████╔╝
+  ╚════██║██╔══╝  ██║     ██║   ██║██╔══██╗██║   ██║     ╚██╔╝
+  ███████║███████╗╚██████╗╚██████╔╝██║  ██║██║   ██║      ██║
+  ╚══════╝╚══════╝ ╚═════╝ ╚═════╝ ╚═╝  ╚═╝╚═╝   ╚═╝      ╚═╝
+
+  [ CHAPTER 15 :: SECURITY HARDENING ]
+  > SUID scan running... firewall audit... fail2ban check...""",
+        story_transitions = [
+            "Sicherheit ist kein Zustand — es ist ein Prozess.",
+            "SUID-Bits, offene Ports, schwache Passwörter: jeder Fehler eine Lücke.",
+            "SSH härten, fail2ban aktivieren, sudo einschränken — Schritt für Schritt.",
+            "Shadow Admin lauert. Schließ die Lücken bevor er sie findet.",
+        ],
         syntax       = "find / -perm -4000 -type f 2>/dev/null",
         example      = "find / -perm /6000 -type f -ls 2>/dev/null",
         task_description = "Suche alle SUID-Dateien im System.",
         expected_commands = ["find / -perm -4000 -type f 2>/dev/null"],
         hint_text    = "find / -perm -4000 — -4000 bedeutet SUID-Bit gesetzt",
-        quiz_questions = [],
+        quiz_questions = [
+            QuizQuestion(
+                question    = "Welcher Befehl findet alle SUID-Dateien im System?",
+                options     = ["find / -perm -2000 -type f", "find / -perm -4000 -type f 2>/dev/null", "ls -la / | grep s", "chmod -S /"],
+                correct     = 1,
+                explanation = "find / -perm -4000 sucht Dateien mit gesetztem SUID-Bit.\n-4000=SUID | -2000=SGID | /6000=SUID oder SGID (OR)",
+                xp_value    = 20,
+            ),
+            QuizQuestion(
+                question    = "Was bedeutet 'find / -perm /6000'?",
+                options     = ["Nur SUID-Dateien", "Nur SGID-Dateien", "SUID ODER SGID gesetzt (OR)", "SUID UND SGID gesetzt (AND)"],
+                correct     = 2,
+                explanation = "find -perm /6000 = SUID ODER SGID (OR-Verknüpfung).\nfind -perm -6000 = SUID UND SGID gleichzeitig gesetzt.",
+                xp_value    = 20,
+            ),
+            QuizQuestion(
+                question    = "Welcher oktale chmod-Wert setzt das SUID-Bit?",
+                options     = ["1000", "2000", "4000", "0755"],
+                correct     = 2,
+                explanation = "Spezialrechte in chmod: 4000=SUID | 2000=SGID | 1000=Sticky-Bit.\nz.B.: chmod 4755 /bin/prog setzt SUID + rwxr-xr-x.",
+                xp_value    = 20,
+            ),
+        ],
         exam_tip     = "find / -perm -4000 (SUID) vs -perm -2000 (SGID) vs -perm /6000 (beides)",
         memory_tip   = "SUID=4000 SGID=2000 — wie chmod-Oktalen: 4=SUID 2=SGID 1=Sticky",
         gear_reward  = None,
@@ -93,7 +131,29 @@ CHAPTER_15_MISSIONS: list[Mission] = [
         task_description = "Zeige die aktive SSH-Konfiguration an.",
         expected_commands = ["cat /etc/ssh/sshd_config"],
         hint_text    = "Die SSH-Daemon-Konfiguration liegt in /etc/ssh/sshd_config",
-        quiz_questions = [],
+        quiz_questions = [
+            QuizQuestion(
+                question    = "Welche sshd_config-Direktive verhindert Root-Login via SSH?",
+                options     = ["DisableRoot yes", "PermitRootLogin no", "BlockRoot true", "RootAccess disabled"],
+                correct     = 1,
+                explanation = "PermitRootLogin no verhindert direkten Root-SSH-Zugang.\nAlternative: prohibit-password erlaubt Root nur per SSH-Key.",
+                xp_value    = 20,
+            ),
+            QuizQuestion(
+                question    = "Mit welchem Befehl prüft man sshd_config auf Syntaxfehler ohne Neustart?",
+                options     = ["sshd --check", "systemctl verify sshd", "sshd -t", "ssh-keygen -c"],
+                correct     = 2,
+                explanation = "sshd -t (test mode) prüft die Konfiguration auf Syntaxfehler,\nohne den Dienst neu zu starten. Immer vor 'systemctl restart sshd' ausführen!",
+                xp_value    = 20,
+            ),
+            QuizQuestion(
+                question    = "Welche Direktive deaktiviert Passwort-Authentifizierung in sshd_config?",
+                options     = ["KeyOnly yes", "PasswordAuthentication no", "AuthMethod pubkey", "DisablePassword true"],
+                correct     = 1,
+                explanation = "PasswordAuthentication no erzwingt Key-basierte Authentifizierung.\nZusätzlich: PubkeyAuthentication yes und AuthorizedKeysFile setzen.",
+                xp_value    = 20,
+            ),
+        ],
         exam_tip     = "PermitRootLogin no + PasswordAuthentication no = SSH-Grundhärtung | prohibit-password (Alias: without-password)",
         memory_tip   = "sshd_config = Server-Config | ssh_config = Client-Config",
         gear_reward  = None,
@@ -139,7 +199,29 @@ CHAPTER_15_MISSIONS: list[Mission] = [
         task_description = "Liste alle GPG-Schlüssel im Keyring auf.",
         expected_commands = ["gpg --list-keys"],
         hint_text    = "gpg --list-keys zeigt alle öffentlichen Schlüssel im lokalen Keyring",
-        quiz_questions = [],
+        quiz_questions = [
+            QuizQuestion(
+                question    = "Welcher gpg-Befehl verschlüsselt eine Datei für einen Empfänger?",
+                options     = ["gpg --encrypt datei.txt", "gpg -e -r 'Empfänger' datei.txt", "gpg --encode datei.txt", "gpg -c datei.txt"],
+                correct     = 1,
+                explanation = "gpg -e = encrypt | -r = recipient (Empfänger).\ngpg -c = symmetrische Verschlüsselung mit Passwort (kein -r nötig).",
+                xp_value    = 20,
+            ),
+            QuizQuestion(
+                question    = "Wie exportiert man seinen öffentlichen GPG-Schlüssel als ASCII?",
+                options     = ["gpg --export-public 'Name'", "gpg --export -a 'Name' > pub.asc", "gpg -x 'Name' > pub.asc", "gpg --public-key > pub.asc"],
+                correct     = 1,
+                explanation = "gpg --export -a 'Name' exportiert den Public Key als ASCII (armored).\n-a = --armor (lesbares ASCII-Format statt Binär)",
+                xp_value    = 20,
+            ),
+            QuizQuestion(
+                question    = "Was macht 'gpg --verify datei.txt.sig datei.txt'?",
+                options     = ["Verschlüsselt datei.txt", "Erstellt eine Signatur für datei.txt", "Prüft ob die Signatur für datei.txt gültig ist", "Entschlüsselt datei.txt.sig"],
+                correct     = 2,
+                explanation = "gpg --verify prüft eine Signatur auf Gültigkeit.\ngpg --sign = signieren | gpg --verify = Signatur prüfen.",
+                xp_value    = 20,
+            ),
+        ],
         exam_tip     = "gpg -e = encrypt | gpg -d = decrypt | gpg --sign = signieren | gpg --verify = prüfen",
         memory_tip   = "GPG: -e encrypt -d decrypt — wie 'encode/decode' rückwärts",
         gear_reward  = None,
@@ -197,7 +279,29 @@ CHAPTER_15_MISSIONS: list[Mission] = [
         task_description = "Zeige den Status des fail2ban SSH-Jails.",
         expected_commands = ["fail2ban-client status sshd"],
         hint_text    = "fail2ban-client status sshd — zeigt aktive Bans und Statistiken",
-        quiz_questions = [],
+        quiz_questions = [
+            QuizQuestion(
+                question    = "Welche fail2ban-Datei sollte für eigene Konfiguration verwendet werden?",
+                options     = ["/etc/fail2ban/jail.conf", "/etc/fail2ban/jail.local", "/etc/fail2ban/config.d/custom", "/var/fail2ban/config"],
+                correct     = 1,
+                explanation = "jail.local überschreibt jail.conf ohne diese zu ändern.\njail.conf wird bei Updates überschrieben — jail.local bleibt erhalten!",
+                xp_value    = 20,
+            ),
+            QuizQuestion(
+                question    = "Was bedeutet 'bantime = 3600' in fail2ban?",
+                options     = ["Prüfe Logs alle 3600 Sekunden", "Sperre IP für 3600 Sekunden (1 Stunde)", "Maximale 3600 Verbindungen", "Lösche Bans nach 3600 Versuchen"],
+                correct     = 1,
+                explanation = "bantime = Dauer des Banns in Sekunden.\nfindtime = Zeitfenster für Versuche | maxretry = Versuche bis zum Bann.",
+                xp_value    = 20,
+            ),
+            QuizQuestion(
+                question    = "Mit welchem Befehl hebt man einen fail2ban-Bann für eine IP auf?",
+                options     = ["fail2ban-client unban 1.2.3.4", "fail2ban-client set sshd unbanip 1.2.3.4", "iptables -D fail2ban 1.2.3.4", "fail2ban --release 1.2.3.4"],
+                correct     = 1,
+                explanation = "fail2ban-client set JAIL unbanip IP hebt den Bann auf.\nfail2ban-client banned zeigt alle aktuell gebannten IPs.",
+                xp_value    = 20,
+            ),
+        ],
         exam_tip     = "jail.local überschreibt jail.conf — eigene Konfiguration immer in jail.local",
         memory_tip   = "fail2ban: find(time) → max(retry) erreicht → ban(time) — drei Parameter",
         gear_reward  = None,
@@ -250,7 +354,29 @@ CHAPTER_15_MISSIONS: list[Mission] = [
         task_description = "Zeige deine eigenen sudo-Rechte an.",
         expected_commands = ["sudo -l"],
         hint_text    = "sudo -l listet alle erlaubten und verbotenen sudo-Befehle auf",
-        quiz_questions = [],
+        quiz_questions = [
+            QuizQuestion(
+                question    = "Welcher Befehl öffnet die sudoers-Datei sicher mit Syntax-Check?",
+                options     = ["nano /etc/sudoers", "visudo", "sudo edit /etc/sudoers", "vi /etc/sudoers"],
+                correct     = 1,
+                explanation = "visudo ist der einzig sichere Weg die sudoers-Datei zu bearbeiten.\nEs prüft die Syntax vor dem Speichern und verhindert ungültige Konfigurationen.",
+                xp_value    = 20,
+            ),
+            QuizQuestion(
+                question    = "Was bedeutet 'ghost ALL=(ALL) NOPASSWD: ALL' in sudoers?",
+                options     = ["ghost muss Passwort eingeben für alle Befehle", "ghost darf alles als jeder User ohne Passwort ausführen", "ghost hat keine sudo-Rechte", "ghost kann nur lokale Befehle ausführen"],
+                correct     = 1,
+                explanation = "Syntax: WHO HOST=(RUNAS) COMMANDS\nghost=User | ALL=alle Hosts | (ALL)=als jeder User | NOPASSWD:ALL=ohne Passwort, alles erlaubt.",
+                xp_value    = 20,
+            ),
+            QuizQuestion(
+                question    = "Wie referenziert man eine Gruppe in der sudoers-Datei?",
+                options     = ["group:admin ALL=(ALL) ALL", "@admin ALL=(ALL) ALL", "%admin ALL=(ALL) ALL", "#admin ALL=(ALL) ALL"],
+                correct     = 2,
+                explanation = "%admin = Gruppe admin (Präfix % für Gruppen).\nBeispiel: %wheel ALL=(ALL) NOPASSWD: ALL — typisch bei Fedora/Arch Linux.",
+                xp_value    = 20,
+            ),
+        ],
         exam_tip     = "visudo = sudo-sicherer Editor | sudo -l = Rechte anzeigen | %gruppe = Gruppe in sudoers",
         memory_tip   = "sudoers: WHO WHERE=(AS_WHOM) WHAT — vier Felder",
         gear_reward  = None,
@@ -303,7 +429,29 @@ CHAPTER_15_MISSIONS: list[Mission] = [
         task_description = "Erstelle eine SHA-256-Prüfsumme von /etc/passwd.",
         expected_commands = ["openssl dgst -sha256 /etc/passwd"],
         hint_text    = "openssl dgst -sha256 DATEI — berechnet SHA-256 Prüfsumme",
-        quiz_questions = [],
+        quiz_questions = [
+            QuizQuestion(
+                question    = "Was macht 'openssl enc -d -aes-256-cbc -in datei.enc'?",
+                options     = ["Verschlüsselt datei.enc mit AES-256", "Entschlüsselt datei.enc mit AES-256-CBC", "Erstellt einen AES-256-Schlüssel", "Prüft die Integrität der Datei"],
+                correct     = 1,
+                explanation = "openssl enc -d = decrypt (Entschlüsseln).\nopenssl enc ohne -d = encrypt (Verschlüsseln). -d ist das Schlüsselwort!",
+                xp_value    = 20,
+            ),
+            QuizQuestion(
+                question    = "In welcher Reihenfolge wird ein LUKS-Container korrekt eingebunden?",
+                options     = ["luksOpen → luksFormat → mount", "mount → luksOpen → luksFormat", "luksFormat → luksOpen → (mkfs) → mount", "luksOpen → mount → luksFormat"],
+                correct     = 2,
+                explanation = "LUKS-Workflow: luksFormat → luksOpen → mkfs → mount → umount → luksClose.\nluksFormat=erstellen | luksOpen=öffnen (erzeugt /dev/mapper/NAME)",
+                xp_value    = 20,
+            ),
+            QuizQuestion(
+                question    = "Welche Datei steuert automatisches Öffnen von LUKS-Containern beim Boot?",
+                options     = ["/etc/fstab", "/etc/crypttab", "/etc/luks.conf", "/boot/luks"],
+                correct     = 1,
+                explanation = "/etc/crypttab steuert das automatische Öffnen von LUKS-Containern beim Boot.\n/etc/fstab wird danach für das Einhängen verwendet.",
+                xp_value    = 20,
+            ),
+        ],
         exam_tip     = "LUKS: luksFormat → luksOpen → (mkfs) → mount | luksClose zum Schließen",
         memory_tip   = "openssl enc -d = decrypt | openssl enc (ohne -d) = encrypt",
         gear_reward  = None,
@@ -356,7 +504,29 @@ CHAPTER_15_MISSIONS: list[Mission] = [
         task_description = "Zeige alle Firewall-Regeln mit iptables.",
         expected_commands = ["iptables -L -n -v"],
         hint_text    = "iptables -L -n -v — List all rules, numeric, verbose",
-        quiz_questions = [],
+        quiz_questions = [
+            QuizQuestion(
+                question    = "Was zeigt 'iptables -L -n -v'?",
+                options     = ["Alle aktiven Netzwerkverbindungen", "Alle Firewall-Regeln numerisch und verbose", "Alle lauschenden Ports", "Die aktuelle Routing-Tabelle"],
+                correct     = 1,
+                explanation = "iptables -L=list rules | -n=numerisch (kein DNS) | -v=verbose (Paketzähler).\n--line-numbers zeigt zusätzlich die Zeilennummern der Regeln.",
+                xp_value    = 20,
+            ),
+            QuizQuestion(
+                question    = "Welche iptables-Chain verarbeitet eingehende Pakete an den lokalen Host?",
+                options     = ["OUTPUT", "FORWARD", "INPUT", "PREROUTING"],
+                correct     = 2,
+                explanation = "INPUT = eingehende Pakete an den lokalen Host.\nOUTPUT = ausgehende Pakete vom lokalen Host.\nFORWARD = Pakete, die weitergeleitet werden (Router-Funktion).",
+                xp_value    = 20,
+            ),
+            QuizQuestion(
+                question    = "Was ist der Unterschied zwischen 'iptables -A INPUT' und 'iptables -I INPUT 1'?",
+                options     = ["-A fügt am Anfang ein, -I am Ende", "-A hängt ans Ende an (append), -I fügt an Position ein (insert)", "-A löscht Regeln, -I fügt ein", "Kein Unterschied"],
+                correct     = 1,
+                explanation = "-A = append (ans Ende anhängen) — niedrigste Priorität.\n-I INPUT 1 = insert an Position 1 (Anfang) — höchste Priorität.\nReihenfolge zählt: erste passende Regel gewinnt!",
+                xp_value    = 20,
+            ),
+        ],
         exam_tip     = "iptables Chains: INPUT=eingehend OUTPUT=ausgehend FORWARD=weitergeleitet",
         memory_tip   = "iptables -A = append (hinten) | -I = insert (vorne/Position) | -D = delete",
         gear_reward  = None,
@@ -1471,6 +1641,33 @@ CHAPTER_15_MISSIONS: list[Mission] = [
             "  find / -perm -4000 -type f 2>/dev/null → SUID-Check\n"
             "  cat /etc/crontab && crontab -l → Verdächtige Cron-Jobs"
         ),
+        ascii_art    = """
+  ███████╗███████╗ ██████╗██╗   ██╗██████╗ ██╗████████╗██╗   ██╗
+  ██╔════╝██╔════╝██╔════╝██║   ██║██╔══██╗██║╚══██╔══╝╚██╗ ██╔╝
+  ███████╗█████╗  ██║     ██║   ██║██████╔╝██║   ██║    ╚████╔╝
+  ╚════██║██╔══╝  ██║     ██║   ██║██╔══██╗██║   ██║     ╚██╔╝
+  ███████║███████╗╚██████╗╚██████╔╝██║  ██║██║   ██║      ██║
+  ╚══════╝╚══════╝ ╚═════╝ ╚═════╝ ╚═╝  ╚═╝╚═╝   ╚═╝      ╚═╝
+      ██████╗ ██████╗  ██████╗ ████████╗ ██████╗  ██████╗ ██████╗ ██╗
+      ██╔══██╗██╔══██╗██╔═══██╗╚══██╔══╝██╔═══██╗██╔════╝██╔═══██╗██║
+      ██████╔╝██████╔╝██║   ██║   ██║   ██║   ██║██║     ██║   ██║██║
+      ██╔═══╝ ██╔══██╗██║   ██║   ██║   ██║   ██║██║     ██║   ██║██║
+      ██║     ██║  ██║╚██████╔╝   ██║   ╚██████╔╝╚██████╗╚██████╔╝███████╗
+      ╚═╝     ╚═╝  ╚═╝ ╚═════╝    ╚═╝    ╚═════╝  ╚═════╝ ╚═════╝ ╚══════╝
+
+  ┌─ SECURITY STATUS ────────────────────────────┐
+  │  SUID: /usr/bin/vim  ::  SSH: PermitRootLogin│
+  │  fail2ban: OFFLINE   ::  sudo: UNRESTRICTED  │
+  │  last: SUSPICIOUS    ::  Incident: ACTIVE    │
+  └──────────────────────────────────────────────┘
+
+  ⚡ CHAOSWERK FACTION :: CHAPTER 15 BOSS ⚡""",
+        story_transitions = [
+            "SHADOW ADMIN war schon drin. last -F zeigt seine Spuren.",
+            "SUID-Binaries leuchten in find-Output. Er hatte root. Du holst es zurück.",
+            "fail2ban blockiert seine Brute-Force. SSH-Config wird gehärtet.",
+            "Audit abgeschlossen. System gesichert. Shadow Admin — gebannt.",
+        ],
         syntax       = "last -F && lastb | head -20",
         example      = "find / -mtime -1 -type f 2>/dev/null | grep -v /proc",
         task_description = (
@@ -1479,7 +1676,29 @@ CHAPTER_15_MISSIONS: list[Mission] = [
         ),
         expected_commands = ["last"],
         hint_text    = "last zeigt die Login-History aus /var/log/wtmp",
-        quiz_questions = [],
+        quiz_questions = [
+            QuizQuestion(
+                question    = "Was ist der erste Schritt bei einem vermuteten System-Einbruch?",
+                options     = ["Sofort alle Daten löschen", "System isolieren und Logs sichern, bevor weitere Analyse", "Passwörter aller User ändern", "System sofort neu starten"],
+                correct     = 1,
+                explanation = "Incident Response: Erkennen → Isolieren → Beweise sichern → Analysieren → Bereinigen.\nLogs sichern BEVOR sie rotieren oder überschrieben werden!",
+                xp_value    = 30,
+            ),
+            QuizQuestion(
+                question    = "Welcher Befehl zeigt fehlgeschlagene Login-Versuche?",
+                options     = ["last -f", "lastb", "who --failed", "journalctl --login-fail"],
+                correct     = 1,
+                explanation = "lastb (last bad) zeigt fehlgeschlagene Login-Versuche aus /var/log/btmp.\nlast zeigt erfolgreiche Logins aus /var/log/wtmp.",
+                xp_value    = 30,
+            ),
+            QuizQuestion(
+                question    = "Welcher Befehl findet Dateien, die in der letzten Stunde geändert wurden?",
+                options     = ["find / -mtime -1 -type f", "find / -newer 1h -type f", "ls -ltr / | head", "find / -modified -60min"],
+                correct     = 0,
+                explanation = "find / -mtime -1 findet Dateien die in den letzten 24h geändert wurden.\n-mtime -1 = modified time < 1 Tag | -mmin -60 = in letzten 60 Minuten.",
+                xp_value    = 30,
+            ),
+        ],
         exam_tip     = "Prüfung: SUID find -perm -4000 | PermitRootLogin no | visudo | fail2ban | openssl -d",
         memory_tip   = "Security = Erkennen + Isolieren + Analysieren + Härten + Wiederherstellen",
         gear_reward  = "ghost_mask",

@@ -30,6 +30,22 @@ CHAPTER_18_MISSIONS: list[Mission] = [
             " Zeig, was du weißt.'"
         ),
         why_important = "LPIC-1 Exam 101: Topics 101.1 / 101.2 / 101.3",
+        ascii_art = """
+  ███████╗██╗  ██╗ █████╗ ███╗   ███╗    ██████╗ ██████╗  ██████╗ ████████╗ ██████╗  ██████╗ ██████╗ ██╗
+  ██╔════╝╚██╗██╔╝██╔══██╗████╗ ████║    ██╔══██╗██╔══██╗██╔═══██╗╚══██╔══╝██╔═══██╗██╔════╝██╔═══██╗██║
+  █████╗   ╚███╔╝ ███████║██╔████╔██║    ██████╔╝██████╔╝██║   ██║   ██║   ██║   ██║██║     ██║   ██║██║
+  ██╔══╝   ██╔██╗ ██╔══██║██║╚██╔╝██║    ██╔═══╝ ██╔══██╗██║   ██║   ██║   ██║   ██║██║     ██║   ██║██║
+  ███████╗██╔╝ ██╗██║  ██║██║ ╚═╝ ██║    ██║     ██║  ██║╚██████╔╝   ██║   ╚██████╔╝╚██████╗╚██████╔╝███████╗
+  ╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝     ╚═╝    ╚═╝     ╚═╝  ╚═╝ ╚═════╝    ╚═╝    ╚═════╝  ╚═════╝ ╚═════╝ ╚══════╝
+
+  [ CHAPTER 18 :: EXAM PROTOCOL 101 ]
+  > LPI-101 exam mode. 60 questions. 60 minutes. 500/800 to pass.""",
+        story_transitions = [
+            "17 Kapitel hinter dir. Das Wissen sitzt. Jetzt der Test.",
+            "LPIC-1: zwei Prüfungen, je 500/800 Punkte. Keine Lücken.",
+            "Examinator wartet. Keine Hints. Keine zweite Chance.",
+            "NeonGrid-9 hat dich vorbereitet. Beweise es.",
+        ],
         explanation  = "",
         syntax       = "",
         example      = "",
@@ -3422,6 +3438,27 @@ CHAPTER_18_MISSIONS: list[Mission] = [
             "Prüfungs-Anmeldung: lpi.org\n"
             "Gültigkeitsdauer: 5 Jahre"
         ),
+        ascii_art    = """
+  ███████╗██╗  ██╗ █████╗ ███╗   ███╗██╗███╗   ██╗ █████╗ ████████╗ ██████╗ ██████╗
+  ██╔════╝╚██╗██╔╝██╔══██╗████╗ ████║██║████╗  ██║██╔══██╗╚══██╔══╝██╔═══██╗██╔══██╗
+  █████╗   ╚███╔╝ ███████║██╔████╔██║██║██╔██╗ ██║███████║   ██║   ██║   ██║██████╔╝
+  ██╔══╝   ██╔██╗ ██╔══██║██║╚██╔╝██║██║██║╚██╗██║██╔══██║   ██║   ██║   ██║██╔══██╗
+  ███████╗██╔╝ ██╗██║  ██║██║ ╚═╝ ██║██║██║ ╚████║██║  ██║   ██║   ╚██████╔╝██║  ██║
+  ╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝     ╚═╝╚═╝╚═╝  ╚═══╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═╝
+
+  ┌─ EXAM STATUS ────────────────────────────────┐
+  │  LPI-101: PENDING    ::  LPI-102: PENDING    │
+  │  17 Chapters: CLEARED ::  XP: MAXIMUM       │
+  │  Score Target: 500/800  ::  LPIC-1: AWAITS  │
+  └──────────────────────────────────────────────┘
+
+  ⚡ CHAOSWERK FACTION :: CHAPTER 18 FINAL BOSS ⚡""",
+        story_transitions = [
+            "EXAMINATOR lädt die härtesten Fragen. Du hast alles gelernt.",
+            "17 Kapitel. 500 Missionen. Ein Ziel: LPIC-1 bestehen.",
+            "Zara sieht zu. Das gesamte NeonGrid-9 hält den Atem an.",
+            "Eine Frage. Die letzte. Deine Antwort entscheidet alles.",
+        ],
         syntax       = "# Lern-Reihenfolge für echte Prüfung:",
         example      = "# lpi.org → Candidate → Register → Exam 101 → Exam 102",
         task_description = (
@@ -3431,7 +3468,29 @@ CHAPTER_18_MISSIONS: list[Mission] = [
         ),
         expected_commands = ["uname -a"],
         hint_text    = "uname -a zeigt alle Systeminformationen — Kernel, Host, Arch",
-        quiz_questions = [],
+        quiz_questions = [
+            QuizQuestion(
+                question    = "Wie viele Punkte braucht man zum Bestehen einer LPIC-1-Prüfung?",
+                options     = ["400 von 800", "500 von 800 (62,5%)", "600 von 800", "700 von 800"],
+                correct     = 1,
+                explanation = "LPIC-1 Bestehenskriterium: 500 von 800 Punkten (62,5%).\nJede der zwei Prüfungen (LPI-101 und LPI-102) muss einzeln bestanden werden.",
+                xp_value    = 25,
+            ),
+            QuizQuestion(
+                question    = "Welche Topics deckt LPIC-1 Exam 101 (LPI-101) ab?",
+                options     = ["Topics 101-104 (Systemarchitektur, Installation, Befehle, Geräte)", "Topics 105-110 (Shells, Desktop, Admin, Dienste, Netz, Sicherheit)", "Alle Topics 101-110", "Nur Networking und Security"],
+                correct     = 0,
+                explanation = "LPI-101: Topics 101-104 (Hardware, Boot, Linux-Installation, Pakete, Befehle, Dateisysteme).\nLPI-102: Topics 105-110 (Shells, Desktop, Admin, Dienste, Netzwerk, Sicherheit).",
+                xp_value    = 25,
+            ),
+            QuizQuestion(
+                question    = "Was zeigt 'uname -r'?",
+                options     = ["Root-Verzeichnis", "Kernel-Release (Versionsnummer)", "Hostname", "Architektur"],
+                correct     = 1,
+                explanation = "uname -r = Kernel-Release (z.B. 6.1.0-debian).\nuname -s = Kernel-Name | uname -m = Maschinenarchitektur | uname -a = alles.",
+                xp_value    = 25,
+            ),
+        ],
         exam_tip     = "LPIC-1: 2 Prüfungen (101+102) | je 90 Min | 500/800 Punkte | lpi.org anmelden",
         memory_tip   = "NeonGrid-9 deckt alle LPIC-1 v5.0 Topics ab — du bist bereit.",
         gear_reward  = "lpic1_badge",

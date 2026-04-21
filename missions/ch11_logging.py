@@ -77,6 +77,22 @@ CHAPTER_11_MISSIONS: list[Mission] = [
             "  @192.168.1.100  remote syslog UDP\n"
             "  @@192.168.1.100 remote syslog TCP"
         ),
+        ascii_art = """
+  ██╗      ██████╗  ██████╗  ██████╗ ██╗███╗   ██╗ ██████╗
+  ██║     ██╔═══██╗██╔════╝ ██╔════╝ ██║████╗  ██║██╔════╝
+  ██║     ██║   ██║██║  ███╗██║  ███╗██║██╔██╗ ██║██║  ███╗
+  ██║     ██║   ██║██║   ██║██║   ██║██║██║╚██╗██║██║   ██║
+  ███████╗╚██████╔╝╚██████╔╝╚██████╔╝██║██║ ╚████║╚██████╔╝
+  ╚══════╝ ╚═════╝  ╚═════╝  ╚═════╝ ╚═╝╚═╝  ╚═══╝ ╚═════╝
+
+  [ CHAPTER 11 :: LOGGING & JOURNAL ]
+  > syslog daemon ready. journald ring buffer: active.""",
+        story_transitions = [
+            "Alles hinterlässt Spuren. Logs sind die Erinnerung des Systems.",
+            "kern.err, auth.warning, daemon.info — Prioritäten im Chaos.",
+            "journalctl zeigt was systemd gesehen hat. tail -f zeigt es live.",
+            "Kein Log, kein Beweis. Kein Beweis, keine Diagnose.",
+        ],
         syntax       = "tail -f /var/log/syslog  |  grep ERROR /var/log/syslog  |  cat /etc/rsyslog.conf",
         example      = (
             "tail -f /var/log/syslog\n"
@@ -2057,6 +2073,27 @@ CHAPTER_11_MISSIONS: list[Mission] = [
             "cat /etc/crontab\n"
             "ls /etc/cron.d/"
         ),
+        ascii_art    = """
+  ██████╗██╗  ██╗██████╗  ██████╗ ███╗   ██╗ ██████╗     ██████╗  █████╗ ███████╗███╗   ███╗ ██████╗ ███╗   ██╗
+  ██╔════╝██║  ██║██╔══██╗██╔═══██╗████╗  ██║██╔═══██╗    ██╔══██╗██╔══██╗██╔════╝████╗ ████║██╔═══██╗████╗  ██║
+  ██║     ███████║██████╔╝██║   ██║██╔██╗ ██║██║   ██║    ██║  ██║███████║█████╗  ██╔████╔██║██║   ██║██╔██╗ ██║
+  ██║     ██╔══██║██╔══██╗██║   ██║██║╚██╗██║██║   ██║    ██║  ██║██╔══██║██╔══╝  ██║╚██╔╝██║██║   ██║██║╚██╗██║
+  ╚██████╗██║  ██║██║  ██║╚██████╔╝██║ ╚████║╚██████╔╝    ██████╔╝██║  ██║███████╗██║ ╚═╝ ██║╚██████╔╝██║ ╚████║
+   ╚═════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═══╝ ╚═════╝     ╚═════╝ ╚═╝  ╚═╝╚══════╝╚═╝     ╚═╝ ╚═════╝ ╚═╝  ╚═══╝
+
+  ┌─ TEMPORAL DISTORTION ACTIVE ──────────────────────────────────────┐
+  │  System Time: 1970-01-01 00:00:00  (UNIX EPOCH LOCKED)           │
+  │  NTP: DISABLED   journalctl: TIMESTAMPS CORRUPTED                │
+  │  crontab: HIJACKED  rsyslog: SILENT  logrotate: PAUSED           │
+  └───────────────────────────────────────────────────────────────────┘
+
+                    ⚡ CHAOSWERK FACTION :: CHAPTER 11 BOSS ⚡""",
+        story_transitions = [
+            "CHRONO DAEMON verdreht die Zeitstempel. auth.log lügt dich an.",
+            "journalctl -p err zeigt echte Fehler. Er versteckt sie im Rauschen.",
+            "NTP deaktiviert. Timestamps driften. timedatectl kämpft zurück.",
+            "Log-Rotation aktiviert. Die Wahrheit bleibt erhalten.",
+        ],
         task_description = "BOSS: Aktiviere NTP-Synchronisation mit timedatectl",
         expected_commands = ["timedatectl set-ntp true"],
         hint_text    = "timedatectl set-ntp true aktiviert automatische Zeitsynchronisation via NTP",

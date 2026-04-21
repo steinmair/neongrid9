@@ -50,6 +50,28 @@ CHAPTER_20_MISSIONS: list[Mission] = [
             "  mangle   Paket-Manipulation\n"
             "  raw      Connection-Tracking deaktivieren"
         ),
+        ascii_art = """
+  ███████╗██╗██████╗ ███████╗██╗    ██╗ █████╗ ██╗     ██╗
+  ██╔════╝██║██╔══██╗██╔════╝██║    ██║██╔══██╗██║     ██║
+  █████╗  ██║██████╔╝█████╗  ██║ █╗ ██║███████║██║     ██║
+  ██╔══╝  ██║██╔══██╗██╔══╝  ██║███╗██║██╔══██║██║     ██║
+  ██║     ██║██║  ██║███████╗╚███╔███╔╝██║  ██║███████╗███████╗
+  ╚═╝     ╚═╝╚═╝  ╚═╝╚══════╝ ╚══╝╚══╝ ╚═╝  ╚═╝╚══════╝╚══════╝
+      ██████╗  ██████╗ ███╗   ███╗██╗███╗   ██╗██╗ ██████╗ ███╗   ██╗
+      ██╔══██╗██╔═══██╗████╗ ████║██║████╗  ██║██║██╔═══██╗████╗  ██║
+      ██║  ██║██║   ██║██╔████╔██║██║██╔██╗ ██║██║██║   ██║██╔██╗ ██║
+      ██║  ██║██║   ██║██║╚██╔╝██║██║██║╚██╗██║██║██║   ██║██║╚██╗██║
+      ██████╔╝╚██████╔╝██║ ╚═╝ ██║██║██║ ╚████║██║╚██████╔╝██║ ╚████║
+      ╚═════╝  ╚═════╝ ╚═╝     ╚═╝╚═╝╚═╝  ╚═══╝╚═╝ ╚═════╝ ╚═╝  ╚═══╝
+
+  [ CHAPTER 20 :: FIREWALL DOMINION ]
+  > iptables/nftables ruleset loading. Chains: INPUT OUTPUT FORWARD.""",
+        story_transitions = [
+            "Pakete kommen an. Die Firewall entscheidet: ACCEPT, DROP, REJECT.",
+            "INPUT, OUTPUT, FORWARD — drei Ketten. Tausend mögliche Regeln.",
+            "nftables ersetzt iptables. Die Syntax ändert sich, die Logik bleibt.",
+            "Blaze kontrolliert den Eingang. Du musst die Regeln schreiben.",
+        ],
         syntax       = "iptables -L -n -v  (Regeln anzeigen)",
         example      = "iptables -L -n -v --line-numbers",
         task_description = "Zeige aktuelle Firewall-Regeln mit iptables -L -n -v",
@@ -1426,6 +1448,33 @@ CHAPTER_20_MISSIONS: list[Mission] = [
             "  Zeige nftables: nft list ruleset\n"
             "  Zeige Ports: ss -tulpn"
         ),
+        ascii_art    = """
+  ███████╗██╗██████╗ ███████╗██╗    ██╗ █████╗ ██╗     ██╗
+  ██╔════╝██║██╔══██╗██╔════╝██║    ██║██╔══██╗██║     ██║
+  █████╗  ██║██████╔╝█████╗  ██║ █╗ ██║███████║██║     ██║
+  ██╔══╝  ██║██╔══██╗██╔══╝  ██║███╗██║██╔══██║██║     ██║
+  ██║     ██║██║  ██║███████╗╚███╔███╔╝██║  ██║███████╗███████╗
+  ╚═╝     ╚═╝╚═╝  ╚═╝╚══════╝ ╚══╝╚══╝ ╚═╝  ╚═╝╚══════╝╚══════╝
+      ██████╗  ██████╗ ███╗   ███╗██╗███╗   ██╗██╗ ██████╗ ███╗   ██╗
+      ██╔══██╗██╔═══██╗████╗ ████║██║████╗  ██║██║██╔═══██╗████╗  ██║
+      ██║  ██║██║   ██║██╔████╔██║██║██╔██╗ ██║██║██║   ██║██╔██╗ ██║
+      ██║  ██║██║   ██║██║╚██╔╝██║██║██║╚██╗██║██║██║   ██║██║╚██╗██║
+      ██████╔╝╚██████╔╝██║ ╚═╝ ██║██║██║ ╚████║██║╚██████╔╝██║ ╚████║
+      ╚═════╝  ╚═════╝ ╚═╝     ╚═╝╚═╝╚═╝  ╚═══╝╚═╝ ╚═════╝ ╚═╝  ╚═══╝
+
+  ┌─ FIREWALL STATUS ────────────────────────────┐
+  │  INPUT chain: OPEN    ::  NAT: MISCONFIGURED │
+  │  nftables: BYPASSED   ::  VPN: DOWN          │
+  │  IDS: BLINDED         ::  PKI: COMPROMISED   │
+  └──────────────────────────────────────────────┘
+
+  ⚡ CHAOSWERK FACTION :: CHAPTER 20 BOSS ⚡""",
+        story_transitions = [
+            "FIREWALL DAEMON öffnet alle Ports. iptables -L zeigt das Chaos.",
+            "iptables -A INPUT -p tcp --dport 22 -j DROP — er blockiert SSH.",
+            "nftables übernimmt. Du schreibst saubere Regeln gegen seinen Angriff.",
+            "Finaler Audit: iptables-save. Alle Regeln korrekt. Blaze fällt.",
+        ],
         syntax       = "iptables-save | nft list ruleset | ss -tulpn",
         example      = "iptables -L -n -v && nft list ruleset && ss -tulpn",
         task_description = "Führe den finalen Firewall-Audit durch: iptables -L -n -v",

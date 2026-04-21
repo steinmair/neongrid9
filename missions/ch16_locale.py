@@ -58,12 +58,50 @@ CHAPTER_16_MISSIONS: list[Mission] = [
             "locale-gen               → Locales generieren\n"
             "update-locale            → /etc/default/locale aktualisieren"
         ),
+        ascii_art = """
+  ██╗      ██████╗  ██████╗ █████╗ ██╗     ███████╗    ██╗
+  ██║     ██╔═══██╗██╔════╝██╔══██╗██║     ██╔════╝   ██╔╝
+  ██║     ██║   ██║██║     ███████║██║     █████╗    ██╔╝
+  ██║     ██║   ██║██║     ██╔══██║██║     ██╔══╝   ██╔╝
+  ███████╗╚██████╔╝╚██████╗██║  ██║███████╗███████╗██╔╝
+  ╚══════╝ ╚═════╝  ╚═════╝╚═╝  ╚═╝╚══════╝╚══════╝╚═╝
+
+  [ CHAPTER 16 :: LOCALE & DISPLAY ]
+  > LANG=de_DE.UTF-8... timedatectl syncing... X11 starting...""",
+        story_transitions = [
+            "Sprache, Zeitzone, Zeichensatz — das unsichtbare Fundament.",
+            "Falsche Locale: Umlaute werden zu ???. Logs werden unlesbar.",
+            "X11 braucht DISPLAY. Wayland braucht einen Compositor.",
+            "Ein Server ohne korrekte Locale loggt Müll. Kenn dein LANG.",
+        ],
         syntax       = "locale",
         example      = "iconv -f ISO-8859-1 -t UTF-8 alte_datei.txt > neue_datei.txt",
         task_description = "Zeige alle aktuellen Locale-Einstellungen an.",
         expected_commands = ["locale"],
         hint_text    = "locale ohne Argumente zeigt alle aktuell gesetzten LC_-Variablen",
-        quiz_questions = [],
+        quiz_questions = [
+            QuizQuestion(
+                question    = "Welche Variable hat die höchste Priorität und überschreibt alle anderen LC_*?",
+                options     = ["LANG", "LC_MESSAGES", "LC_ALL", "LANGUAGE"],
+                correct     = 2,
+                explanation = "LC_ALL überschreibt ALLE anderen LC_*-Variablen und LANG.\nPriorität: LC_ALL > LC_* > LANG.\nLC_ALL=C erzwingt POSIX-Locale (ASCII, englische Meldungen).",
+                xp_value    = 20,
+            ),
+            QuizQuestion(
+                question    = "Mit welchem Befehl konvertiert man eine Datei von ISO-8859-1 nach UTF-8?",
+                options     = ["convert -from ISO-8859-1 -to UTF-8 datei.txt", "iconv -f ISO-8859-1 -t UTF-8 datei.txt", "charset --from=latin1 --to=utf8 datei.txt", "encode -i latin1 -o utf8 datei.txt"],
+                correct     = 1,
+                explanation = "iconv -f FROM -t TO konvertiert Zeichensätze.\n-f = from (Quell-Encoding) | -t = to (Ziel-Encoding)\nErgebnis umleiten: iconv -f ISO-8859-1 -t UTF-8 alt.txt > neu.txt",
+                xp_value    = 20,
+            ),
+            QuizQuestion(
+                question    = "Welche Datei auf Debian/Ubuntu-Systemen aktiviert Locales zur Generierung?",
+                options     = ["/etc/locale.conf", "/etc/locale.gen", "/etc/default/locale", "/etc/sysconfig/locale"],
+                correct     = 1,
+                explanation = "/etc/locale.gen enthält auskommentierte Locale-Einträge (Debian/Ubuntu).\nNach Aktivierung: locale-gen ausführen, um die Locales zu kompilieren.",
+                xp_value    = 20,
+            ),
+        ],
         exam_tip     = "LANG=Haupt-Locale | LC_ALL überschreibt alles | iconv -f Quelle -t Ziel",
         memory_tip   = "Locale-Hierarchie: LC_ALL > LC_* > LANG — höchste Priorität gewinnt",
         gear_reward  = None,
@@ -116,7 +154,29 @@ CHAPTER_16_MISSIONS: list[Mission] = [
         task_description = "Zeige den aktuellen Zeitzonenstatus des Systems.",
         expected_commands = ["timedatectl"],
         hint_text    = "timedatectl zeigt Zeitzone, Zeit und NTP-Synchronisationsstatus",
-        quiz_questions = [],
+        quiz_questions = [
+            QuizQuestion(
+                question    = "Wie setzt man die Systemzeitzone auf Europe/Berlin mit systemd?",
+                options     = ["timezone set Europe/Berlin", "timedatectl set-timezone Europe/Berlin", "ln -s Europe/Berlin /etc/timezone", "date --timezone Europe/Berlin"],
+                correct     = 1,
+                explanation = "timedatectl set-timezone REGION/STADT setzt die Systemzeitzone.\nAlternativ manuell: ln -sf /usr/share/zoneinfo/Europe/Berlin /etc/localtime",
+                xp_value    = 20,
+            ),
+            QuizQuestion(
+                question    = "Was ist /etc/localtime?",
+                options     = ["Eine Textdatei mit dem Zeitzonennamen", "Ein Symlink auf /usr/share/zoneinfo/REGION/STADT", "Eine Binärdatei mit der aktuellen Zeit", "Eine Datei mit UTC-Offset in Stunden"],
+                correct     = 1,
+                explanation = "/etc/localtime ist ein Symlink auf die aktive Zeitzonendatei.\nz.B.: /etc/localtime → /usr/share/zoneinfo/Europe/Berlin",
+                xp_value    = 20,
+            ),
+            QuizQuestion(
+                question    = "Mit welchem date-Format gibt man die Unix-Timestamp aus?",
+                options     = ["date --timestamp", "date +%s", "date -u", "date +%T"],
+                correct     = 1,
+                explanation = "date +%s gibt den Unix-Timestamp (Sekunden seit 1970-01-01 00:00 UTC).\ndate -d '@1705312800' konvertiert Timestamp zurück zu Datum.",
+                xp_value    = 20,
+            ),
+        ],
         exam_tip     = "timedatectl set-timezone | ln -sf /usr/share/zoneinfo/... /etc/localtime",
         memory_tip   = "/etc/localtime = Symlink auf /usr/share/zoneinfo/REGION/STADT",
         gear_reward  = None,
@@ -178,7 +238,29 @@ CHAPTER_16_MISSIONS: list[Mission] = [
         task_description = "Zeige den aktuellen X11-Display-Wert an.",
         expected_commands = ["echo $DISPLAY"],
         hint_text    = "Die DISPLAY-Umgebungsvariable enthält den aktuellen X11-Display",
-        quiz_questions = [],
+        quiz_questions = [
+            QuizQuestion(
+                question    = "Was bedeutet 'DISPLAY=192.168.1.5:0.0' in X11?",
+                options     = ["SSH-Verbindung zu 192.168.1.5 Port 0", "X-Server auf 192.168.1.5, Display 0, Screen 0", "VNC-Server auf 192.168.1.5", "X-Client auf 192.168.1.5"],
+                correct     = 1,
+                explanation = "DISPLAY=HOST:DISPLAY.SCREEN\n192.168.1.5=Hostname | :0=erster Display (TCP 6000) | .0=erster Screen.\nDISPLAY=:0 = lokaler X-Server (Unix-Socket, kein TCP).",
+                xp_value    = 20,
+            ),
+            QuizQuestion(
+                question    = "Was ist der Unterschied zwischen 'ssh -X' und 'ssh -Y' für X11-Forwarding?",
+                options     = ["-X ist schneller, -Y ist sicherer", "-X ist untrusted (sicherer), -Y ist trusted (unsicherer)", "-X für lokale, -Y für Remote-Sessions", "-X für GNOME, -Y für KDE"],
+                correct     = 1,
+                explanation = "ssh -X = untrusted X11-Forwarding (sicherer, standard)\nssh -Y = trusted X11-Forwarding (weniger Sicherheitsbeschränkungen, für ältere Apps)\nFür normale Anwendungen immer -X bevorzugen.",
+                xp_value    = 20,
+            ),
+            QuizQuestion(
+                question    = "Welche Datei speichert die X11-Authentifizierungs-Cookies?",
+                options     = ["~/.Xcookies", "~/.Xauthority", "/etc/X11/auth", "~/.x11-auth"],
+                correct     = 1,
+                explanation = "~/.Xauthority enthält die MIT-MAGIC-COOKIE-1 Authentifizierungstoken.\nxauth list zeigt den Inhalt | xauth add fügt Einträge hinzu.",
+                xp_value    = 20,
+            ),
+        ],
         exam_tip     = "DISPLAY=:0 lokal | ssh -X forwarding | xauth = Authentifizierung | xdpyinfo = Info",
         memory_tip   = "X Client schickt Zeichenbefehle → X Server zeigt sie an (umgekehrt wie man denkt!)",
         gear_reward  = None,
@@ -238,7 +320,29 @@ CHAPTER_16_MISSIONS: list[Mission] = [
         task_description = "Prüfe den aktuellen Session-Typ (X11 oder Wayland).",
         expected_commands = ["echo $XDG_SESSION_TYPE"],
         hint_text    = "XDG_SESSION_TYPE enthält 'x11' oder 'wayland'",
-        quiz_questions = [],
+        quiz_questions = [
+            QuizQuestion(
+                question    = "Welcher Display Manager ist Standard bei GNOME-Systemen?",
+                options     = ["SDDM", "LightDM", "GDM", "XDM"],
+                correct     = 2,
+                explanation = "GDM (GNOME Display Manager) ist Standard bei GNOME.\nSDDM = KDE Plasma | LightDM = XFCE/LXDE | XDM = minimalistisch/klassisch.",
+                xp_value    = 20,
+            ),
+            QuizQuestion(
+                question    = "Welches systemd-Target entspricht dem grafischen Mehrbenutzermodus (Runlevel 5)?",
+                options     = ["multi-user.target", "graphical.target", "gui.target", "desktop.target"],
+                correct     = 1,
+                explanation = "graphical.target = GUI-Modus (früher Runlevel 5).\nmulti-user.target = CLI ohne GUI (früher Runlevel 3).",
+                xp_value    = 20,
+            ),
+            QuizQuestion(
+                question    = "Was ist ein Hauptunterschied zwischen X11 und Wayland?",
+                options     = ["Wayland ist älter und stabiler", "X11 ist netzwerktransparent, Wayland nicht nativ", "Wayland unterstützt keine GUI-Anwendungen", "X11 funktioniert nur auf neuerer Hardware"],
+                correct     = 1,
+                explanation = "X11 ist netzwerktransparent (DISPLAY=remote:0 möglich).\nWayland ist sicherer und moderner, aber kein natives Netz-Forwarding.\nXWayland bietet X11-Kompatibilität unter Wayland.",
+                xp_value    = 20,
+            ),
+        ],
         exam_tip     = "graphical.target = GUI-Boot | multi-user.target = CLI-Boot | GDM/SDDM/LightDM = Display Manager",
         memory_tip   = "Display Manager = Login-Screen | Window Manager = Fensterrahmen | Desktop = beides zusammen",
         gear_reward  = None,
@@ -304,7 +408,29 @@ CHAPTER_16_MISSIONS: list[Mission] = [
         task_description = "Zeige alle konfigurierten Drucker und deren Status.",
         expected_commands = ["lpstat -p"],
         hint_text    = "lpstat -p zeigt alle Drucker mit ihrem aktuellen Status",
-        quiz_questions = [],
+        quiz_questions = [
+            QuizQuestion(
+                question    = "Welcher Befehl druckt eine Datei auf einem bestimmten Drucker?",
+                options     = ["print -P druckername datei", "lpr -P druckername datei", "cups -d druckername datei", "lp --printer druckername datei"],
+                correct     = 1,
+                explanation = "lpr -P DRUCKERNAME DATEI druckt auf einem bestimmten Drucker.\nlp -d DRUCKERNAME DATEI ist die CUPS-native Alternative.",
+                xp_value    = 20,
+            ),
+            QuizQuestion(
+                question    = "Wie entfernt man alle eigenen Druckjobs aus der Warteschlange?",
+                options     = ["lpq -a", "lprm -", "cancel --all", "cups-remove-all"],
+                correct     = 1,
+                explanation = "lprm - entfernt alle eigenen Jobs aus der Warteschlange.\nlprm JOB-ID entfernt einen spezifischen Job | cancel JOB-ID ist die CUPS-native Version.",
+                xp_value    = 20,
+            ),
+            QuizQuestion(
+                question    = "Was macht 'cupsenable DRUCKERNAME'?",
+                options     = ["Installiert den CUPS-Dienst", "Aktiviert den Drucker (ermöglicht Drucken)", "Zeigt CUPS-Konfiguration an", "Startet die CUPS-Weboberfläche"],
+                correct     = 1,
+                explanation = "cupsenable aktiviert einen Drucker (ermöglicht Druckjob-Ausführung).\ncupsaccept = Jobs akzeptieren | cupsreject = Jobs ablehnen | cupsdisable = deaktivieren.",
+                xp_value    = 20,
+            ),
+        ],
         exam_tip     = "lpr/lp drucken | lpq/lpstat Warteschlange | lprm/cancel entfernen | cupsenable aktivieren",
         memory_tip   = "CUPS: lpr=drucken lpq=queue-anzeigen lprm=remove — alles mit 'lp' prefix",
         gear_reward  = None,
@@ -365,7 +491,29 @@ CHAPTER_16_MISSIONS: list[Mission] = [
         task_description = "Zeige den XDG-Konfigurationspfad an.",
         expected_commands = ["echo $XDG_CONFIG_HOME"],
         hint_text    = "XDG_CONFIG_HOME ist die XDG Base Directory für Konfigurationsdateien",
-        quiz_questions = [],
+        quiz_questions = [
+            QuizQuestion(
+                question    = "Welches Tool ist der Standard-Screenreader für GNOME unter Linux?",
+                options     = ["Brltty", "AT-SPI2", "Orca", "Dasher"],
+                correct     = 2,
+                explanation = "Orca ist der GNOME-Screenreader (Text-zu-Sprache).\nAT-SPI2 ist das Basis-Framework für Accessibility-Tools.\nBrltty = Braille-Display-Unterstützung.",
+                xp_value    = 20,
+            ),
+            QuizQuestion(
+                question    = "Wohin zeigt XDG_CONFIG_HOME standardmäßig?",
+                options     = ["~/.local/share", "~/.config", "~/.cache", "/etc/xdg"],
+                correct     = 1,
+                explanation = "XDG Base Directory Standard:\nXDG_CONFIG_HOME = ~/.config\nXDG_DATA_HOME = ~/.local/share\nXDG_CACHE_HOME = ~/.cache",
+                xp_value    = 20,
+            ),
+            QuizQuestion(
+                question    = "Welches Accessibility-Framework ist die Basis für Linux-Accessibility-Tools?",
+                options     = ["GTK-Accessibility", "AT-SPI2", "GNOME-A11y", "X11-Access"],
+                correct     = 1,
+                explanation = "AT-SPI2 (Accessibility Technology Service Provider Interface v2) ist das Linux-Standard-Accessibility-Framework.\nAlle modernen Linux-Accessibility-Tools bauen darauf auf.",
+                xp_value    = 20,
+            ),
+        ],
         exam_tip     = "AT-SPI2 = Accessibility-Framework | Orca = Screenreader | XDG_CONFIG_HOME = ~/.config",
         memory_tip   = "XDG Base Dirs: CONFIG=~/.config DATA=~/.local CACHE=~/.cache",
         gear_reward  = None,
@@ -1507,6 +1655,33 @@ CHAPTER_16_MISSIONS: list[Mission] = [
             "  tail -f /var/log/cups/error_log\n"
             "  lpstat -t            → Vollständiger Status"
         ),
+        ascii_art    = """
+  ██╗      ██████╗  ██████╗ █████╗ ██╗     ███████╗
+  ██║     ██╔═══██╗██╔════╝██╔══██╗██║     ██╔════╝
+  ██║     ██║   ██║██║     ███████║██║     █████╗
+  ██║     ██║   ██║██║     ██╔══██║██║     ██╔══╝
+  ███████╗╚██████╔╝╚██████╗██║  ██║███████╗███████╗
+  ╚══════╝ ╚═════╝  ╚═════╝╚═╝  ╚═╝╚══════╝╚══════╝
+      ███╗   ███╗ █████╗ ████████╗██████╗ ██╗██╗  ██╗
+      ████╗ ████║██╔══██╗╚══██╔══╝██╔══██╗██║╚██╗██╔╝
+      ██╔████╔██║███████║   ██║   ██████╔╝██║ ╚███╔╝
+      ██║╚██╔╝██║██╔══██║   ██║   ██╔══██╗██║ ██╔██╗
+      ██║ ╚═╝ ██║██║  ██║   ██║   ██║  ██║██║██╔╝ ██╗
+      ╚═╝     ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝╚═╝  ╚═╝
+
+  ┌─ LOCALE STATUS ──────────────────────────────┐
+  │  LANG=BROKEN  ::  UTF-8: NOT FOUND           │
+  │  X11: CRASHED ::  DISPLAY: undefined         │
+  │  CUPS: ERROR  ::  Timezone: CORRUPTED        │
+  └──────────────────────────────────────────────┘
+
+  ⚡ CHAOSWERK FACTION :: CHAPTER 16 BOSS ⚡""",
+        story_transitions = [
+            "GLITCH RENDERER zerstört die Locale. ??? überall auf dem Screen.",
+            "locale-gen versucht UTF-8 zu retten. Er blockiert /etc/locale.gen.",
+            "X11 crasht. DISPLAY ungesetzt. Du setzt ihn zurück: DISPLAY=:0.",
+            "Letzte Locale gesetzt. System spricht wieder Deutsch. Er verschwindet.",
+        ],
         syntax       = "locale -a | grep UTF-8 | head -5",
         example      = "sudo localectl set-locale LANG=de_DE.UTF-8",
         task_description = (
@@ -1515,7 +1690,29 @@ CHAPTER_16_MISSIONS: list[Mission] = [
         ),
         expected_commands = ["locale -a"],
         hint_text    = "locale -a listet alle installierten Locales auf",
-        quiz_questions = [],
+        quiz_questions = [
+            QuizQuestion(
+                question    = "Welcher Befehl setzt die systemweite Locale dauerhaft auf de_DE.UTF-8?",
+                options     = ["export LANG=de_DE.UTF-8", "localectl set-locale LANG=de_DE.UTF-8", "echo 'de_DE.UTF-8' > /etc/locale", "locale --set de_DE.UTF-8"],
+                correct     = 1,
+                explanation = "localectl set-locale LANG=de_DE.UTF-8 setzt die systemweite Locale dauerhaft.\nNur export LANG= gilt nur für die aktuelle Shell-Session.",
+                xp_value    = 30,
+            ),
+            QuizQuestion(
+                question    = "Was muss man nach dem Aktivieren einer Locale in /etc/locale.gen ausführen?",
+                options     = ["systemctl restart locale", "locale-gen", "update-locale", "dpkg-reconfigure locales"],
+                correct     = 1,
+                explanation = "locale-gen kompiliert die aktivierten Locales aus /etc/locale.gen.\nDanach update-locale ausführen, um die Systemlocale zu setzen.",
+                xp_value    = 30,
+            ),
+            QuizQuestion(
+                question    = "Wohin zeigt /etc/localtime auf einem korrekt konfigurierten System?",
+                options     = ["/etc/timezone", "/usr/share/zoneinfo/REGION/STADT", "/var/lib/timezone", "/etc/zoneinfo"],
+                correct     = 1,
+                explanation = "/etc/localtime ist ein Symlink: /etc/localtime → /usr/share/zoneinfo/Europe/Berlin.\n/etc/timezone enthält nur den Namen als Text (Debian-spezifisch).",
+                xp_value    = 30,
+            ),
+        ],
         exam_tip     = "locale -a = installierte Locales | locale-gen = generieren | update-locale = setzen",
         memory_tip   = "Locale-Fix: locale -a → locale-gen → update-locale → source /etc/default/locale",
         gear_reward  = "display_lens",

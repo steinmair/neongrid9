@@ -77,6 +77,22 @@ CHAPTER_14_MISSIONS: list[Mission] = [
             "  set -u               ungesetzte Variablen als Fehler\n"
             "  set -o pipefail      Pipe-Fehler erkennen"
         ),
+        ascii_art = """
+  ███████╗ ██████╗██████╗ ██╗██████╗ ████████╗██╗███╗   ██╗ ██████╗
+  ██╔════╝██╔════╝██╔══██╗██║██╔══██╗╚══██╔══╝██║████╗  ██║██╔════╝
+  ███████╗██║     ██████╔╝██║██████╔╝   ██║   ██║██╔██╗ ██║██║  ███╗
+  ╚════██║██║     ██╔══██╗██║██╔═══╝    ██║   ██║██║╚██╗██║██║   ██║
+  ███████║╚██████╗██║  ██║██║██║        ██║   ██║██║ ╚████║╚██████╔╝
+  ╚══════╝ ╚═════╝╚═╝  ╚═╝╚═╝╚═╝        ╚═╝   ╚═╝╚═╝  ╚═══╝ ╚═════╝
+
+  [ CHAPTER 14 :: SHELL SCRIPTING ]
+  > #!/bin/bash loaded. set -euo pipefail. Execute.""",
+        story_transitions = [
+            "Ein Skript ist Automatisierung. Was einmal manuell war, läuft jetzt allein.",
+            "set -euo pipefail: bei Fehler stoppen. Kein stilles Versagen.",
+            "Variablen, Schleifen, Funktionen — die Grammatik der Automatisierung.",
+            "Ein gutes Skript ersetzt hundert manuelle Befehle.",
+        ],
         syntax       = "#!/bin/bash  |  chmod +x skript.sh  |  ./skript.sh",
         example      = (
             "#!/bin/bash\n"
@@ -2721,6 +2737,33 @@ CHAPTER_14_MISSIONS: list[Mission] = [
             "  bash -n cleanup.sh\n"
             "  ./cleanup.sh -h"
         ),
+        ascii_art    = """
+  ███████╗ ██████╗██████╗ ██╗██████╗ ████████╗
+  ██╔════╝██╔════╝██╔══██╗██║██╔══██╗╚══██╔══╝
+  ███████╗██║     ██████╔╝██║██████╔╝   ██║
+  ╚════██║██║     ██╔══██╗██║██╔═══╝    ██║
+  ███████║╚██████╗██║  ██║██║██║        ██║
+  ╚══════╝ ╚═════╝╚═╝  ╚═╝╚═╝╚═╝        ╚═╝
+      ██████╗  █████╗ ███████╗███╗   ███╗ ██████╗ ███╗   ██╗
+      ██╔══██╗██╔══██╗██╔════╝████╗ ████║██╔═══██╗████╗  ██║
+      ██║  ██║███████║█████╗  ██╔████╔██║██║   ██║██╔██╗ ██║
+      ██║  ██║██╔══██║██╔══╝  ██║╚██╔╝██║██║   ██║██║╚██╗██║
+      ██████╔╝██║  ██║███████╗██║ ╚═╝ ██║╚██████╔╝██║ ╚████║
+      ╚═════╝ ╚═╝  ╚═╝╚══════╝╚═╝     ╚═╝ ╚═════╝ ╚═╝  ╚═══╝
+
+  ┌─ SCRIPT STATUS ──────────────────────────────┐
+  │  Backdoor scripts: SPAWNING  ::  chmod WRONG │
+  │  getopts HIJACKED  ::  loops INFINITE        │
+  │  set -e DISABLED   ::  pipefail BYPASSED     │
+  └──────────────────────────────────────────────┘
+
+  ⚡ CHAOSWERK FACTION :: CHAPTER 14 BOSS ⚡""",
+        story_transitions = [
+            "SCRIPT DAEMON generiert Backdoor-Skripte. Du schreibst das Gegenmittel.",
+            "getopts verarbeitet seine Argumente. Du nutzt seine eigene Logik.",
+            "set -e stoppt beim ersten Fehler. Sein Skript stirbt an sich selbst.",
+            "Letzter Loop. Dein cleanup.sh bereinigt alles was er geschrieben hat.",
+        ],
         syntax       = "",
         example      = (
             "#!/bin/bash\n"

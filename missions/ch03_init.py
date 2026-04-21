@@ -49,6 +49,22 @@ CHAPTER_3_MISSIONS = [
             "  cat /proc/1/comm\n"
             "  ps -p 1"
         ),
+        ascii_art = """
+  ██╗███╗   ██╗██╗████████╗    ███████╗██╗   ██╗███████╗████████╗███████╗███╗   ███╗
+  ██║████╗  ██║██║╚══██╔══╝    ██╔════╝╚██╗ ██╔╝██╔════╝╚══██╔══╝██╔════╝████╗ ████║
+  ██║██╔██╗ ██║██║   ██║       ███████╗ ╚████╔╝ ███████╗   ██║   █████╗  ██╔████╔██║
+  ██║██║╚██╗██║██║   ██║       ╚════██║  ╚██╔╝  ╚════██║   ██║   ██╔══╝  ██║╚██╔╝██║
+  ██║██║ ╚████║██║   ██║       ███████║   ██║   ███████║   ██║   ███████╗██║ ╚═╝ ██║
+  ╚═╝╚═╝  ╚═══╝╚═╝   ╚═╝       ╚══════╝   ╚═╝   ╚══════╝   ╚═╝   ╚══════╝╚═╝     ╚═╝
+
+  [ CHAPTER 03 :: INIT & SYSTEMD ]
+  > PID 1 detected. Scanning service graph...""",
+        story_transitions = [
+            "systemd spinnt seine Einheiten auf. Units laden parallel.",
+            "Targets verketten sich. multi-user.target fast erreicht.",
+            "Dienste starten, stoppen, stürzen ab. Zara beobachtet alles.",
+            "Wer PID 1 kontrolliert, kontrolliert das System.",
+        ],
         syntax="cat /proc/1/comm\nps -p 1\nls -la /sbin/init",
         example=(
             "$ cat /proc/1/comm\n"
@@ -923,6 +939,7 @@ CHAPTER_3_MISSIONS = [
         title="systemctl restart/reload — Unterschied",
         mtype="INFILTRATE", xp=30, chapter=3,
         speaker="SYSTEM",
+        why_important="Der Unterschied zwischen restart (Neustart, Verbindungsunterbrechung) und reload (SIGHUP, keine Unterbrechung) ist LPIC-1-Prüfungsstoff und produktionskritisch.",
         explanation=(
             "restart vs reload — detailliert:\n\n"
             "  restart:\n"
@@ -1728,6 +1745,7 @@ CHAPTER_3_MISSIONS = [
         mtype="QUIZ", xp=25, chapter=3,
         speaker="KERNEL-ORAKEL",
         story="Orakel-Test: SysVinit vs systemd — häufige Verwechslungen.",
+        why_important="Runlevel-zu-Target-Mapping ist eine der häufigsten Prüfungsfallen im LPIC-1 Kapitel über Init-Systeme.",
         quiz_questions=[
             QuizQuestion(
                 question="Runlevel 1 entspricht in systemd welchem Target?",
@@ -1769,6 +1787,7 @@ CHAPTER_3_MISSIONS = [
         title="Prüfungsfalle: SysVinit Runlevel 2 Debian vs RHEL",
         mtype="QUIZ", xp=25, chapter=3,
         speaker="KERNEL-ORAKEL",
+        why_important="Debian und RHEL haben unterschiedliche Runlevel-Bedeutungen — eine der häufigsten Verwechslungen in LPIC-1-Prüfungen.",
         quiz_questions=[
             QuizQuestion(
                 question="Unter welcher Distribution hat Runlevel 2 die gleiche Bedeutung wie Runlevel 5?",
@@ -1850,6 +1869,7 @@ CHAPTER_3_MISSIONS = [
         mtype="QUIZ", xp=30, chapter=3,
         speaker="KERNEL-ORAKEL",
         story="Das Orakel prüft dein Verständnis beider Init-Systeme.",
+        why_important="LPIC-1 prüft beide Init-Systeme: SysVinit (update-rc.d, service) und systemd (systemctl, unit files). Wer beides kennt, besteht.",
         quiz_questions=[
             QuizQuestion(
                 question="Wie aktivierst du einen Dienst für Autostart in SysVinit (Debian) vs systemd?",
@@ -1894,6 +1914,29 @@ CHAPTER_3_MISSIONS = [
         speaker="DAEMON",
         boss_name="INIT WAR — Das System kämpft zurück",
         boss_desc="systemd vs SysVinit. Drei Phasen. Zeig dass du beide beherrschst.",
+        ascii_art="""
+  ██╗███╗   ██╗██╗████████╗    ██╗    ██╗ █████╗ ██████╗
+  ██║████╗  ██║██║╚══██╔══╝    ██║    ██║██╔══██╗██╔══██╗
+  ██║██╔██╗ ██║██║   ██║       ██║ █╗ ██║███████║██████╔╝
+  ██║██║╚██╗██║██║   ██║       ██║███╗██║██╔══██║██╔══██╗
+  ██║██║ ╚████║██║   ██║       ╚███╔███╔╝██║  ██║██║  ██║
+  ╚═╝╚═╝  ╚═══╝╚═╝   ╚═╝        ╚══╝╚══╝ ╚═╝  ╚═╝╚═╝  ╚═╝
+
+  ┌─ INIT SYSTEM STATUS ──────────────────────────────────────────────┐
+  │  SysVinit  :: CORRUPTED  ░░░░░░░░░░ 0%                           │
+  │  systemd   :: LOCKED     ░░░░░░░░░░ 0%                           │
+  │  Runlevels :: UNDEFINED                                           │
+  │  >> systemctl: command not found                                  │
+  └───────────────────────────────────────────────────────────────────┘
+
+                    ⚡ CHAOSWERK FACTION :: CHAPTER 3 BOSS ⚡""",
+        story_transitions = [
+            "INIT WAR. systemd.target korrumpiert. Dienste stürzen ab.",
+            "systemctl mask blockiert alles. Du musst die Masken brechen.",
+            "SysVinit erwacht. /etc/rc.d kämpft gegen systemd.",
+            "Wer das Init-System kontrolliert, kontrolliert den Boot.",
+        ],
+        why_important="Der Init-War-Boss testet alle systemd und SysVinit-Kenntnisse aus Kapitel 3 — beide Systeme sind LPIC-1-Pflicht.",
         story=(
             "Das BIOS Imperium hat beide Init-Systeme korrumpiert.\n"
             "Du musst:\n"

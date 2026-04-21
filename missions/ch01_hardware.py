@@ -46,6 +46,22 @@ CHAPTER_1_MISSIONS = [
             "Infos über Hardware findest du in /proc/ und /sys/\n"
             "sowie mit spezialisierten Befehlen."
         ),
+        ascii_art = """
+  ██╗  ██╗ █████╗ ██████╗ ██████╗ ██╗    ██╗ █████╗ ██████╗ ███████╗
+  ██║  ██║██╔══██╗██╔══██╗██╔══██╗██║    ██║██╔══██╗██╔══██╗██╔════╝
+  ███████║███████║██████╔╝██║  ██║██║ █╗ ██║███████║██████╔╝█████╗
+  ██╔══██║██╔══██║██╔══██╗██║  ██║██║███╗██║██╔══██║██╔══██╗██╔══╝
+  ██║  ██║██║  ██║██║  ██║██████╔╝╚███╔███╔╝██║  ██║██║  ██║███████╗
+  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚═════╝  ╚══╝╚══╝╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝
+
+  [ CHAPTER 01 :: HARDWARE RECON ]
+  > Scanning physical layer... NeonGrid-9 boot sequence initiated.""",
+        story_transitions = [
+            "Zara tippt auf ihr Holopad. Sensorpulse scannen die Umgebung.",
+            "Die Daten fließen. /proc öffnet sich wie ein Fenster zur Maschine.",
+            "Jedes Byte Hardware hat eine Adresse. Lern sie zu lesen.",
+            "NeonGrid-9 wartet nicht. Starte deinen ersten Scan.",
+        ],
         syntax  = "lspci    # PCI-Geräte auflisten\nlsusb    # USB-Geräte auflisten",
         example = "$ lspci\n00:02.0 VGA: Intel UHD Graphics 620\n01:00.0 Network: Intel Wireless 8265",
         task_description  = "Zeige alle PCI-Geräte im System an.",
@@ -601,6 +617,7 @@ CHAPTER_1_MISSIONS = [
         xp          = 35,
         chapter     = 1,
         speaker     = "SYSTEM",
+        why_important = "lsusb -v und -t sind LPIC-1 Prüfungsthemen. USB-Gerätehierarchie und Deskriptoren zu lesen ist Pflicht für Hardware-Diagnostik.",
         explanation = (
             "lsusb Flags:\n\n"
             "  -v    : Verbose — vollständige USB-Deskriptoren\n"
@@ -712,6 +729,7 @@ CHAPTER_1_MISSIONS = [
         mtype       = "INFILTRATE",
         xp          = 30,
         chapter     = 1,
+        why_important = "lshw -class erlaubt gezieltes Filtern nach Hardware-Typen — in der Prüfung wird nach der korrekten Klassen-Syntax gefragt.",
         explanation = (
             "Mit -class kannst du lshw auf bestimmte Hardware filtern:\n\n"
             "  lshw -class processor  # CPU-Info\n"
@@ -1625,6 +1643,7 @@ CHAPTER_1_MISSIONS = [
             "IRQ 14 — eine Frage die im Examen erscheint.\n"
             "Beweise dass du die Antwort kennst."
         ),
+        why_important = "IRQ-Nummern sind klassisches LPIC-1 Prüfungswissen. IRQ 14 = Primary IDE ist eine typische Exam-Falle.",
         quiz_questions = [
             QuizQuestion(
                 question  = "Welchem klassischen Gerät ist IRQ 14 traditionell zugewiesen?",
@@ -1667,6 +1686,7 @@ CHAPTER_1_MISSIONS = [
             "Device-Naming ist eine häufige Prüfungsfalle.\n"
             "Kennst du den Unterschied zwischen sda, nvme0n1 und vda?"
         ),
+        why_important = "Device-Naming (/dev/sda, /dev/nvme0n1, /dev/vda) ist fundamentales LPIC-1-Wissen für Partitionierung und Troubleshooting.",
         quiz_questions = [
             QuizQuestion(
                 question  = "Welches Device-Präfix bezeichnet eine NVMe-SSD?",
@@ -1753,6 +1773,28 @@ CHAPTER_1_MISSIONS = [
         speaker     = "ZARA Z3R0",
         boss_name   = "BIOS OVERLORD — Hardware Guardian",
         boss_desc   = "Ein dreistufiger Hardware-Angriff. Zeig was du kannst.",
+        ascii_art   = """
+  ██████╗ ██╗ ██████╗ ███████╗      ██████╗ ██╗   ██╗███████╗██████╗ ██╗      ██████╗ ██████╗ ██████╗
+  ██╔══██╗██║██╔═══██╗██╔════╝     ██╔═══██╗██║   ██║██╔════╝██╔══██╗██║     ██╔═══██╗██╔══██╗██╔══██╗
+  ██████╔╝██║██║   ██║███████╗     ██║   ██║██║   ██║█████╗  ██████╔╝██║     ██║   ██║██████╔╝██║  ██║
+  ██╔══██╗██║██║   ██║╚════██║     ██║   ██║╚██╗ ██╔╝██╔══╝  ██╔══██╗██║     ██║   ██║██╔══██╗██║  ██║
+  ██████╔╝██║╚██████╔╝███████║     ╚██████╔╝ ╚████╔╝ ███████╗██║  ██║███████╗╚██████╔╝██║  ██║██████╔╝
+  ╚═════╝ ╚═╝ ╚═════╝ ╚══════╝      ╚═════╝   ╚═══╝  ╚══════╝╚═╝  ╚═╝╚══════╝ ╚═════╝ ╚═╝  ╚═╝╚═════╝
+
+  ┌─ HARDWARE INTERFACE LOCKED ──────────────────────────────────────────────────────────────────────┐
+  │  > lspci -k        BLOCKED                                                                       │
+  │  > lsmod           BLOCKED                                                                       │
+  │  > /proc/cpuinfo   ENCRYPTED                                                                     │
+  └──────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+                          ⚡ CHAOSWERK FACTION :: CHAPTER 1 BOSS ⚡""",
+        story_transitions = [
+            "BIOS OVERLORD rotiert seine Energieschilde. Dein Scan beginnt.",
+            "lspci zeigt PCI-Busse. Der Overlord korrumpiert sie in Echtzeit.",
+            "Jedes Modul ist eine Waffe. Lade das richtige.",
+            "Letzte Phase. Hardware-Speicher wird gelöscht. Beeil dich.",
+        ],
+        why_important = "Der Boss-Kampf testet alle Hardware-Kenntnisse aus Kapitel 1: PCI-Geräte, Kernel-Module und /proc — alle drei sind LPIC-1-Prüfungsstoff.",
         story       = (
             "Der BIOS Overlord hat das Hardware-Interface gesperrt.\n"
             "Drei Phasen. Kein Fehler erlaubt.\n\n"

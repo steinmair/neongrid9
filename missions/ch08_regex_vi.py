@@ -56,6 +56,22 @@ CHAPTER_8_MISSIONS: list[Mission] = [
             "  \\s       Whitespace (Leerzeichen, Tab, Newline)\n"
             "  \\w       Wortzeichen [a-zA-Z0-9_]"
         ),
+        ascii_art = """
+  ██████╗ ███████╗ ██████╗ ███████╗██╗  ██╗   ██╗   ██╗   ██╗██╗
+  ██╔══██╗██╔════╝██╔════╝ ██╔════╝╚██╗██╔╝   ██║   ██║   ██║██║
+  ██████╔╝█████╗  ██║  ███╗█████╗   ╚███╔╝    ██║   ██║   ██║██║
+  ██╔══██╗██╔══╝  ██║   ██║██╔══╝   ██╔██╗    ╚═╝   ╚═╝   ╚═╝╚═╝
+  ██║  ██║███████╗╚██████╔╝███████╗██╔╝ ██╗   ██╗   ██╗   ██╗██╗
+  ╚═╝  ╚═╝╚══════╝ ╚═════╝ ╚══════╝╚═╝  ╚═╝   ╚═╝   ╚═╝   ╚═╝╚═╝
+
+  [ CHAPTER 08 :: REGEX & VIM ]
+  > Pattern engine online. .* [A-Z]+ \\d{3} — match found.""",
+        story_transitions = [
+            "Muster erkennen ist Macht. Regex ist die Sprache der Maschinen.",
+            ". * + ? [] {} — jedes Zeichen hat Bedeutung.",
+            "grep findet. sed ersetzt. awk verarbeitet. vim editiert.",
+            "Ein Sysadmin ohne Regex ist blind im Datendschungel.",
+        ],
         syntax       = "grep 'MUSTER' DATEI | grep -E 'ERE-MUSTER'",
         example      = (
             "grep '^root' /etc/passwd        # Zeilen die mit 'root' beginnen\n"
@@ -2330,6 +2346,27 @@ CHAPTER_8_MISSIONS: list[Mission] = [
             "awk -F: '$3 >= 1000 {print $1}' /etc/passwd\n"
             "# In vi: :%s/http:/https:/g"
         ),
+        ascii_art   = """
+  ██████╗ ███████╗ ██████╗ ███████╗██╗  ██╗    ██████╗  █████╗ ███████╗███╗   ███╗ ██████╗ ███╗   ██╗
+  ██╔══██╗██╔════╝██╔════╝ ██╔════╝╚██╗██╔╝    ██╔══██╗██╔══██╗██╔════╝████╗ ████║██╔═══██╗████╗  ██║
+  ██████╔╝█████╗  ██║  ███╗█████╗   ╚███╔╝     ██║  ██║███████║█████╗  ██╔████╔██║██║   ██║██╔██╗ ██║
+  ██╔══██╗██╔══╝  ██║   ██║██╔══╝   ██╔██╗     ██║  ██║██╔══██║██╔══╝  ██║╚██╔╝██║██║   ██║██║╚██╗██║
+  ██║  ██║███████╗╚██████╔╝███████╗██╔╝ ██╗    ██████╔╝██║  ██║███████╗██║ ╚═╝ ██║╚██████╔╝██║ ╚████║
+  ╚═╝  ╚═╝╚══════╝ ╚═════╝ ╚══════╝╚═╝  ╚═╝    ╚═════╝ ╚═╝  ╚═╝╚══════╝╚═╝     ╚═╝ ╚═════╝ ╚═╝  ╚═══╝
+
+  ┌─ PATTERN MATCH ENGINE ────────────────────────────────────────────┐
+  │  grep -E '[0-9]+\\..*'  :: SCANNING...   ████████░░ 80%          │
+  │  sed 's/BOSS/GHOST/g'  :: REPLACING...  ██████████ ARMED         │
+  │  awk '{print $3}'       :: EXTRACTING... FIELD: LOCKED           │
+  └───────────────────────────────────────────────────────────────────┘
+
+                    ⚡ CHAOSWERK FACTION :: CHAPTER 8 BOSS ⚡""",
+        story_transitions = [
+            "REGEX DAEMON formt Muster aus Rauschen. Dein grep kämpft dagegen.",
+            ". * + ? — er schreibt Patterns die alles matchen. Du verfeinerst.",
+            "sed ersetzt seine Backdoor-Strings. awk extrahiert die Wahrheit.",
+            "Letztes Muster. Ein Regex der alles auflöst. Schreib ihn.",
+        ],
         task_description = "BOSS: Zeige UIDs >= 1000 aus /etc/passwd mit awk",
         expected_commands = ["awk -F: '$3 >= 1000 {print $1}' /etc/passwd"],
         hint_text    = "awk -F: setzt Trennzeichen, $3 ist die UID-Spalte, >= 1000 = normale User",

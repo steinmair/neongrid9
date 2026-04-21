@@ -55,6 +55,22 @@ CHAPTER_7_MISSIONS: list[Mission] = [
             "  pstree -p            # mit PIDs\n"
             "  pstree ghost         # Prozesse eines Users"
         ),
+        ascii_art = """
+  ██████╗ ██████╗  ██████╗  ██████╗███████╗███████╗███████╗
+  ██╔══██╗██╔══██╗██╔═══██╗██╔════╝██╔════╝██╔════╝██╔════╝
+  ██████╔╝██████╔╝██║   ██║██║     █████╗  ███████╗███████╗
+  ██╔═══╝ ██╔══██╗██║   ██║██║     ██╔══╝  ╚════██║╚════██║
+  ██║     ██║  ██║╚██████╔╝╚██████╗███████╗███████║███████║
+  ╚═╝     ╚═╝  ╚═╝ ╚═════╝  ╚═════╝╚══════╝╚══════╝╚══════╝
+
+  [ CHAPTER 07 :: PROCESSES & SIGNALS ]
+  > PID table loading... fork(), exec(), wait()...""",
+        story_transitions = [
+            "Jedes Programm ist ein Prozess. Jeder Prozess hat eine PID.",
+            "fork() klont. exec() ersetzt. wait() harvested Zombies.",
+            "Signale: SIGTERM bittet. SIGKILL tötet ohne Gnade.",
+            "nice, renice, cgroups — wer bekommt die CPU-Zeit?",
+        ],
         syntax       = "ps\npstree -p\ncat /proc/$$/status",
         example      = (
             "$ cat /proc/1/cmdline\n/sbin/init\n\n"
@@ -1840,6 +1856,27 @@ CHAPTER_7_MISSIONS: list[Mission] = [
         explanation      = "Boss-Kampf: Prozess-Gott — vollständige Prüfung",
         task_description = "Überlebe den Boss-Quiz!",
         expected_commands = [],
+        ascii_art        = """
+  ██████╗ ██████╗  ██████╗ ███████╗███████╗███████╗     ██████╗  ██████╗ ████████╗
+  ██╔══██╗██╔══██╗██╔═══██╗╚══███╔╝██╔════╝██╔════╝    ██╔════╝ ██╔═══██╗╚══██╔══╝
+  ██████╔╝██████╔╝██║   ██║  ███╔╝ █████╗  ███████╗    ██║  ███╗██║   ██║   ██║
+  ██╔═══╝ ██╔══██╗██║   ██║ ███╔╝  ██╔══╝  ╚════██║    ██║   ██║██║   ██║   ██║
+  ██║     ██║  ██║╚██████╔╝███████╗███████╗███████║    ╚██████╔╝╚██████╔╝   ██║
+  ╚═╝     ╚═╝  ╚═╝ ╚═════╝ ╚══════╝╚══════╝╚══════╝     ╚═════╝  ╚═════╝   ╚═╝
+
+  ┌─ PROCESS TABLE ────────────────────────────────────────────────────┐
+  │  PID   0  SWAPPER    CPU: 100%  MEM: ████████████████  LOCKED    │
+  │  PID   1  systemd    SIGNAL: 9  STATUS: KILLING                  │
+  │  PID 666  BOSS       NICE: -20  IONICE: realtime  IMMORTAL       │
+  └────────────────────────────────────────────────────────────────────┘
+
+                     ⚡ CHAOSWERK FACTION :: CHAPTER 7 BOSS ⚡""",
+        story_transitions = [
+            "PROZESS-GOTT spawnt Prozesse ohne Ende. ps aux explodiert.",
+            "kill -9 trifft. Er fork()t sofort neu. Zombies überall.",
+            "nice -20 stiehlt die CPU. Du renicest zurück.",
+            "Ein letzter Prozess. Töte ihn. Für immer.",
+        ],
         boss_name        = "PROZESS-GOTT v7.0",
         boss_desc        = (
             "SYSTEM PROCESS MATRIX ACTIVATED\n"

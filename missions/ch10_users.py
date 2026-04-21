@@ -63,6 +63,22 @@ CHAPTER_10_MISSIONS: list[Mission] = [
             "  /usr/sbin/nologin kein Login (Debian)\n"
             "  /bin/false        Login verweigert"
         ),
+        ascii_art = """
+  ██╗   ██╗███████╗███████╗██████╗ ███████╗    ██╗
+  ██║   ██║██╔════╝██╔════╝██╔══██╗██╔════╝   ██╔╝
+  ██║   ██║███████╗█████╗  ██████╔╝███████╗  ██╔╝
+  ██║   ██║╚════██║██╔══╝  ██╔══██╗╚════██║ ██╔╝
+  ╚██████╔╝███████║███████╗██║  ██║███████║██╔╝
+   ╚═════╝ ╚══════╝╚══════╝╚═╝  ╚═╝╚══════╝╚═╝
+
+  [ CHAPTER 10 :: USERS & GROUPS ]
+  > /etc/passwd loaded. Identity matrix online. UID scan...""",
+        story_transitions = [
+            "Jeder User hat eine UID. Jede Gruppe eine GID. Niemand ist anonym.",
+            "/etc/passwd: offen. /etc/shadow: verschlüsselt. Kenn den Unterschied.",
+            "useradd, usermod, userdel — du bestimmst wer existiert.",
+            "Privilegien trennen: root ist nicht alles. sudo ist die Brücke.",
+        ],
         syntax       = "cat /etc/passwd  |  getent passwd USER  |  id USER",
         example      = (
             "cat /etc/passwd\n"
@@ -2137,6 +2153,27 @@ CHAPTER_10_MISSIONS: list[Mission] = [
             "id agent\n"
             "getent passwd agent"
         ),
+        ascii_art    = """
+  ██╗██████╗ ███████╗███╗   ██╗████████╗██╗████████╗██╗   ██╗    ██████╗  █████╗ ███████╗███╗   ███╗ ██████╗ ███╗   ██╗
+  ██║██╔══██╗██╔════╝████╗  ██║╚══██╔══╝██║╚══██╔══╝╚██╗ ██╔╝    ██╔══██╗██╔══██╗██╔════╝████╗ ████║██╔═══██╗████╗  ██║
+  ██║██║  ██║█████╗  ██╔██╗ ██║   ██║   ██║   ██║    ╚████╔╝     ██║  ██║███████║█████╗  ██╔████╔██║██║   ██║██╔██╗ ██║
+  ██║██║  ██║██╔══╝  ██║╚██╗██║   ██║   ██║   ██║     ╚██╔╝      ██║  ██║██╔══██║██╔══╝  ██║╚██╔╝██║██║   ██║██║╚██╗██║
+  ██║██████╔╝███████╗██║ ╚████║   ██║   ██║   ██║      ██║       ██████╔╝██║  ██║███████╗██║ ╚═╝ ██║╚██████╔╝██║ ╚████║
+  ╚═╝╚═════╝ ╚══════╝╚═╝  ╚═══╝   ╚═╝   ╚═╝   ╚═╝      ╚═╝       ╚═════╝ ╚═╝  ╚═╝╚══════╝╚═╝     ╚═╝ ╚═════╝ ╚═╝  ╚═══╝
+
+  ┌─ IDENTITY MATRIX ─────────────────────────────────────────────────┐
+  │  ghost   :: UID 1000  STATUS: LOCKED   SUDO: REVOKED             │
+  │  /etc/shadow: ENCRYPTED  PAM: COMPROMISED                        │
+  │  passwd -l ghost  >> EXECUTED  |  usermod --lock: ACTIVE         │
+  └───────────────────────────────────────────────────────────────────┘
+
+                    ⚡ CHAOSWERK FACTION :: CHAPTER 10 BOSS ⚡""",
+        story_transitions = [
+            "IDENTITY DAEMON löscht Accounts in Echtzeit. Du must schneller sein.",
+            "useradd, usermod, passwd — drei Befehle drei Sekunden.",
+            "Shadow-Datei korrumpiert. chage rettet die Passwort-Policy.",
+            "Letzter Account gesperrt. passwd -u. Das Daemon-Schloss bricht.",
+        ],
         task_description = "BOSS: Entsperre den gesperrten Account 'ghost'",
         expected_commands = ["passwd -u ghost"],
         hint_text    = "passwd -u ghost entsperrt (unlock) einen gesperrten Benutzer-Account",

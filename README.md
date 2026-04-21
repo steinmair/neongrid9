@@ -31,11 +31,14 @@ python3 main.py
 | Stat | Wert |
 |---|---|
 | Kapitel | 22 |
-| Missionen | 500 |
-| Max XP | 47 410 |
+| Missionen | 501 |
+| Boss-Missionen | 22 |
+| Quiz-Fragen | 1 117 |
+| Max XP | 47 610 |
 | LPIC-1 Domains | 101.x – 110.x |
 | Fraktionen | 5 |
-| Prüfungsmodus | 26 Blöcke / LPIC-1 komplett |
+| Prüfungsmodus | 27 Blöcke / LPIC-1 komplett |
+| Quiz-Abdeckung | 100 % (501/501) |
 
 ---
 
@@ -60,7 +63,7 @@ python3 main.py
 | 15 | SECURITY PROTOCOL | 110.1 | 22 |
 | 16 | LOCALE MATRIX | 107.3 | 22 |
 | 17 | SHELL ENV | 105.1 | 22 |
-| 18 | EXAM PROTOCOL | ALL | 26 |
+| 18 | EXAM PROTOCOL | ALL | 27 |
 | 19 | GHOST PROTOCOL II | 102.6 | 18 |
 | 20 | FIREWALL DOMINION | 109.4 | 21 |
 | 21 | NETWORK SERVICES | 109.2 | 22 |

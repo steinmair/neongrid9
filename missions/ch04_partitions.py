@@ -46,6 +46,22 @@ CHAPTER_4_MISSIONS: list[Mission] = [
             "  - Redundante Partitionstabelle (Anfang + Ende)\n"
             "  - fdisk -l zeigt: 'Disklabel type: gpt'"
         ),
+        ascii_art = """
+  ██████╗  █████╗ ██████╗ ████████╗██╗████████╗██╗ ██████╗ ███╗   ██╗███████╗
+  ██╔══██╗██╔══██╗██╔══██╗╚══██╔══╝██║╚══██╔══╝██║██╔═══██╗████╗  ██║██╔════╝
+  ██████╔╝███████║██████╔╝   ██║   ██║   ██║   ██║██║   ██║██╔██╗ ██║███████╗
+  ██╔═══╝ ██╔══██║██╔══██╗   ██║   ██║   ██║   ██║██║   ██║██║╚██╗██║╚════██║
+  ██║     ██║  ██║██║  ██║   ██║   ██║   ██║   ██║╚██████╔╝██║ ╚████║███████║
+  ╚═╝     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝   ╚═╝   ╚═╝ ╚═════╝ ╚═╝  ╚═══╝╚══════╝
+
+  [ CHAPTER 04 :: DISK & PARTITIONS ]
+  > Scanning block devices... MBR/GPT structures detected.""",
+        story_transitions = [
+            "Die Festplatte rotiert. Sektoren warten auf Befehle.",
+            "GPT-Header erkannt. 128 Partitionseinträge. Platz für Daten.",
+            "mkfs formatiert. mount bindet ein. Daten fließen.",
+            "Kein Dateisystem — kein Speicher. Versteh die Grundlagen.",
+        ],
         syntax       = "fdisk -l              # alle Partitionstabellen anzeigen\nfdisk -l /dev/nvme0n1 # ein Laufwerk",
         example      = (
             "$ fdisk -l /dev/nvme0n1\n"
@@ -1783,6 +1799,27 @@ CHAPTER_4_MISSIONS: list[Mission] = [
         explanation      = "Boss-Kampf: Partition-Wächter — vollständige Prüfung",
         task_description = "Überlebe den Boss-Quiz!",
         expected_commands = [],
+        ascii_art        = """
+  ██████╗  █████╗ ██████╗ ████████╗██╗████████╗██╗ ██████╗ ███╗   ██╗
+  ██╔══██╗██╔══██╗██╔══██╗╚══██╔══╝██║╚══██╔══╝██║██╔═══██╗████╗  ██║
+  ██████╔╝███████║██████╔╝   ██║   ██║   ██║   ██║██║   ██║██╔██╗ ██║
+  ██╔═══╝ ██╔══██║██╔══██╗   ██║   ██║   ██║   ██║██║   ██║██║╚██╗██║
+  ██║     ██║  ██║██║  ██║   ██║   ██║   ██║   ██║╚██████╔╝██║ ╚████║
+  ╚═╝     ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝   ╚═╝   ╚═╝ ╚═════╝ ╚═╝  ╚═══╝
+
+  ┌─ STORAGE SYSTEM STATUS ───────────────────────────────────────────┐
+  │  /dev/sda :: LOCKED     MBR: ENCRYPTED                           │
+  │  /dev/sdb :: PROTECTED  GPT: INACCESSIBLE                        │
+  │  fdisk: PERMISSION DENIED   mkfs: BLOCKED                        │
+  └───────────────────────────────────────────────────────────────────┘
+
+                    ⚡ CHAOSWERK FACTION :: CHAPTER 4 BOSS ⚡""",
+        story_transitions = [
+            "PARTITION-WÄCHTER erwacht. Partition-Tabellen rotieren wie Schlösser.",
+            "fdisk zeigt die Struktur. Der Wächter verschlüsselt sie in Echtzeit.",
+            "mkfs formatiert. mount versucht es. Zugang verweigert.",
+            "Letzte Partition. Zara flüstert: 'Zeig ihm wer hier der Admin ist.'",
+        ],
         boss_name        = "PARTITION-WÄCHTER v4.0",
         boss_desc        = (
             "ERROR: UNAUTHORIZED ACCESS DETECTED\n"

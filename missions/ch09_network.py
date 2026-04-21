@@ -67,6 +67,22 @@ CHAPTER_9_MISSIONS: list[Mission] = [
             "  80     HTTP      110  POP3     143  IMAP\n"
             "  443    HTTPS     465  SMTPS    993  IMAPS"
         ),
+        ascii_art = """
+  ███╗   ██╗███████╗████████╗██╗    ██╗ ██████╗ ██████╗ ██╗  ██╗
+  ████╗  ██║██╔════╝╚══██╔══╝██║    ██║██╔═══██╗██╔══██╗██║ ██╔╝
+  ██╔██╗ ██║█████╗     ██║   ██║ █╗ ██║██║   ██║██████╔╝█████╔╝
+  ██║╚██╗██║██╔══╝     ██║   ██║███╗██║██║   ██║██╔══██╗██╔═██╗
+  ██║ ╚████║███████╗   ██║   ╚███╔███╔╝╚██████╔╝██║  ██║██║  ██╗
+  ╚═╝  ╚═══╝╚══════╝   ╚═╝    ╚══╝╚══╝  ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝
+
+  [ CHAPTER 09 :: NETWORKING ]
+  > Interface up. IP stack initialized. Routing table online.""",
+        story_transitions = [
+            "Pakete reisen durch das Netz. IP-Adressen sind Adressen im Chaos.",
+            "Subnetz, Gateway, DNS — drei Dinge die ein Netz braucht.",
+            "ss zeigt offene Ports. ip zeigt Routen. dig fragt DNS.",
+            "Ohne Netz kein Grid. Versteh die Schichten.",
+        ],
         syntax       = "ip addr show  |  cat /etc/hosts  |  cat /etc/resolv.conf",
         example      = (
             "# Eigene IP anzeigen:\n"
@@ -718,6 +734,29 @@ CHAPTER_9_MISSIONS: list[Mission] = [
         task_description = "Zeige alle aktuellen iptables-Regeln",
         expected_commands = ["iptables -L"],
         hint_text    = "iptables -L listet alle Firewall-Regeln. -n -v für mehr Details.",
+        quiz_questions = [
+            QuizQuestion(
+                question    = "Was ist der Unterschied zwischen DROP und REJECT in iptables?",
+                options     = ["DROP und REJECT sind identisch", "DROP verwirft still (kein ICMP), REJECT sendet ICMP Port-unreachable zurück", "REJECT ist schneller als DROP", "DROP sendet RST zurück, REJECT nicht"],
+                correct     = 1,
+                explanation = "DROP = Paket wird still verworfen, Sender erhält keine Rückmeldung.\nREJECT = Paket abgelehnt + ICMP Port-unreachable an Sender.\nFür Ports mit legitimen Nutzern: REJECT. Für Port-Scans: DROP.",
+                xp_value    = 20,
+            ),
+            QuizQuestion(
+                question    = "Welcher Befehl speichert iptables-Regeln permanent?",
+                options     = ["iptables --save", "iptables-save > /etc/iptables/rules.v4", "service iptables save", "systemctl save iptables"],
+                correct     = 1,
+                explanation = "iptables-save > /etc/iptables/rules.v4 speichert Regeln.\niptables-restore < /etc/iptables/rules.v4 lädt sie.\nOhne Speichern gehen Regeln nach Reboot verloren!",
+                xp_value    = 20,
+            ),
+            QuizQuestion(
+                question    = "Welcher Befehl erlaubt eingehenden SSH-Traffic (Port 22) mit iptables?",
+                options     = ["iptables -A INPUT --allow tcp:22", "iptables -A INPUT -p tcp --dport 22 -j ACCEPT", "iptables allow ssh", "ufw allow 22 (das ist ufw, nicht iptables!)"],
+                correct     = 1,
+                explanation = "iptables -A INPUT -p tcp --dport 22 -j ACCEPT erlaubt SSH.\n-A=append | -p=protocol | --dport=destination port | -j=jump (Aktion).",
+                xp_value    = 20,
+            ),
+        ],
         exam_tip     = (
             "MERKE: DROP vs REJECT:\n"
             "  DROP   → Paket wird still verworfen (kein ICMP zurück)\n"
@@ -1983,9 +2022,53 @@ CHAPTER_9_MISSIONS: list[Mission] = [
             "dig @8.8.8.8 neongrid9.local\n"
             "ping -c 4 8.8.8.8"
         ),
+        ascii_art    = """
+  ███╗   ██╗███████╗████████╗    ██████╗  █████╗ ███████╗███╗   ███╗ ██████╗ ███╗   ██╗
+  ████╗  ██║██╔════╝╚══██╔══╝    ██╔══██╗██╔══██╗██╔════╝████╗ ████║██╔═══██╗████╗  ██║
+  ██╔██╗ ██║█████╗     ██║       ██║  ██║███████║█████╗  ██╔████╔██║██║   ██║██╔██╗ ██║
+  ██║╚██╗██║██╔══╝     ██║       ██║  ██║██╔══██║██╔══╝  ██║╚██╔╝██║██║   ██║██║╚██╗██║
+  ██║ ╚████║███████╗   ██║       ██████╔╝██║  ██║███████╗██║ ╚═╝ ██║╚██████╔╝██║ ╚████║
+  ╚═╝  ╚═══╝╚══════╝   ╚═╝       ╚═════╝ ╚═╝  ╚═╝╚══════╝╚═╝     ╚═╝ ╚═════╝ ╚═╝  ╚═══╝
+
+  ┌─ NETWORK CONTROL CENTER ──────────────────────────────────────────┐
+  │  ALL ROUTES HIJACKED  ─  DNS POISONED  ─  PORTS LOCKED           │
+  │  ip route: DEFAULT GATEWAY: 666.666.666.666 (MALICIOUS)          │
+  │  ss -tulpn: PORT 22 BLOCKED   PORT 80: REDIRECTED                │
+  └───────────────────────────────────────────────────────────────────┘
+
+                    ⚡ CHAOSWERK FACTION :: CHAPTER 9 BOSS ⚡""",
+        story_transitions = [
+            "NETZ-TYRANT blockiert Port 22. SSH tot. Du versuchst Port 443.",
+            "iptables -L zeigt seine Regeln. Du kennst die Lücken.",
+            "ip route add umgeht seine Blockade. Pakete finden den Weg.",
+            "Letzter Port offen. ss -tulpn. Ende des Tyrannen.",
+        ],
         task_description = "BOSS: Zeige alle lauschenden Ports mit Prozessinformationen",
         expected_commands = ["ss -tulpn"],
         hint_text    = "ss -tulpn = TCP+UDP, nur Listening, mit Prozessen, numerisch",
+        quiz_questions = [
+            QuizQuestion(
+                question    = "Welcher Befehl zeigt alle lauschenden TCP/UDP-Ports mit zugehörigen Prozessen?",
+                options     = ["netstat -a", "ss -tulpn", "lsof -net", "ps aux | grep listen"],
+                correct     = 1,
+                explanation = "ss -tulpn: -t=TCP -u=UDP -l=listening -p=prozesse -n=numerisch.\nss ist der moderne Ersatz für netstat (selbe Flags oft kompatibel).",
+                xp_value    = 30,
+            ),
+            QuizQuestion(
+                question    = "Was zeigt 'ip route show' an?",
+                options     = ["Alle Netzwerkinterfaces mit IPs", "Die Kernel-Routing-Tabelle", "DNS-Konfiguration", "ARP-Cache-Einträge"],
+                correct     = 1,
+                explanation = "ip route show zeigt die Kernel-Routing-Tabelle.\n'default via X.X.X.X' = Standard-Gateway | Netzwerk-Routen zeigen direkte Verbindungen.",
+                xp_value    = 30,
+            ),
+            QuizQuestion(
+                question    = "Auf welchem Port lauscht SSH standardmäßig und was ist das Protokoll?",
+                options     = ["UDP Port 22", "TCP Port 22", "TCP Port 23", "TCP Port 2222"],
+                correct     = 1,
+                explanation = "SSH (Secure Shell) lauscht auf TCP Port 22.\nPort 23 = Telnet (UNSICHER — kein Encryption) | SSH ist der sichere Ersatz.",
+                xp_value    = 30,
+            ),
+        ],
         exam_tip     = (
             "LPIC-1 FINAL NET CHECK:\n"
             "  ip addr show  → Interfaces\n"

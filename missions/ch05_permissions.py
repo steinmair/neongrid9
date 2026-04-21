@@ -61,6 +61,22 @@ CHAPTER_5_MISSIONS: list[Mission] = [
             "  w = Dateien erstellen/löschen\n"
             "  x = Verzeichnis betreten (cd)"
         ),
+        ascii_art = """
+  ██████╗ ███████╗██████╗ ███╗   ███╗███████╗     ██████╗ ██╗  ██╗███╗   ███╗██████╗
+  ██╔══██╗██╔════╝██╔══██╗████╗ ████║██╔════╝    ██╔═══██╗██║  ██║████╗ ████║██╔══██╗
+  ██████╔╝█████╗  ██████╔╝██╔████╔██║███████╗    ██║   ██║███████║██╔████╔██║██║  ██║
+  ██╔═══╝ ██╔══╝  ██╔══██╗██║╚██╔╝██║╚════██║    ██║   ██║██╔══██║██║╚██╔╝██║██║  ██║
+  ██║     ███████╗██║  ██║██║ ╚═╝ ██║███████║    ╚██████╔╝██║  ██║██║ ╚═╝ ██║██████╔╝
+  ╚═╝     ╚══════╝╚═╝  ╚═╝╚═╝     ╚═╝╚══════╝     ╚═════╝ ╚═╝  ╚═╝╚═╝     ╚═╝╚═════╝
+
+  [ CHAPTER 05 :: PERMISSIONS & ACCESS ]
+  > rwxr-xr-x... Access matrix loading. Who controls the files?""",
+        story_transitions = [
+            "Zara zeigt dir die Zugriffsmatrix. r=4 w=2 x=1.",
+            "Wer besitzt die Datei? Wer darf sie lesen? Wer ausführen?",
+            "chmod, chown, umask — die Werkzeuge der Kontrolle.",
+            "Falsche Berechtigungen öffnen Backdoors. Kenn dein rwx.",
+        ],
         syntax       = "ls -l /etc/passwd\nls -la ~",
         example      = (
             "$ ls -la /home/ghost\n"
@@ -1810,6 +1826,27 @@ CHAPTER_5_MISSIONS: list[Mission] = [
         explanation      = "Boss-Kampf: Permission-Göttin — vollständige Prüfung",
         task_description = "Überlebe den Boss-Quiz!",
         expected_commands = [],
+        ascii_art        = """
+  ██████╗ ███████╗██████╗ ███╗   ███╗██╗███████╗███████╗██╗ ██████╗ ███╗   ██╗
+  ██╔══██╗██╔════╝██╔══██╗████╗ ████║██║██╔════╝██╔════╝██║██╔═══██╗████╗  ██║
+  ██████╔╝█████╗  ██████╔╝██╔████╔██║██║███████╗███████╗██║██║   ██║██╔██╗ ██║
+  ██╔═══╝ ██╔══╝  ██╔══██╗██║╚██╔╝██║██║╚════██║╚════██║██║██║   ██║██║╚██╗██║
+  ██║     ███████╗██║  ██║██║ ╚═╝ ██║██║███████║███████║██║╚██████╔╝██║ ╚████║
+  ╚═╝     ╚══════╝╚═╝  ╚═╝╚═╝     ╚═╝╚═╝╚══════╝╚══════╝╚═╝ ╚═════╝ ╚═╝  ╚═══╝
+
+  ┌─ ACCESS MATRIX ───────────────────────────────────────────────────┐
+  │  /etc/shadow  :: ----------  (000)  ACCESS: DENIED               │
+  │  /etc/passwd  :: -r--------  (400)  READ:   RESTRICTED           │
+  │  chmod / chown: LOCKED    SUID/SGID: ARMED                       │
+  └───────────────────────────────────────────────────────────────────┘
+
+                    ⚡ CHAOSWERK FACTION :: CHAPTER 5 BOSS ⚡""",
+        story_transitions = [
+            "PERMISSION-GÖTTIN analysiert deine UIDs. Bereite dich vor.",
+            "chmod 000 sperrt alles. Sie lacht. Du weißt wie man entsperrt.",
+            "SUID-Bits leuchten. Wer setzt sie? Wer missbraucht sie?",
+            "Letzte Frage. rwxrwxrwx oder 000? Die Göttin entscheidet.",
+        ],
         boss_name        = "PERMISSION-GÖTTIN v5.0",
         boss_desc        = (
             "ACCESS MATRIX ONLINE\n"

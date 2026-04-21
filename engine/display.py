@@ -82,7 +82,8 @@ def header(title: str, subtitle: str = ""):
 ║  ██║╚██╗██║██╔══╝  ██║   ██║██║╚██╗██║██║   ██║██╔══██╗██║██║  ██║ ║
 ║  ██║ ╚████║███████╗╚██████╔╝██║ ╚████║╚██████╔╝██║  ██║██║██████╔╝ ║
 ╚══════════════════════════════════════════════════════════════════╝""" + C.RESET)
-    print(C.GRAY + f"  {'NeonGrid-9 :: LPIC-1 Combat Training System':^66}" + C.RESET)
+    print(C.GRAY + f"  {'NeonGrid-9:: LPIC-1 Combat Training System':^66}" + C.RESET)
+    print(C.RED + f"  {'⚙  Powered by Chaoswerk  ⚙':^66}" + C.RESET)
     if subtitle:
         print(C.YELLOW + f"  {subtitle:^66}" + C.RESET)
     print()
@@ -200,6 +201,27 @@ def show_memory_tip(text: str):
     """Merksatz."""
     print()
     print(C.MAGENTA + "  ★  MERKSATZ: " + C.RESET + C.WHITE + text + C.RESET)
+    print()
+
+
+def show_ascii_art(art: str, color: str = ""):
+    """Zeigt Neon ASCII Art. Farbe optional — default CYAN+BOLD."""
+    if not art:
+        return
+    col = color if color else C.NEON
+    print()
+    for line in art.split('\n'):
+        print(col + line + C.RESET)
+    print()
+
+
+def show_transition(text: str):
+    """Kurzer Übergangssatz zwischen Mission-Sektionen."""
+    if not text:
+        return
+    print()
+    print(C.STORY + "  > " + C.RESET + C.DIM + text + C.RESET)
+    time.sleep(0.15)
     print()
 
 

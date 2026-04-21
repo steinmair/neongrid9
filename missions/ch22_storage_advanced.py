@@ -50,6 +50,28 @@ CHAPTER_22_MISSIONS: list[Mission] = [
             "SOFTWARE RAID: mdadm\n"
             "HARDWARE RAID: Controller-Karte (BIOS-Ebene)"
         ),
+        ascii_art = """
+  ███████╗████████╗ ██████╗ ██████╗  █████╗  ██████╗ ███████╗
+  ██╔════╝╚══██╔══╝██╔═══██╗██╔══██╗██╔══██╗██╔════╝ ██╔════╝
+  ███████╗   ██║   ██║   ██║██████╔╝███████║██║  ███╗█████╗
+  ╚════██║   ██║   ██║   ██║██╔══██╗██╔══██║██║   ██║██╔══╝
+  ███████║   ██║   ╚██████╔╝██║  ██║██║  ██║╚██████╔╝███████╗
+  ╚══════╝   ╚═╝    ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝ ╚══════╝
+       █████╗ ██████╗ ██╗   ██╗ █████╗ ███╗   ██╗ ██████╗███████╗██████╗
+      ██╔══██╗██╔══██╗██║   ██║██╔══██╗████╗  ██║██╔════╝██╔════╝██╔══██╗
+      ███████║██║  ██║██║   ██║███████║██╔██╗ ██║██║     █████╗  ██║  ██║
+      ██╔══██║██║  ██║╚██╗ ██╔╝██╔══██║██║╚██╗██║██║     ██╔══╝  ██║  ██║
+      ██║  ██║██████╔╝ ╚████╔╝ ██║  ██║██║ ╚████║╚██████╗███████╗██████╔╝
+      ╚═╝  ╚═╝╚═════╝   ╚═══╝  ╚═╝  ╚═╝╚═╝  ╚═══╝ ╚═════╝╚══════╝╚═════╝
+
+  [ CHAPTER 22 :: STORAGE ADVANCED ]
+  > RAID array: assembling. LVM: scanning VGs. mdstat: loading...""",
+        story_transitions = [
+            "RAID schützt Daten durch Redundanz. Ein Disk-Ausfall überlebt.",
+            "LVM abstrahiert physische Disks. Resize ohne Neustart.",
+            "Quota begrenzt. btrfs versioniert. iSCSI netzt Storage.",
+            "Rust bewacht die Daten. Du musst die Arrays kennen.",
+        ],
         syntax       = "mdadm --create /dev/md0 --level=5 --raid-devices=3 /dev/sd[bcd]1",
         example      = "cat /proc/mdstat && mdadm --detail /dev/md0",
         task_description = "Zeige RAID-Status mit cat /proc/mdstat",
@@ -1427,6 +1449,33 @@ CHAPTER_22_MISSIONS: list[Mission] = [
             "  df -h && df -ih\n"
             "  blkid"
         ),
+        ascii_art    = """
+  ███████╗████████╗ ██████╗ ██████╗  █████╗  ██████╗ ███████╗
+  ██╔════╝╚══██╔══╝██╔═══██╗██╔══██╗██╔══██╗██╔════╝ ██╔════╝
+  ███████╗   ██║   ██║   ██║██████╔╝███████║██║  ███╗█████╗
+  ╚════██║   ██║   ██║   ██║██╔══██╗██╔══██║██║   ██║██╔══╝
+  ███████║   ██║   ╚██████╔╝██║  ██║██║  ██║╚██████╔╝███████╗
+  ╚══════╝   ╚═╝    ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝ ╚══════╝
+      ██████╗  █████╗ ███████╗███╗   ███╗ ██████╗ ███╗   ██╗
+      ██╔══██╗██╔══██╗██╔════╝████╗ ████║██╔═══██╗████╗  ██║
+      ██║  ██║███████║█████╗  ██╔████╔██║██║   ██║██╔██╗ ██║
+      ██║  ██║██╔══██║██╔══╝  ██║╚██╔╝██║██║   ██║██║╚██╗██║
+      ██████╔╝██║  ██║███████╗██║ ╚═╝ ██║╚██████╔╝██║ ╚████║
+      ╚═════╝ ╚═╝  ╚═╝╚══════╝╚═╝     ╚═╝ ╚═════╝ ╚═╝  ╚═══╝
+
+  ┌─ STORAGE STATUS ─────────────────────────────┐
+  │  RAID-5: DEGRADED    ::  LVM: VOLUME FULL    │
+  │  Quota: EXCEEDED     ::  btrfs: SNAPSHOT ERR │
+  │  mdadm: DRIVE FAIL   ::  iSCSI: DISCONNECT   │
+  └──────────────────────────────────────────────┘
+
+  ⚡ CHAOSWERK FACTION :: CHAPTER 22 BOSS ⚡""",
+        story_transitions = [
+            "STORAGE DAEMON lässt RAID-5 degradieren. /proc/mdstat zeigt FAILED.",
+            "mdadm --add fügt neue Disk ein. Rebuild läuft. Er versucht zu stoppen.",
+            "LVM-Volume voll. lvextend rettet die Daten. Er verliert die Kontrolle.",
+            "Finaler Scan: df -h, blkid, /proc/mdstat — alles grün. Rust fällt.",
+        ],
         syntax       = "cat /proc/mdstat && vgs && lvs && df -h && blkid",
         example      = "cat /proc/mdstat && vgs && lvs -a && df -h",
         task_description = "Führe finalen Storage-Audit durch: df -h && blkid",

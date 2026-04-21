@@ -50,6 +50,28 @@ CHAPTER_19_MISSIONS: list[Mission] = [
             "  cat /proc/cpuinfo | grep -E 'vmx|svm'  → CPU-Virtualisierungsflags\n"
             "  lscpu | grep Virtualization"
         ),
+        ascii_art = """
+  ██████╗ ██╗  ██╗ ██████╗ ███████╗████████╗
+  ██╔════╝██║  ██║██╔═══██╗██╔════╝╚══██╔══╝
+  ██║  ███╗███████║██║   ██║███████╗   ██║
+  ██║   ██║██╔══██║██║   ██║╚════██║   ██║
+  ╚██████╔╝██║  ██║╚██████╔╝███████║   ██║
+   ╚═════╝ ╚═╝  ╚═╝ ╚═════╝ ╚══════╝   ╚═╝
+      ██████╗ ██████╗  ██████╗  ██████╗███████╗███████╗███████╗ ██████╗ ██████╗ ███████╗
+      ██╔══██╗██╔══██╗██╔═══██╗██╔════╝██╔════╝██╔════╝██╔════╝██╔═══██╗██╔══██╗██╔════╝
+      ██████╔╝██████╔╝██║   ██║██║     █████╗  ███████╗███████╗██║   ██║██████╔╝███████╗
+      ██╔═══╝ ██╔══██╗██║   ██║██║     ██╔══╝  ╚════██║╚════██║██║   ██║██╔══██╗╚════██║
+      ██║     ██║  ██║╚██████╔╝╚██████╗███████╗███████║███████║╚██████╔╝██║  ██║███████║
+      ╚═╝     ╚═╝  ╚═╝ ╚═════╝  ╚═════╝╚══════╝╚══════╝╚══════╝ ╚═════╝ ╚═╝  ╚═╝╚══════╝
+
+  [ CHAPTER 19 :: GHOST PROCESSORS ]
+  > Namespace isolation. Container stack. VM detection...""",
+        story_transitions = [
+            "Container: Isolation ohne VM-Overhead. Namespaces trennen.",
+            "cgroups limitieren CPU, RAM, I/O. Kontrolle ohne Root.",
+            "chroot < nspawn < Docker < Kubernetes. Die Abstraktionsleiter.",
+            "Ghost Processors existieren im Unsichtbaren. Lern ihre Sprache.",
+        ],
         syntax       = "systemd-detect-virt",
         example      = "systemd-detect-virt && lscpu | grep -i virt",
         task_description = "Erkenne den Virtualisierungstyp des Systems.",
@@ -1178,6 +1200,33 @@ CHAPTER_19_MISSIONS: list[Mission] = [
             "  AppArmor: aa-status, enforce/complain\n"
             "  SELinux: getenforce, setenforce, ls -Z"
         ),
+        ascii_art    = """
+  ██████╗ ██╗  ██╗ ██████╗ ███████╗████████╗
+  ██╔════╝██║  ██║██╔═══██╗██╔════╝╚══██╔══╝
+  ██║  ███╗███████║██║   ██║███████╗   ██║
+  ██║   ██║██╔══██║██║   ██║╚════██║   ██║
+  ╚██████╔╝██║  ██║╚██████╔╝███████║   ██║
+   ╚═════╝ ╚═╝  ╚═╝ ╚═════╝ ╚══════╝   ╚═╝
+      ██████╗ ██████╗  ██████╗  ██████╗███████╗███████╗███████╗ ██████╗ ██████╗ ███████╗
+      ██╔══██╗██╔══██╗██╔═══██╗██╔════╝██╔════╝██╔════╝██╔════╝██╔═══██╗██╔══██╗██╔════╝
+      ██████╔╝██████╔╝██║   ██║██║     █████╗  ███████╗███████╗██║   ██║██████╔╝███████╗
+      ██╔═══╝ ██╔══██╗██║   ██║██║     ██╔══╝  ╚════██║╚════██║██║   ██║██╔══██╗╚════██║
+      ██║     ██║  ██║╚██████╔╝╚██████╗███████╗███████║███████║╚██████╔╝██║  ██║███████║
+      ╚═╝     ╚═╝  ╚═╝ ╚═════╝  ╚═════╝╚══════╝╚══════╝╚══════╝ ╚═════╝ ╚═╝  ╚═╝╚══════╝
+
+  ┌─ PHANTOM STATUS ─────────────────────────────┐
+  │  Namespaces: HIJACKED  ::  cgroups: ESCAPED  │
+  │  Containers: ROGUE     ::  VMs: COMPROMISED  │
+  │  Capabilities: LEAKED  ::  SELinux: BYPASSED │
+  └──────────────────────────────────────────────┘
+
+  ⚡ CHAOSWERK FACTION :: CHAPTER 19 BOSS ⚡""",
+        story_transitions = [
+            "PHANTOM CODE aktiviert sich. Namespaces kollabieren. lsns zeigt Chaos.",
+            "Container brechen aus. nsenter -t PID --net taucht in seinen Namespace.",
+            "cgroups memory.limit_in_bytes gesetzt. Er erstickt an eigenen Limits.",
+            "Letzte VM. systemd-detect-virt enttarnt sie. Ghost Processor — besiegt.",
+        ],
         syntax       = "lsns && machinectl list && virsh list --all 2>/dev/null",
         example      = "systemd-detect-virt && cat /etc/machine-id",
         task_description = (

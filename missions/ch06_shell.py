@@ -64,6 +64,22 @@ CHAPTER_6_MISSIONS: list[Mission] = [
             "Variable löschen:\n"
             "  unset NAME"
         ),
+        ascii_art = """
+  ███████╗██╗  ██╗███████╗██╗     ██╗         ██╗
+  ██╔════╝██║  ██║██╔════╝██║     ██║        ██╔╝
+  ███████╗███████║█████╗  ██║     ██║       ██╔╝
+  ╚════██║██╔══██║██╔══╝  ██║     ██║      ██╔╝
+  ███████║██║  ██║███████╗███████╗███████╗██╔╝
+  ╚══════╝╚═╝  ╚═╝╚══════╝╚══════╝╚══════╝╚═╝
+
+  [ CHAPTER 06 :: SHELL & STREAMS ]
+  > stdin/stdout/stderr online. Pipe matrix ready.""",
+        story_transitions = [
+            "Die Shell ist dein Interface zur Maschine. Beherrsch sie.",
+            "Pipes verbinden Befehle. Daten fließen von links nach rechts.",
+            "Redirect: > überschreibt. >> hängt an. 2> fängt Fehler.",
+            "Wer die Shell kennt, braucht keine GUI.",
+        ],
         syntax       = "export VARNAME=wert\necho $VARNAME\nenv | grep PATH",
         example      = (
             "$ export MISSION='active'\n"
@@ -1794,6 +1810,27 @@ CHAPTER_6_MISSIONS: list[Mission] = [
         explanation      = "Boss-Kampf: Stream-Lord — vollständige Prüfung",
         task_description = "Überlebe den Boss-Quiz!",
         expected_commands = [],
+        ascii_art        = """
+  ███████╗████████╗██████╗ ███████╗ █████╗ ███╗   ███╗    ██╗      ██████╗ ██████╗ ██████╗
+  ██╔════╝╚══██╔══╝██╔══██╗██╔════╝██╔══██╗████╗ ████║    ██║     ██╔═══██╗██╔══██╗██╔══██╗
+  ███████╗   ██║   ██████╔╝█████╗  ███████║██╔████╔██║    ██║     ██║   ██║██████╔╝██║  ██║
+  ╚════██║   ██║   ██╔══██╗██╔══╝  ██╔══██║██║╚██╔╝██║    ██║     ██║   ██║██╔══██╗██║  ██║
+  ███████║   ██║   ██║  ██║███████╗██║  ██║██║ ╚═╝ ██║    ███████╗╚██████╔╝██║  ██║██████╔╝
+  ╚══════╝   ╚═╝   ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═╝     ╚═╝    ╚══════╝ ╚═════╝ ╚═╝  ╚═╝╚═════╝
+
+  ┌─ DATA STREAMS ONLINE ─────────────────────────────────────────────┐
+  │  STDIN  ──>>──  PIPE  ──>>──  STDOUT                             │
+  │  grep   │  awk  │  sed  │  sort  │  uniq  │  tee                 │
+  │  REDIRECT: > >> 2> 2>&1 << <<< |&   ALL ARMED                   │
+  └───────────────────────────────────────────────────────────────────┘
+
+                    ⚡ CHAOSWERK FACTION :: CHAPTER 6 BOSS ⚡""",
+        story_transitions = [
+            "STREAM-LORD flutet stdin mit /dev/urandom. Rauschen überall.",
+            "Deine Pipes halten stand. | tr | sort | uniq — die Kette hält.",
+            "2>&1 fängt seine Fehler-Angriffe. Er verliert die Initiative.",
+            "Letzter Datenstrom. Leite ihn um. Beende den Lord.",
+        ],
         boss_name        = "STREAM-LORD v6.0",
         boss_desc        = (
             "INITIATING DATA STREAM DEFENSE\n"

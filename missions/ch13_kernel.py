@@ -67,6 +67,22 @@ CHAPTER_13_MISSIONS: list[Mission] = [
             "  snd_hda    90112   2 snd_hda_intel,snd_hda_codec_hdmi\n"
             "  Spalten: Name, Größe, Anzahl Nutzungen (und wer)"
         ),
+        ascii_art = """
+  ██╗  ██╗███████╗██████╗ ███╗   ██╗███████╗██╗
+  ██║ ██╔╝██╔════╝██╔══██╗████╗  ██║██╔════╝██║
+  █████╔╝ █████╗  ██████╔╝██╔██╗ ██║█████╗  ██║
+  ██╔═██╗ ██╔══╝  ██╔══██╗██║╚██╗██║██╔══╝  ██║
+  ██║  ██╗███████╗██║  ██║██║ ╚████║███████╗███████╗
+  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═══╝╚══════╝╚══════╝
+
+  [ CHAPTER 13 :: KERNEL & MODULES ]
+  > Ring-0 access granted. lsmod output: [loading...]""",
+        story_transitions = [
+            "Der Kernel ist das Herz. Ring-0: volle Kontrolle über Hardware.",
+            "Module erweitern den Kernel zur Laufzeit. Plug and unplug.",
+            "sysctl schreibt in den Kernel-Namensraum. /proc hört zu.",
+            "Ein kompromittiertes Modul bedeutet vollständige Kontrolle verloren.",
+        ],
         syntax       = "lsmod  |  modinfo MODULE  |  modprobe MODULE  |  rmmod MODULE",
         example      = (
             "lsmod\n"
@@ -2554,6 +2570,33 @@ CHAPTER_13_MISSIONS: list[Mission] = [
             "  dmesg -T | tail\n"
             "  udevadm control --reload-rules"
         ),
+        ascii_art    = """
+  ██╗  ██╗███████╗██████╗ ███╗   ██╗███████╗██╗
+  ██║ ██╔╝██╔════╝██╔══██╗████╗  ██║██╔════╝██║
+  █████╔╝ █████╗  ██████╔╝██╔██╗ ██║█████╗  ██║
+  ██╔═██╗ ██╔══╝  ██╔══██╗██║╚██╗██║██╔══╝  ██║
+  ██║  ██╗███████╗██║  ██║██║ ╚████║███████╗███████╗
+  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═══╝╚══════╝╚══════╝
+        ███████╗ ██████╗ ██████╗  ██████╗ ███████╗
+        ██╔════╝██╔═══██╗██╔══██╗██╔════╝ ██╔════╝
+        █████╗  ██║   ██║██████╔╝██║  ███╗█████╗
+        ██╔══╝  ██║   ██║██╔══██╗██║   ██║██╔══╝
+        ██║     ╚██████╔╝██║  ██║╚██████╔╝███████╗
+        ╚═╝      ╚═════╝ ╚═╝  ╚═╝ ╚═════╝ ╚══════╝
+
+  ┌─ KERNEL STATUS ──────────────────────────────┐
+  │  Ring-0 COMPROMISED  ::  rootkit module LIVE │
+  │  ip_forward = 1      ::  /proc CORRUPTED     │
+  │  dmesg FLOODED       ::  udev rules HIJACKED │
+  └──────────────────────────────────────────────┘
+
+  ⚡ CHAOSWERK FACTION :: CHAPTER 13 BOSS ⚡""",
+        story_transitions = [
+            "KERNEL DAEMON lädt rootkit_mod. lsmod zeigt seinen Namen.",
+            "modprobe -r trifft ihn. Er versucht sich neu zu laden.",
+            "ip_forward=1 sendet deine Pakete in seine Hände. Deaktiviere es.",
+            "Kernel-Speicher wird bereinigt. Der Daemon verschwindet.",
+        ],
         syntax       = "",
         example      = (
             "lsmod\n"
