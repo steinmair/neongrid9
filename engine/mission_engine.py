@@ -134,63 +134,60 @@ class MissionRunner:
             print(C.GREEN + "  ── AUFGABE " + "─" * 56 + C.RESET)
             print(C.WHITE + f"\n  {mission.task_description}\n" + C.RESET)
 
-            # Try to get correct command from hint menu
+            # Try to get correct command from fancy prompt
             success = False
             attempts_used = 0
             final_cmd = ""
 
-            # Hint menu loop
+            # Command input loop with automatic hints on wrong answer
             hints_used = 0
-            if mission.hints:
-                print(C.GRAY + "  ┌─ Optionen: [h]int / [q]uiz / [s]kip · oder direkt Befehl eingeben" + C.RESET)
-                while True:
-                    hint_choice = prompt_input(
-                        C.CYAN + "  [befehl/h/q/s]? " + C.RESET
-                    )
-                    hint_choice_lower = hint_choice.lower()
+            attempts = 0
+            while not success and attempts < 5:
+                # Fancy prompt
+                print()
+                print(C.NEON + "  ╔═══════════════════════════════════════════════════════════════╗" + C.RESET)
+                print(C.CYAN + "  ║  Gib den Befehl ein:                                              ║" + C.RESET)
+                print(C.NEON + "  ╚═══════════════════════════════════════════════════════════════╝" + C.RESET)
 
-                    if hint_choice_lower == "h":
-                        if hints_used < len(mission.hints):
-                            hint_req = HintRequest.create(mission.mission_id, mission.hints, hints_used)
-                            if hint_req:
-                                show_hint(hint_req.text, hints_used, hint_req.xp_cost)
-                                if hint_req.xp_cost > 0:
-                                    self.player.xp = max(0, self.player.xp - hint_req.xp_cost)
-                                hints_used += 1
-                        else:
-                            show_warn("Keine weiteren Hinweise verfügbar.")
-                    elif hint_choice_lower == "q":
-                        break
-                    elif hint_choice_lower == "s":
-                        return True  # Skip mission
-                    elif hint_choice.strip():  # Wenn User einen Befehl eingegeben hat
-                        # Prüfe ob der eingegeben Befehl korrekt ist
-                        cmd_base = hint_choice.strip().split()[0].lower()
-                        found_match = False
-                        for exp in mission.expected_commands:
-                            exp_base = exp.strip().split()[0].lower()
-                            # Exakter Match
-                            if hint_choice.strip().lower() == exp.strip().lower():
-                                show_success("✓ Befehl akzeptiert — Ziel erreicht!")
-                                success = True
-                                attempts_used = 1
-                                final_cmd = hint_choice
-                                found_match = True
-                                break
-                            # Teilweise richtig: richtiger Basis-Befehl
-                            if cmd_base == exp_base and len(mission.expected_commands) == 1:
-                                show_success("✓ Befehl akzeptiert — Ziel erreicht!")
-                                success = True
-                                attempts_used = 1
-                                final_cmd = hint_choice
-                                found_match = True
-                                break
+                user_input = prompt_input(C.GREEN + "  root@matrix" + C.RESET + C.CYAN + " $ " + C.RESET)
 
-                        # Egal ob korrekt oder nicht, verlasse Hint-Menu
-                        if not found_match:
-                            show_info(f"Befehl nicht korrekt. Gehe zum Terminal...")
-                            time.sleep(0.3)
+                # Check if command is correct
+                cmd_base = user_input.strip().split()[0].lower() if user_input.strip() else ""
+                found_match = False
+
+                for exp in mission.expected_commands:
+                    exp_base = exp.strip().split()[0].lower()
+                    # Exakter Match
+                    if user_input.strip().lower() == exp.strip().lower():
+                        show_success("✓ Befehl korrekt — Ziel erreicht!")
+                        success = True
+                        attempts_used = attempts + 1
+                        final_cmd = user_input
+                        found_match = True
                         break
+                    # Teilweise richtig: richtiger Basis-Befehl
+                    if cmd_base == exp_base and len(mission.expected_commands) == 1:
+                        show_success("✓ Befehl korrekt — Ziel erreicht!")
+                        success = True
+                        attempts_used = attempts + 1
+                        final_cmd = user_input
+                        found_match = True
+                        break
+
+                # If wrong answer, show hint automatically
+                if not found_match and user_input.strip():
+                    if hints_used < len(mission.hints):
+                        hint_req = HintRequest.create(mission.mission_id, mission.hints, hints_used)
+                        if hint_req:
+                            show_hint(hint_req.text, hints_used, hint_req.xp_cost)
+                            if hint_req.xp_cost > 0:
+                                self.player.xp = max(0, self.player.xp - hint_req.xp_cost)
+                            hints_used += 1
+                    attempts += 1
+                elif found_match:
+                    break
+                elif user_input.strip():
+                    attempts += 1
 
             # Wenn Befehl bei Hint-Menu nicht korrekt war, gehe zum Terminal
             if not success:
