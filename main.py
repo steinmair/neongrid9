@@ -433,7 +433,7 @@ def game_hub():
                   f"{C.YELLOW}{completed:>2}/{total}{C.RESET}{lock}")
         print()
         print(C.WHITE + "  KAPITEL\n" + C.RESET)
-        print(C.CYAN  + "  [1-18]" + C.RESET + "  Kapitel auswählen")
+        print(C.CYAN  + "  [1-22]" + C.RESET + "  Kapitel auswählen")
         print(C.CYAN  + "  [all]" + C.RESET + "   Alle Missionen im Kapitel spielen")
         print()
         print(C.WHITE + "  AKTIONEN\n" + C.RESET)
@@ -484,6 +484,14 @@ def game_hub():
             chapter_menu(17)
         elif choice == "18":
             chapter_menu(18)
+        elif choice == "19":
+            chapter_menu(19)
+        elif choice == "20":
+            chapter_menu(20)
+        elif choice == "21":
+            chapter_menu(21)
+        elif choice == "22":
+            chapter_menu(22)
         elif choice in ("s", "status"):
             show_player_status()
         elif choice in ("i", "inv", "inventar"):
