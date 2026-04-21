@@ -231,10 +231,14 @@ def prompt_continue():
     input(C.GRAY + "  [ ENTER ] weiterspielen ..." + C.RESET)
 
 
-def prompt_input(label: str = "terminal") -> str:
+def prompt_input(label: str = "terminal", valid_choices: tuple = None) -> str:
     """Eingabe-Prompt im Terminal-Style."""
     print()
-    return input(C.PROMPT + f"  [{label}]> " + C.RESET).strip()
+    while True:
+        response = input(C.PROMPT + f"  [{label}]> " + C.RESET).strip().lower()
+        if valid_choices is None or response in valid_choices:
+            return response
+        # If invalid choice, loop and ask again (silently)
 
 
 def show_progress(chapter: int, total_chapters: int, missions_done: int, total_missions: int):
