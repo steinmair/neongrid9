@@ -189,13 +189,19 @@ class FactionStatus:
 
 
 def calculate_level(total_xp: int) -> int:
-    """Calculate faction level from total XP. Levels 1-10."""
-    # 0-100 = Lv1, 100-250 = Lv2, etc. (exponential)
-    thresholds = [0, 100, 250, 450, 700, 1000, 1350, 1750, 2200, 2700, 3250]
-    for i, threshold in enumerate(thresholds[1:], 1):
-        if total_xp < threshold:
-            return i
-    return 10
+    """Calculate faction level from total XP or reputation. Levels 1-10."""
+    # If value is ≤100, treat as reputation (0-100 scale)
+    # Otherwise treat as XP (exponential scale)
+    if total_xp <= 100:
+        # Reputation levels: 1-5 based on rep/20
+        return min(5, max(1, (total_xp // 20) + 1))
+    else:
+        # XP-based levels: 1-10
+        thresholds = [0, 100, 250, 450, 700, 1000, 1350, 1750, 2200, 2700, 3250]
+        for i, threshold in enumerate(thresholds[1:], 1):
+            if total_xp < threshold:
+                return i
+        return 10
 
 
 # ── Hint Display Helpers ───────────────────────────────────────────────────────

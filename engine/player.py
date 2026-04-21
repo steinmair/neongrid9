@@ -5,7 +5,7 @@ XP, Level, Reputation, Inventar, Skilltree
 
 from dataclasses import dataclass, field
 from typing import Dict, List, Set
-from engine.features import AchievementTracker
+from engine.features import AchievementTracker, FactionStatus, calculate_level
 
 # ── Level-Tabelle ─────────────────────────────────────────────────────────────
 LEVELS = [
@@ -272,13 +272,14 @@ class Player:
             f"  Bosse      : {self.bosses_defeated} besiegt",
             f"  Streak     : {self.streak} Tage",
             "",
-            "  REPUTATION:",
+            "  FRAKTIONEN:",
         ]
         for faction, rep in self.reputation.items():
-            bar = "█" * (rep // 10) + "░" * (10 - rep // 10)
-            lines.append(f"    {faction:<22} [{bar}] {rep}/100")
+            lvl = calculate_level(rep)
+            bar = "█" * lvl + "░" * (10 - lvl)
+            lines.append(f"    {faction:<22} [{bar}] Lvl {lvl:2d}  ({rep}/100 rep)")
         lines.append("")
-        lines.append("  INVENTAR:")
+        lines.append("  AUSRÜSTUNG:")
         for item_id in self.inventory:
             item    = GEAR_CATALOG.get(item_id, {})
             rarity  = item.get("rarity", "common")
