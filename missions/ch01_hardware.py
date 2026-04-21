@@ -1906,6 +1906,11 @@ CHAPTER_1_MISSIONS = [
             "Zeige CPU-Details aus /proc/cpuinfo."
         ),
         expected_commands = ["lspci -k", "lsmod", "cat /proc/cpuinfo"],
+        hints = [
+            "Du brauchst drei Befehle für die drei Phasen: PCI-Geräte, Kernel-Module und /proc-Dateien.",
+            "Versuche: lspci -k (Phase 1), lsmod (Phase 2), cat /proc/cpuinfo (Phase 3)",
+            "Der vollständige Befehl: lspci -k && lsmod && cat /proc/cpuinfo",
+        ],
         quiz_questions = [
             QuizQuestion(
                 question  = "Du findest eine Grafikkarte im System. Welcher Befehl zeigt dir den aktiven Kernel-Treiber?",
