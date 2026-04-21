@@ -142,9 +142,10 @@ class MissionRunner:
             # Hint menu loop
             hints_used = 0
             if mission.hints:
+                print(C.GRAY + "  ┌─ Optionen: [h]int / [q]uiz / [s]kip · oder direkt Befehl eingeben" + C.RESET)
                 while True:
                     hint_choice = prompt_input(
-                        C.CYAN + "  [h]int / [q]uiz / [s]kip / Befehl? " + C.RESET
+                        C.CYAN + "  [befehl/h/q/s]? " + C.RESET
                     )
                     hint_choice_lower = hint_choice.lower()
 
@@ -165,24 +166,30 @@ class MissionRunner:
                     elif hint_choice.strip():  # Wenn User einen Befehl eingegeben hat
                         # Prüfe ob der eingegeben Befehl korrekt ist
                         cmd_base = hint_choice.strip().split()[0].lower()
+                        found_match = False
                         for exp in mission.expected_commands:
                             exp_base = exp.strip().split()[0].lower()
                             # Exakter Match
                             if hint_choice.strip().lower() == exp.strip().lower():
-                                show_success("Befehl akzeptiert — Ziel erreicht!")
+                                show_success("✓ Befehl akzeptiert — Ziel erreicht!")
                                 success = True
                                 attempts_used = 1
                                 final_cmd = hint_choice
+                                found_match = True
                                 break
                             # Teilweise richtig: richtiger Basis-Befehl
                             if cmd_base == exp_base and len(mission.expected_commands) == 1:
-                                show_success("Befehl akzeptiert — Ziel erreicht!")
+                                show_success("✓ Befehl akzeptiert — Ziel erreicht!")
                                 success = True
                                 attempts_used = 1
                                 final_cmd = hint_choice
+                                found_match = True
                                 break
 
                         # Egal ob korrekt oder nicht, verlasse Hint-Menu
+                        if not found_match:
+                            show_info(f"Befehl nicht korrekt. Gehe zum Terminal...")
+                            time.sleep(0.3)
                         break
 
             # Wenn Befehl bei Hint-Menu nicht korrekt war, gehe zum Terminal
