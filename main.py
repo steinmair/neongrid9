@@ -48,11 +48,11 @@ from missions.ch14_scripting   import CHAPTER_14_MISSIONS
 from missions.ch15_security    import CHAPTER_15_MISSIONS
 from missions.ch16_locale      import CHAPTER_16_MISSIONS
 from missions.ch17_shellenv    import CHAPTER_17_MISSIONS
-from missions.ch18_exam        import CHAPTER_18_MISSIONS
+from missions.ch18_storage     import CHAPTER_18_MISSIONS
 from missions.ch19_ghost_processors import CHAPTER_19_MISSIONS
 from missions.ch20_firewall_dominion import CHAPTER_20_MISSIONS
 from missions.ch21_network_services import CHAPTER_21_MISSIONS
-from missions.ch22_storage_advanced import CHAPTER_22_MISSIONS
+from missions.ch22_exam         import CHAPTER_22_MISSIONS
 
 # Kapitel-Metadaten  (id, missions_list, topic_tag, title, subtitle)
 CHAPTERS = [
@@ -73,11 +73,11 @@ CHAPTERS = [
     (15, CHAPTER_15_MISSIONS, "110.1", "SECURITY PROTOCOL","SUID, SSH-Härtung, GPG, fail2ban, sudo & LUKS"),
     (16, CHAPTER_16_MISSIONS, "107.3", "LOCALE MATRIX",    "Locale, Zeitzonen, X11, CUPS & Desktop"),
     (17, CHAPTER_17_MISSIONS, "105.1", "SHELL ENV",        "Startup-Dateien, PATH, Aliases, History & PS1"),
-    (18, CHAPTER_18_MISSIONS, "ALL",   "EXAM PROTOCOL",   "Linux Zertifizierungsprüfung — alle Topics"),
+    (18, CHAPTER_18_MISSIONS, "104.1/104.3", "STORAGE ADVANCED", "RAID, LVM, Quotas, iSCSI & btrfs"),
     (19, CHAPTER_19_MISSIONS, "102.6/103.6", "GHOST PROTOCOL II", "Container & Virtualization"),
     (20, CHAPTER_20_MISSIONS, "109.4/110.1", "FIREWALL DOMINION", "iptables, nftables, VPN & Netzwerk-Sicherheit"),
     (21, CHAPTER_21_MISSIONS, "109.2/109.4", "NETWORK SERVICES", "NFS, Samba, DHCP, DNS, LDAP & Netzwerkdienste"),
-    (22, CHAPTER_22_MISSIONS, "104.1/104.3", "STORAGE ADVANCED", "RAID, LVM, Quotas, iSCSI & btrfs"),
+    (22, CHAPTER_22_MISSIONS, "ALL",   "FINAL EXAM PROTOCOL", "Linux Zertifizierungsprüfung — alle Topics"),
 ]
 
 
@@ -1010,12 +1010,12 @@ def timed_exam_mode():
     if go == "q":
         return
 
-    # Alle ch18-Quiz-Fragen sammeln (Blöcke 18.01–18.05)
-    from missions.ch18_exam import CHAPTER_18_MISSIONS
+    # Alle ch22-Quiz-Fragen sammeln (Blöcke 22.01–22.26)
+    from missions.ch22_exam import CHAPTER_22_MISSIONS
     import random
     letters = ["A", "B", "C", "D"]
 
-    exam_blocks = [m for m in CHAPTER_18_MISSIONS if m.quiz_questions]
+    exam_blocks = [m for m in CHAPTER_22_MISSIONS if m.quiz_questions]
     all_questions = []
     for block in exam_blocks:
         for q in block.quiz_questions:

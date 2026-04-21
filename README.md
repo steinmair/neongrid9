@@ -243,7 +243,7 @@ neongrid9/
 │   ├── ch03_init.py                     # 32 Missionen (Init-Systeme)
 │   ├── ch04_partitions.py               # 22 Missionen (Partitionen/Festplatten)
 │   ├── ch05_permissions.py              # 20 Missionen (Dateiberechtigungen)
-│   ├── ch06_shell.py → ch22_exam.py     # Kapitel 6-22 (440 Missionen insgesamt)
+│   ├── ch06_shell.py → ch22_exam.py     # Kapitel 6-22 (insgesamt 440 Missionen)
 └── Dokumentation/
     ├── README.md                        # Diese Datei
     ├── GAMEPLAY_GUIDE.md                # Spielanleitung (15 KB)
