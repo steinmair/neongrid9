@@ -1003,7 +1003,7 @@ CHAPTER_6_MISSIONS: list[Mission] = [
         title        = "awk Grundlagen — Felder, FS, NR, NF",
         mtype        = "SCAN",
         xp           = 90,
-        speaker      = "ZARA_Z3R0",
+        speaker = "ZARA Z3R0",
         story        = (
             "Das Logfile hat zehn Felder pro Zeile.\n"
             "Ghost braucht nur das erste — die IP-Adresse.\n"
@@ -1195,7 +1195,7 @@ CHAPTER_6_MISSIONS: list[Mission] = [
         title        = "sed Erweitert — -n, -i, -e und Adressbereiche",
         mtype        = "CONSTRUCT",
         xp           = 90,
-        speaker      = "ZARA_Z3R0",
+        speaker = "ZARA Z3R0",
         story        = (
             "sed kann mehr als nur ersetzen.\n"
             "Ghost muss Konfigurationsdateien direkt bearbeiten, Bereiche ausgeben.\n"
@@ -1387,7 +1387,7 @@ CHAPTER_6_MISSIONS: list[Mission] = [
         title        = "wc — Zeilen, Wörter und Bytes zählen",
         mtype        = "CONSTRUCT",
         xp           = 75,
-        speaker      = "ZARA_Z3R0",
+        speaker = "ZARA Z3R0",
         story        = (
             "Wie viele Zeilen hat das Logfile? Wie viele Fehler?\n"
             "Zara Z3R0 tippt wc -l und hat die Antwort in Millisekunden.\n"
@@ -1582,7 +1582,7 @@ CHAPTER_6_MISSIONS: list[Mission] = [
         title        = "Heredoc — Mehrzeilige Eingabe mit cat <<EOF",
         mtype        = "SCAN",
         xp           = 85,
-        speaker      = "ZARA_Z3R0",
+        speaker = "ZARA Z3R0",
         story        = (
             "Ghost muss eine Konfigurationsdatei direkt im Skript schreiben.\n"
             "Zeile für Zeile echo ist mühsam.\n"

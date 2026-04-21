@@ -228,7 +228,7 @@ CHAPTER_22_MISSIONS: list[Mission] = [
         title        = "Disk Quotas: Speicher begrenzen",
         mtype        = "CONSTRUCT",
         xp           = 90,
-        speaker      = "RUST",
+        speaker      = "SYSTEM",
         story        = (
             "RUST: 'Ghost füllt /home mit 50GB Logs.\n"
             " Quotas. Soft limit. Hard limit. Grace period.\n"
@@ -560,7 +560,7 @@ CHAPTER_22_MISSIONS: list[Mission] = [
         title        = "iSCSI: Block-Storage über Netzwerk",
         mtype        = "SCAN",
         xp           = 85,
-        speaker      = "RUST",
+        speaker      = "PHANTOM",
         story        = (
             "RUST: 'Storage-Server. Disks über IP-Netz.\n"
             " iSCSI. Block-Device remote. Als wäre es lokal.\n"
@@ -628,7 +628,7 @@ CHAPTER_22_MISSIONS: list[Mission] = [
         title        = "SMART: Festplatten-Gesundheit überwachen",
         mtype        = "SCAN",
         xp           = 80,
-        speaker      = "RUST",
+        speaker      = "SYSTEM",
         story        = (
             "RUST: 'Festplatten sterben ohne Vorwarnung — meistens.\n"
             " SMART erkennt schlechte Sektoren, Fehler, Temperatur.\n"
@@ -759,7 +759,7 @@ CHAPTER_22_MISSIONS: list[Mission] = [
         title        = "Disk-Partitionierung: gdisk & parted",
         mtype        = "CONSTRUCT",
         xp           = 85,
-        speaker      = "RUST",
+        speaker      = "CIPHER",
         story        = (
             "RUST: 'fdisk für MBR. gdisk für GPT.\n"
             " parted für beide. 2TB+ Disks brauchen GPT.\n"
@@ -957,7 +957,7 @@ CHAPTER_22_MISSIONS: list[Mission] = [
         title        = "Dateisystem-Typen: Vergleich & Wahl",
         mtype        = "SCAN",
         xp           = 80,
-        speaker      = "RUST",
+        speaker      = "CIPHER",
         story        = (
             "RUST: 'ext4, xfs, btrfs, vfat, ntfs.\n"
             " Welches wofür?\n"
@@ -1026,7 +1026,7 @@ CHAPTER_22_MISSIONS: list[Mission] = [
         title        = "UUID & Labels: Geräte-Identifizierung",
         mtype        = "SCAN",
         xp           = 80,
-        speaker      = "RUST",
+        speaker      = "PHANTOM",
         story        = (
             "RUST: 'Gerätename /dev/sdb kann sich ändern.\n"
             " UUID nicht. Label nicht.\n"

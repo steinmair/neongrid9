@@ -839,7 +839,7 @@ CHAPTER_12_MISSIONS: list[Mission] = [
         title         = "rpm2cpio & Archiv-Extraktion",
         mtype         = "CONSTRUCT",
         xp            = 85,
-        speaker       = "ZARA_Z3R0",
+        speaker = "ZARA Z3R0",
         story         = (
             "Zara Z3R0: 'Manchmal willst du nur eine einzelne Datei, Ghost.\n"
             " Kein volles Install — nur extrahieren.\n"
@@ -1085,7 +1085,7 @@ CHAPTER_12_MISSIONS: list[Mission] = [
         title         = "YUM Repos & Konfiguration",
         mtype         = "SCAN",
         xp            = 90,
-        speaker       = "ZARA_Z3R0",
+        speaker = "ZARA Z3R0",
         story         = (
             "Zara Z3R0: 'Das Imperium kontrolliert die offiziellen RHEL-Repos, Ghost.\n"
             " Wir brauchen eigene Quellen — EPEL, Remi, eigene Mirrors.\n"

@@ -644,7 +644,7 @@ CHAPTER_10_MISSIONS: list[Mission] = [
         title        = "/etc/shadow Format — 9 Felder & Passwort-Hash",
         mtype        = "SCAN",
         xp           = 85,
-        speaker      = "ZARA_Z3R0",
+        speaker = "ZARA Z3R0",
         story        = (
             "Zara Z3R0: 'Das Passwort-Archiv des Imperiums, Ghost.\n"
             " /etc/shadow — nur root kann es lesen.\n"
@@ -858,7 +858,7 @@ CHAPTER_10_MISSIONS: list[Mission] = [
         title        = "sudo Konfiguration — /etc/sudoers, visudo & Aliases",
         mtype        = "SCAN",
         xp           = 90,
-        speaker      = "ZARA_Z3R0",
+        speaker = "ZARA Z3R0",
         story        = (
             "Zara Z3R0: 'sudo ist Macht, Ghost.\n"
             " Aber unkontrollierte Macht ist Gefahr.\n"
@@ -1078,7 +1078,7 @@ CHAPTER_10_MISSIONS: list[Mission] = [
         title        = "gpasswd — Gruppen-Mitglieder & Admins verwalten",
         mtype        = "CONSTRUCT",
         xp           = 85,
-        speaker      = "ZARA_Z3R0",
+        speaker = "ZARA Z3R0",
         story        = (
             "Zara Z3R0: 'Das Net-Runner-Team braucht neue Mitglieder, Ghost.\n"
             " gpasswd -a fügt hinzu. gpasswd -d entfernt.\n"
@@ -1399,7 +1399,7 @@ CHAPTER_10_MISSIONS: list[Mission] = [
         title        = "nsswitch.conf — Namensauflösung für passwd, group, hosts",
         mtype        = "SCAN",
         xp           = 85,
-        speaker      = "ZARA_Z3R0",
+        speaker = "ZARA Z3R0",
         story        = (
             "Zara Z3R0: 'Das System sucht den User 'agent', Ghost.\n"
             " Aber wo sucht es? /etc/passwd? LDAP? NIS?\n"

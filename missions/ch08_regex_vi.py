@@ -715,7 +715,7 @@ CHAPTER_8_MISSIONS: list[Mission] = [
         title        = "Regex Zeichenklassen — [a-z], [A-Z0-9], POSIX",
         mtype        = "SCAN",
         xp           = 85,
-        speaker      = "ZARA_Z3R0",
+        speaker = "ZARA Z3R0",
         story        = (
             "Zara Z3R0: 'Die Datenbänke des Imperiums sind voll von\n"
             " Mustern, Ghost. Großbuchstaben-Codes. Zahlenpräfixe.\n"
@@ -919,7 +919,7 @@ CHAPTER_8_MISSIONS: list[Mission] = [
         title        = "Regex Gruppen & Alternation — (abc|def), \\1",
         mtype        = "CONSTRUCT",
         xp           = 95,
-        speaker      = "ZARA_Z3R0",
+        speaker = "ZARA Z3R0",
         story        = (
             "Zara Z3R0: 'Der Imperium-Log hat zwei Formate, Ghost.\n"
             " ERROR: und WARN: — beide müssen gefunden werden.\n"
@@ -1118,7 +1118,7 @@ CHAPTER_8_MISSIONS: list[Mission] = [
         title        = "vim Suchen & Ersetzen — :%s, :g/pattern/d, Flags",
         mtype        = "CONSTRUCT",
         xp           = 90,
-        speaker      = "ZARA_Z3R0",
+        speaker = "ZARA Z3R0",
         story        = (
             "Zara Z3R0: 'Die Konfig hat tausend Zeilen, Ghost.\n"
             " Dein Ziel: alle alten API-Endpunkte ersetzen.\n"
@@ -1335,7 +1335,7 @@ CHAPTER_8_MISSIONS: list[Mission] = [
         title        = "grep Flags — -v, -n, -r, -l, -c, -i, -A, -B, -C",
         mtype        = "CONSTRUCT",
         xp           = 85,
-        speaker      = "ZARA_Z3R0",
+        speaker = "ZARA Z3R0",
         story        = (
             "Zara Z3R0: 'grep ohne Flags ist ein stumpfes Schwert, Ghost.\n"
             " -r durchsucht ganze Verzeichnisbäume.\n"

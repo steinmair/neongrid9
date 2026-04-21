@@ -778,7 +778,7 @@ CHAPTER_9_MISSIONS: list[Mission] = [
         title        = "IPv6 Grundlagen — Adressformat & Adresstypen",
         mtype        = "SCAN",
         xp           = 90,
-        speaker      = "ZARA_Z3R0",
+        speaker = "ZARA Z3R0",
         story        = (
             "Zara Z3R0: 'IPv4 stirbt, Ghost. Das Netz läuft über.\n"
             " IPv6 ist die Zukunft — und das Imperium ist noch nicht\n"
@@ -989,7 +989,7 @@ CHAPTER_9_MISSIONS: list[Mission] = [
         title        = "TCP/UDP Deep Dive — Handshake, Ports & /etc/services",
         mtype        = "SCAN",
         xp           = 85,
-        speaker      = "ZARA_Z3R0",
+        speaker = "ZARA Z3R0",
         story        = (
             "Zara Z3R0: 'Jede Verbindung beginnt mit einem Handshake, Ghost.\n"
             " SYN. SYN-ACK. ACK. Drei Pakete — dann bist du drin.\n"
@@ -1208,7 +1208,7 @@ CHAPTER_9_MISSIONS: list[Mission] = [
         title        = "Netzwerk-Bridges & Bonding — Konzepte",
         mtype        = "SCAN",
         xp           = 90,
-        speaker      = "ZARA_Z3R0",
+        speaker = "ZARA Z3R0",
         story        = (
             "Zara Z3R0: 'Unser Safe-House hat zwei Netzwerke, Ghost.\n"
             " Eine Bridge verbindet sie auf Layer 2.\n"
@@ -1431,7 +1431,7 @@ CHAPTER_9_MISSIONS: list[Mission] = [
         title        = "nmap — Netzwerk-Scanner",
         mtype        = "SCAN",
         xp           = 90,
-        speaker      = "ZARA_Z3R0",
+        speaker = "ZARA Z3R0",
         story        = (
             "Zara Z3R0: 'Bevor wir angreifen, kartieren wir, Ghost.\n"
             " nmap zeigt uns alle offenen Ports.\n"
@@ -1646,7 +1646,7 @@ CHAPTER_9_MISSIONS: list[Mission] = [
         title        = "/etc/hosts & DNS-Auflösung — nsswitch.conf",
         mtype        = "SCAN",
         xp           = 80,
-        speaker      = "ZARA_Z3R0",
+        speaker = "ZARA Z3R0",
         story        = (
             "Zara Z3R0: 'Das Imperium hat die DNS-Server kompromittiert.\n"
             " Aber /etc/hosts hat IMMER Vorrang, Ghost.\n"

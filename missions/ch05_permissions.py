@@ -941,7 +941,7 @@ CHAPTER_5_MISSIONS: list[Mission] = [
         title        = "umask — Schablone setzen & konfigurieren",
         mtype        = "SCAN",
         xp           = 80,
-        speaker      = "ZARA_Z3R0",
+        speaker = "ZARA Z3R0",
         story        = (
             "Jede neue Datei in NeonGrid-9 trägt eine unsichtbare Schablone.\n"
             "Woher kommt sie? /etc/profile. ~/.bashrc. login.defs.\n"
@@ -1126,7 +1126,7 @@ CHAPTER_5_MISSIONS: list[Mission] = [
         title        = "SGID auf Verzeichnisse — Gruppenvererbung",
         mtype        = "CONSTRUCT",
         xp           = 90,
-        speaker      = "ZARA_Z3R0",
+        speaker = "ZARA Z3R0",
         story        = (
             "Das Team-Verzeichnis ist ein Problem.\n"
             "Jeder speichert Dateien mit seiner eigenen Gruppe.\n"
@@ -1323,7 +1323,7 @@ CHAPTER_5_MISSIONS: list[Mission] = [
         title        = "ACL setzen & entfernen — setfacl -x und -b",
         mtype        = "CONSTRUCT",
         xp           = 95,
-        speaker      = "ZARA_Z3R0",
+        speaker = "ZARA Z3R0",
         story        = (
             "Ghost hat zu viele ACL-Einträge gesetzt.\n"
             "Jetzt muss er aufräumen — einzelne Einträge löschen oder alles zurücksetzen.\n"
@@ -1522,7 +1522,7 @@ CHAPTER_5_MISSIONS: list[Mission] = [
         title        = "find mit Berechtigungen — SUID-Dateien aufspüren",
         mtype        = "CONSTRUCT",
         xp           = 90,
-        speaker      = "ZARA_Z3R0",
+        speaker = "ZARA Z3R0",
         story        = (
             "Jemand hat heimlich SUID-Dateien auf NeonGrid-9 versteckt.\n"
             "Potenzielle Privilege-Escalation-Vektoren.\n"

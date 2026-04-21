@@ -363,7 +363,7 @@ CHAPTER_19_MISSIONS: list[Mission] = [
         title        = "Cloud-Init Grundlagen — VM-Erstkonfiguration",
         mtype        = "SCAN",
         xp           = 95,
-        speaker      = "LYRA_7",
+        speaker = "LYRA-7",
         story        = (
             "Lyra-7: 'Jede Cloud-VM startet nackt.\n"
             " Cloud-Init gibt ihr eine Seele — SSH-Keys, Pakete, Benutzer.\n"
@@ -502,7 +502,7 @@ CHAPTER_19_MISSIONS: list[Mission] = [
         title        = "D-Bus & systemd — Machine-ID",
         mtype        = "SCAN",
         xp           = 90,
-        speaker      = "LYRA_7",
+        speaker = "LYRA-7",
         story        = (
             "Lyra-7: 'Jede Maschine hat eine Identität — die Machine-ID.\n"
             " Unveränderlich. Einzigartig. D-Bus nutzt sie.\n"
@@ -757,7 +757,7 @@ CHAPTER_19_MISSIONS: list[Mission] = [
         title        = "systemd-resolved — Modernes DNS",
         mtype        = "SCAN",
         xp           = 90,
-        speaker      = "LYRA_7",
+        speaker = "LYRA-7",
         story        = (
             "Lyra-7: 'DNS ist die Telefonbuch der Datennetze.\n"
             " systemd-resolved ersetzt den klassischen Resolver.\n"

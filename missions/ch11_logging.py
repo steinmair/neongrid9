@@ -829,7 +829,7 @@ CHAPTER_11_MISSIONS: list[Mission] = [
         title        = "journald Konfiguration — /etc/systemd/journald.conf",
         mtype        = "CONSTRUCT",
         xp           = 90,
-        speaker      = "ZARA_Z3R0",
+        speaker = "ZARA Z3R0",
         story        = (
             "ZARA_Z3R0: 'Das Journal frisst Disk-Space, Ghost.\n"
             " Ohne Konfiguration wächst /var/log/journal unkontrolliert.\n"
@@ -1034,7 +1034,7 @@ CHAPTER_11_MISSIONS: list[Mission] = [
         title        = "at & batch — Einmalige Jobs & Last-abhängige Ausführung",
         mtype        = "CONSTRUCT",
         xp           = 85,
-        speaker      = "ZARA_Z3R0",
+        speaker = "ZARA Z3R0",
         story        = (
             "ZARA_Z3R0: 'Die Operation startet um 14:00, Ghost.\n"
             " Einmalig. Kein cron nötig.\n"
