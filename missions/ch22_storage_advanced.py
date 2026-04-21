@@ -3391,17 +3391,17 @@ CHAPTER_22_MISSIONS: list[Mission] = [
     ),
 
     # ══════════════════════════════════════════════════════════════════════
-    # 18.BOSS — FINAL EXAM — Linux CERTIFICATION
+    # 22.BOSS — FINAL EXAM — Linux CERTIFICATION
     # ══════════════════════════════════════════════════════════════════════
     Mission(
-        mission_id   = "18.boss",
+        mission_id   = "22.boss",
         chapter      = 22,
         title        = "BOSS: FINAL EXAM — Linux CERTIFICATION",
         mtype        = "BOSS",
         xp           = 625,
         speaker      = "EXAMINATOR",
         story        = (
-            "EXAMINATOR: 'Ghost. Du hast 17 Kapitel durchkämpft.\n"
+            "EXAMINATOR: 'Ghost. Du hast 21 Kapitel durchkämpft.\n"
             " 60 Prüfungsfragen beantwortet.\n"
             " Du kennst Hardware, Boot, Dateisysteme, Prozesse,\n"
             " Netzwerk, Benutzer, Logs, Scripting, Sicherheit.\n"
