@@ -155,19 +155,12 @@ Neue Spieler sollten in dieser Reihenfolge lesen:
 - ✅ 88,6 % Hint-Abdeckung (444/501 Missionen)
 - ✅ Erweitertes Player-Profil mit detaillierten Statistiken
 - ✅ Umfassende Dokumentation (50+ KB)
-- ✅ Alle Tests bestanden (5/5 Test-Suite)
 - ✅ Null Warnungen/Fehler
 
 ### Spielen
 
 ```bash
 python3 main.py
-```
-
-### Test-Suite
-
-```bash
-python3 scripts/test_gameflow.py
 ```
 
 ---
