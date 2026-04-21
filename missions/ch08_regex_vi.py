@@ -2303,7 +2303,7 @@ CHAPTER_8_MISSIONS: list[Mission] = [
             "  - :wq :q! :%s/x/y/g — die drei Must-Knows\n"
             "  - POSIX-Klassen: [[:digit:]] [[:alpha:]]"
         ),
-        memory_tip   = "",
+        memory_tip   = "BRE: grep. ERE: grep -E / egrep. vi-Modi: i=insert, Esc=normal, :=command. :wq=speichern+quit, :q!=nur quit, :%s=global ersetzen.",
         gear_reward  = None,
         faction_reward = ("Net Runners", 15),
     ),

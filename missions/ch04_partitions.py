@@ -1774,7 +1774,7 @@ CHAPTER_4_MISSIONS: list[Mission] = [
             "4. fsck: NUR unmounted!\n"
             "5. LVM: pvcreate→vgcreate→lvcreate"
         ),
-        memory_tip       = "",
+        memory_tip       = "MBR=446+64+2 bytes. GPT=128 Partitionen. LVM: PV→VG→LV wie Schichten. fstab Pass: 0=nie, 1=root, 2=rest.",
         gear_reward      = None,
         faction_reward   = ("Kernel Syndicate", 8),
     ),
@@ -1903,6 +1903,8 @@ CHAPTER_4_MISSIONS: list[Mission] = [
                 xp_value    = 35,
             ),
         ],
+        exam_tip         = "Boss-Wiederholung: MBR vs GPT, LVM-Workflow, fstab-Syntax, fsck NUR unmounted, mkfs.ext4 vs mkfs.xfs.",
+        memory_tip       = "Eselsbrücke LVM: 'Platte, Gruppe, Laufwerk' = pvcreate, vgcreate, lvcreate. Ohne vorherigen Schritt kein nächster.",
         gear_reward      = "pipe_wrench",
         faction_reward   = ("Root Collective", 20),
     ),

@@ -1911,7 +1911,7 @@ CHAPTER_12_MISSIONS: list[Mission] = [
             "  - dpkg↔rpm Äquivalenz-Paare\n"
             "  - ldconfig nach neuer Library"
         ),
-        memory_tip   = "",
+        memory_tip   = "dpkg -i=install, -r=remove, -P=purge (config weg!), -l=list, -L=list-files, -S=search-file. apt update (Liste)→upgrade (Pakete). rpm -q/qa/ql/qf.",
         gear_reward  = None,
         faction_reward = ("Root Collective", 15),
     ),

@@ -2026,7 +2026,7 @@ CHAPTER_11_MISSIONS: list[Mission] = [
             "  - /etc/crontab hat ZUSÄTZLICH User-Feld (6 Felder)\n"
             "  - journalctl -b=boot, -p=priority, -u=unit, -f=follow"
         ),
-        memory_tip   = "",
+        memory_tip   = "Syslog 0-7: EmAlert CritErr Warn Notice Info Debug → 'Every Admin Can Enjoy Working Night Duty'. Cron: * * * * * = min std tag mon wot.",
         gear_reward  = None,
         faction_reward = ("Kernel Syndicate", 15),
     ),

@@ -1785,7 +1785,7 @@ CHAPTER_6_MISSIONS: list[Mission] = [
             "sort | uniq -c = zählen und sortieren.\n"
             "awk $1=erste Spalte, -F=Trennzeichen."
         ),
-        memory_tip       = "",
+        memory_tip       = "Pipe |=weiterleiten, >=überschreiben, >>=anhängen, 2>&1=Fehler zu stdout. grep -v=invertieren. awk -F:=Doppelpunkt-Trenner.",
         gear_reward      = None,
         faction_reward   = ("Net Runners", 8),
     ),
@@ -1914,6 +1914,8 @@ CHAPTER_6_MISSIONS: list[Mission] = [
                 xp_value    = 40,
             ),
         ],
+        exam_tip         = "Boss-Wiederholung: > vs >> vs 2> vs &>. grep -E=ERE, -i=ignorecase, -v=invert, -r=recursive. cut -d -f für Felder. sort -n=numerisch, -r=reverse.",
+        memory_tip       = "Pipe-Richtung: links→rechts. Redirect-Zeichen: >=überschreibt, >>=hängt an. 2>&1 = Fehler ZU stdout. /dev/null = schwarzes Loch.",
         gear_reward      = "pipe_wrench",
         faction_reward   = ("Net Runners", 25),
     ),

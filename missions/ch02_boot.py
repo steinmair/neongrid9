@@ -168,6 +168,12 @@ CHAPTER_2_MISSIONS = [
         title="GPT Structure — GUID Partition Table",
         mtype="DECODE", xp=30, chapter=2,
         speaker="ZARA Z3R0",
+        story=(
+            "Zara Z3R0: 'GPT hat MBR begraben, Ghost.\n"
+            " 128 Partitionen. Redundante Tabelle. Festplatten über 2TB.\n"
+            " UEFI braucht GPT — kein GPT, kein UEFI-Boot.\n"
+            " Lern die Struktur. Die Prüfung fragt genau hier.'"
+        ),
         why_important=(
             "GPT ist der moderne Nachfolger von MBR.\n"
             "UEFI-Systeme nutzen ausschließlich GPT.\n"
@@ -311,6 +317,12 @@ CHAPTER_2_MISSIONS = [
         title="GRUB2 Config — grub.cfg lesen",
         mtype="DECODE", xp=35, chapter=2,
         speaker="DAEMON",
+        story=(
+            "DAEMON: grub.cfg — ich generiere diese Datei.\n"
+            "Editiere sie NICHT direkt — sie wird überschrieben.\n"
+            "Lesen darfst du. Verstehen musst du.\n"
+            "Welcher menuentry bootet als nächstes?"
+        ),
         why_important=(
             "grub.cfg zu verstehen bedeutet zu wissen welche\n"
             "Betriebssysteme verfügbar sind und wie der Boot läuft."
@@ -466,6 +478,12 @@ CHAPTER_2_MISSIONS = [
         title="update-grub — Config regenerieren",
         mtype="INFILTRATE", xp=30, chapter=2,
         speaker="DAEMON",
+        story=(
+            "DAEMON: Du änderst /etc/default/grub.\n"
+            "Schön. Aber grub.cfg wurde noch nicht aktualisiert.\n"
+            "update-grub ist der Befehl der die Änderung aktiviert.\n"
+            "Vergiss ihn — und deine Änderung existiert nicht."
+        ),
         why_important="update-grub ist der Pflichtbefehl nach jeder GRUB-Konfigurationsänderung.",
         explanation=(
             "update-grub — GRUB2 Konfiguration neu generieren\n\n"
@@ -529,6 +547,12 @@ CHAPTER_2_MISSIONS = [
         title="grub-install — GRUB auf Device schreiben",
         mtype="INFILTRATE", xp=35, chapter=2,
         speaker="ZARA Z3R0",
+        story=(
+            "Zara Z3R0: 'Das System bootet nicht. MBR korrumpiert.\n"
+            " grub-install /dev/sda — das rettet dich.\n"
+            " Für UEFI: grub-install --target=x86_64-efi.\n"
+            " Lern beide. Notsituationen warten nicht auf Recherche.'"
+        ),
         why_important=(
             "grub-install schreibt GRUB in den MBR/EFI.\n"
             "Notwendig nach frischer Installation oder MBR-Korruption."
@@ -677,6 +701,12 @@ CHAPTER_2_MISSIONS = [
         title="Kernel Parameters — Boot-Parameter",
         mtype="DECODE", xp=35, chapter=2,
         speaker="LYRA-7",
+        story=(
+            "LYRA-7: Der Kernel ist formbar beim Boot.\n"
+            "root=/dev/sda1 sagt ihm wo das Root-FS liegt.\n"
+            "quiet unterdrückt Ausgabe. init=/bin/bash gibt dir eine Shell.\n"
+            "Kenn die Parameter — sie retten dich in Notfällen."
+        ),
         why_important=(
             "Kernel-Parameter steuern das Systemverhalten beim Boot.\n"
             "LPIC-1 fragt wichtige Parameter wie root=, ro/rw, quiet, etc."
@@ -749,6 +779,12 @@ CHAPTER_2_MISSIONS = [
         title="cmdline lesen — /proc/cmdline",
         mtype="INFILTRATE", xp=30, chapter=2,
         speaker="SYSTEM",
+        story=(
+            "SYSTEM: Willst du wissen womit dein System gebootet hat?\n"
+            "/proc/cmdline gibt dir die Antwort.\n"
+            "Kein Raten. Kein Vermuten. Nur Fakten vom Kernel.\n"
+            "Lies es. Versteh es. Dann weißt du wo du stehst."
+        ),
         why_important="Aktuelle Boot-Parameter aus /proc/cmdline lesen ist Admin-Alltag.",
         explanation=(
             "/proc/cmdline — aktuelle Kernel-Parameter\n\n"
@@ -874,6 +910,12 @@ CHAPTER_2_MISSIONS = [
         title="mkinitramfs / update-initramfs",
         mtype="INFILTRATE", xp=35, chapter=2,
         speaker="DAEMON",
+        story=(
+            "DAEMON: initramfs — das temporäre Root-FS beim Booten.\n"
+            "Enthält Module die der Kernel vor dem echten Root braucht.\n"
+            "Neues Modul? Neuer Kernel? update-initramfs -u.\n"
+            "Vergiss das — und dein System bootet beim nächsten Mal nicht."
+        ),
         why_important="Nach Kernel-Modul-Änderungen muss initramfs neu erstellt werden.",
         explanation=(
             "initramfs verwalten (Debian/Ubuntu):\n\n"
@@ -930,6 +972,12 @@ CHAPTER_2_MISSIONS = [
         title="/boot/ Verzeichnis — Kernel Image",
         mtype="SCAN", xp=30, chapter=2,
         speaker="SYSTEM",
+        story=(
+            "SYSTEM: /boot/ — hier schläft der Kernel.\n"
+            "vmlinuz: komprimiertes Kernel-Image.\n"
+            "initrd.img: das frühe Root-Dateisystem.\n"
+            "System.map: Kernel-Symbol-Tabelle. Kenn die Bewohner."
+        ),
         why_important="Kenntnis der /boot/-Dateien ist Grundlage für Boot-Management.",
         explanation=(
             "/boot/ — Boot-Verzeichnis\n\n"
@@ -990,6 +1038,12 @@ CHAPTER_2_MISSIONS = [
         title="Kernel Version — uname",
         mtype="INFILTRATE", xp=25, chapter=2,
         speaker="SYSTEM",
+        story=(
+            "SYSTEM: Welche Kernel-Version läuft hier?\n"
+            "uname -r — eine Sekunde, eine Antwort.\n"
+            "uname -a gibt dir alles: Kernel, Hostname, Architektur.\n"
+            "Erstes Kommando auf jedem neuen System."
+        ),
         why_important="uname liefert Kernel-Version und System-Infos — Admin-Alltag.",
         explanation=(
             "uname — System-Informationen\n\n"
@@ -1035,6 +1089,12 @@ CHAPTER_2_MISSIONS = [
         title="UEFI Boot — efibootmgr",
         mtype="INFILTRATE", xp=40, chapter=2,
         speaker="ZARA Z3R0",
+        story=(
+            "Zara Z3R0: 'UEFI hat seine eigene Boot-Liste, Ghost.\n"
+            " efibootmgr zeigt sie dir. Einträge hinzufügen, löschen, sortieren.\n"
+            " Dual-Boot durcheinander? efibootmgr --bootorder ändert die Reihenfolge.\n"
+            " Lern das — bevor du das falsche System boot-löscht.'"
+        ),
         why_important=(
             "efibootmgr verwaltet UEFI-Boot-Einträge.\n"
             "Notwendig wenn System doppelt bootet oder Bootloader-Ordnung geändert werden muss."
@@ -1096,6 +1156,12 @@ CHAPTER_2_MISSIONS = [
         title="Secure Boot — Konzept",
         mtype="SCAN", xp=25, chapter=2,
         speaker="LYRA-7",
+        story=(
+            "LYRA-7: Secure Boot — Freund oder Feind?\n"
+            "Es schützt vor unsignierten Bootloadern. Gut gegen Rootkits.\n"
+            "Aber: unsigned Kernel-Module werden blockiert.\n"
+            "Kenn das Konzept. Die Prüfung fragt es — mit Fallstricken."
+        ),
         why_important="Secure Boot beeinflusst welche Kernel/Module geladen werden können.",
         explanation=(
             "Secure Boot — UEFI-Sicherheitsmechanismus\n\n"
@@ -1199,6 +1265,12 @@ CHAPTER_2_MISSIONS = [
         title="Prüfungsfalle: initrd vs initramfs",
         mtype="QUIZ", xp=25, chapter=2,
         speaker="KERNEL-ORAKEL",
+        story=(
+            "KERNEL-ORAKEL: initrd und initramfs — scheinbar gleich.\n"
+            "Aber ein Block-Device versus ein tmpfs sind zwei Welten.\n"
+            "Die Prüfung liebt diese Falle. Kenn den echten Unterschied.\n"
+            "Ein falsches Ankreuzen kostet Punkte."
+        ),
         why_important="initrd vs initramfs ist LPIC-1-Prüfungswissen: unterschiedliche Implementierungen des frühen Userspace, der Kernel-Module vor dem Root-Mount lädt.",
         quiz_questions=[
             QuizQuestion(

@@ -1977,7 +1977,7 @@ CHAPTER_9_MISSIONS: list[Mission] = [
             "  - DNS: A, AAAA, MX, PTR, CNAME kennen\n"
             "  - /etc/resolv.conf, /etc/hosts, /etc/nsswitch.conf"
         ),
-        memory_tip   = "",
+        memory_tip   = "DNS-Reihenfolge: /etc/nsswitch.conf bestimmt. ip=moderne, ifconfig=legacy. ss -tulpn: t=TCP u=UDP l=listen p=prozess n=numerisch.",
         gear_reward  = None,
         faction_reward = ("Net Runners", 15),
     ),

@@ -2701,7 +2701,7 @@ CHAPTER_14_MISSIONS: list[Mission] = [
             "  - for..in..do..done, while..do..done, case..esac\n"
             "  - getopts: ':' = hat Argument, $OPTARG = Wert"
         ),
-        memory_tip   = "",
+        memory_tip   = "Spezialvariablen: $0=Skriptname, $1-$9=Args, $#=Anzahl, $@=alle Args, $?=Exit-Code, $$=PID. test -eq/-ne/-lt/-gt für Zahlen, = für Strings.",
         gear_reward  = None,
         faction_reward = ("Net Runners", 15),
     ),

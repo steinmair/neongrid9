@@ -2107,7 +2107,7 @@ CHAPTER_10_MISSIONS: list[Mission] = [
             "  - visudo = einziger sicherer Weg für sudoers\n"
             "  - Login-Shell: ~/.bash_profile | Non-Login: ~/.bashrc"
         ),
-        memory_tip   = "",
+        memory_tip   = "passwd 7 Felder: user:x:uid:gid:info:home:shell. shadow hat Hashes. usermod -aG = append, -G = replace! Merke: -a für addieren.",
         gear_reward  = None,
         faction_reward = ("Root Collective", 15),
     ),

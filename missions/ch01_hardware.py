@@ -244,6 +244,12 @@ CHAPTER_1_MISSIONS = [
         xp          = 25,
         chapter     = 1,
         speaker     = "SYSTEM",
+        story       = (
+            "SYSTEM: I/O Ports — die unsichtbaren Kanäle zwischen\n"
+            "CPU und Hardware. 0x0060 spricht mit der Tastatur.\n"
+            "0x0040 tickt im Takt der Zeit.\n"
+            "Lies /proc/ioports. Versteh was da fließt."
+        ),
         why_important = (
             "I/O Ports sind die Kommunikationsadressen zwischen\n"
             "Betriebssystem und Hardware-Registern.\n"
@@ -289,6 +295,12 @@ CHAPTER_1_MISSIONS = [
         xp          = 25,
         chapter     = 1,
         speaker     = "SYSTEM",
+        story       = (
+            "SYSTEM: Speicher ist nicht einfach 'RAM'.\n"
+            "Der physische Adressraum wird aufgeteilt — zwischen\n"
+            "Kernel, Geräten, BIOS. DMA erlaubt Direktzugriff.\n"
+            "Scan /proc/iomem. Sieh wie dein System atmet."
+        ),
         why_important = (
             "/proc/iomem zeigt die Memory Map des Systems —\n"
             "wie physischer Speicher zwischen Kernel, RAM und\n"
@@ -405,6 +417,12 @@ CHAPTER_1_MISSIONS = [
         xp          = 30,
         chapter     = 1,
         speaker     = "SYSTEM",
+        story       = (
+            "SYSTEM: Dein RAM ist deine Arena.\n"
+            "Wieviel frei? Wieviel gecacht? Wieviel verschwendet?\n"
+            "/proc/meminfo gibt dir die harte Wahrheit.\n"
+            "Kenn deinen Speicher — oder verlier die Kontrolle."
+        ),
         why_important = (
             "Speichermanagement ist kritisch für jeden Sysadmin.\n"
             "/proc/meminfo gibt dir den vollständigen Speicher-Status\n"
@@ -516,6 +534,12 @@ CHAPTER_1_MISSIONS = [
         xp          = 35,
         chapter     = 1,
         speaker     = "SYSTEM",
+        story       = (
+            "SYSTEM: lspci ohne Flags zeigt dir die Oberfläche.\n"
+            "lspci -v zeigt Details. lspci -k zeigt Treiber.\n"
+            "Welches Modul treibt deine Netzwerkkarte?\n"
+            "Lern die Flags — die Prüfung fragt genau das."
+        ),
         why_important = "lspci -v/-k sind LPIC-1 Prüfungsthemen. Du musst die Flags kennen.",
         explanation = (
             "lspci Flags im Detail:\n\n"
@@ -617,6 +641,12 @@ CHAPTER_1_MISSIONS = [
         xp          = 35,
         chapter     = 1,
         speaker     = "SYSTEM",
+        story       = (
+            "SYSTEM: USB — Universal Serial Bus. Universell, ja.\n"
+            "Aber jedes Gerät hat eine einzigartige ID.\n"
+            "lsusb -v zeigt Deskriptoren. lsusb -t zeigt den Baum.\n"
+            "Identifiziere deine Hardware bis auf Chip-Level."
+        ),
         why_important = "lsusb -v und -t sind LPIC-1 Prüfungsthemen. USB-Gerätehierarchie und Deskriptoren zu lesen ist Pflicht für Hardware-Diagnostik.",
         explanation = (
             "lsusb Flags:\n\n"
@@ -729,6 +759,12 @@ CHAPTER_1_MISSIONS = [
         mtype       = "INFILTRATE",
         xp          = 30,
         chapter     = 1,
+        story       = (
+            "Das Kernel-Orakel spricht:\n"
+            "lshw listet ALLES. Aber manchmal willst du nur eines.\n"
+            "lshw -class disk — nur Datenträger. lshw -class network — nur NICs.\n"
+            "Filter die Hardware. Zeig nur was du brauchst."
+        ),
         why_important = "lshw -class erlaubt gezieltes Filtern nach Hardware-Typen — in der Prüfung wird nach der korrekten Klassen-Syntax gefragt.",
         explanation = (
             "Mit -class kannst du lshw auf bestimmte Hardware filtern:\n\n"
@@ -899,6 +935,12 @@ CHAPTER_1_MISSIONS = [
         xp          = 30,
         chapter     = 1,
         speaker     = "DAEMON",
+        story       = (
+            "DAEMON: /dev/sda1 — ein Name der sich ändern kann.\n"
+            "UUID=abc-123 — ein Name der bleibt.\n"
+            "blkid zeigt beide. /etc/fstab vertraut dem UUID.\n"
+            "Kenn den Unterschied. Sonst bootet nichts."
+        ),
         why_important = (
             "UUIDs sind entscheidend für /etc/fstab.\n"
             "blkid zeigt dir UUID, Dateisystem-Typ und Label\n"
@@ -951,6 +993,12 @@ CHAPTER_1_MISSIONS = [
         xp          = 35,
         chapter     = 1,
         speaker     = "DAEMON",
+        story       = (
+            "DAEMON: Jedes Gerät das du ansteckst — ich sehe es.\n"
+            "udev empfängt den Kernel-Event. Ich erstelle /dev/sdX.\n"
+            "udevadm info verrät den Pfad. udevadm monitor zeigt es live.\n"
+            "Lern wie ich Geräte erkenne — du wirst es brauchen."
+        ),
         why_important = (
             "udev verwaltet alle Gerätedateien in /dev/.\n"
             "udevadm ist das Admin-Tool für udev — unverzichtbar\n"
@@ -1086,6 +1134,12 @@ CHAPTER_1_MISSIONS = [
         xp          = 35,
         chapter     = 1,
         speaker     = "DAEMON",
+        story       = (
+            "DAEMON: Der Kernel schreit — aber niemand hört zu.\n"
+            "dmesg -T zeigt Timestamps. dmesg -l err zeigt nur Fehler.\n"
+            "Hardware-Fehler, Kernel-Panics, Treiber-Abstürze — alles hier.\n"
+            "Filter das Rauschen. Find die Ursache."
+        ),
         why_important = "Fehler in dmesg finden ist eine Kernkompetenz für Troubleshooting.",
         explanation = (
             "dmesg Fehler-Levels:\n"
@@ -1197,6 +1251,12 @@ CHAPTER_1_MISSIONS = [
         xp          = 35,
         chapter     = 1,
         speaker     = "DAEMON",
+        story       = (
+            "DAEMON: Module sind meine Augen und Ohren.\n"
+            "Ohne das richtige Modul — kein Treiber, keine Hardware.\n"
+            "lsmod zeigt was läuft. Die Spalten: Name, Größe, Abhängigkeiten.\n"
+            "Scan die Liste. Was läuft hier wirklich?"
+        ),
         why_important = (
             "Kernel-Module sind die Treiber unter Linux.\n"
             "lsmod zeigt alle geladenen Module.\n"
@@ -1256,6 +1316,12 @@ CHAPTER_1_MISSIONS = [
         xp          = 35,
         chapter     = 1,
         speaker     = "DAEMON",
+        story       = (
+            "DAEMON: Ein Modul ist mehr als ein Name.\n"
+            "modinfo enthüllt alles: Autor, Lizenz, Parameter, Firmware.\n"
+            "Welche Parameter akzeptiert e1000e? Was braucht nvidia?\n"
+            "Kenn deine Module bevor du sie lädst."
+        ),
         why_important = "modinfo zeigt Details zu Kernel-Modulen — Autor, Lizenz, Parameter, Firmware.",
         explanation = (
             "modinfo <modul> — Informationen über ein Kernel-Modul\n\n"
@@ -1383,6 +1449,12 @@ CHAPTER_1_MISSIONS = [
         xp          = 35,
         chapter     = 1,
         speaker     = "DAEMON",
+        story       = (
+            "DAEMON: modprobe lädt — aber nur einmalig.\n"
+            "Für Dauerhaftigkeit schreibst du nach /etc/modprobe.d/.\n"
+            "blacklist, options, alias — die drei Konfigurationstypen.\n"
+            "Kontrolliere welche Module starten. Und welche nie."
+        ),
         why_important = (
             "Permanente Modul-Konfiguration läuft über /etc/modprobe.d/.\n"
             "Blacklisting, Parameter, Aliases — alles hier."
@@ -1502,6 +1574,12 @@ CHAPTER_1_MISSIONS = [
         xp          = 30,
         chapter     = 1,
         speaker     = "DAEMON",
+        story       = (
+            "DAEMON: /dev/ — das Verzeichnis das alles enthält.\n"
+            "/dev/sda ist deine Festplatte. /dev/null verschluckt Daten.\n"
+            "/dev/random generiert Rauschen. /dev/tty ist dein Terminal.\n"
+            "Alles ist eine Datei. Lern den Unterschied zwischen Block und Char."
+        ),
         why_important = (
             "In Unix/Linux IST ALLES eine Datei — auch Hardware.\n"
             "/dev/ enthält Gerätedateien die Hardware repräsentieren."
@@ -1576,6 +1654,12 @@ CHAPTER_1_MISSIONS = [
         xp          = 25,
         chapter     = 1,
         speaker     = "LYRA-7",
+        story       = (
+            "LYRA-7: Zwei Konzepte. Ein wichtiger Unterschied.\n"
+            "Coldplug: das Gerät muss beim Boot bereits angesteckt sein.\n"
+            "Hotplug: du steckst es während des Betriebs an — udev reagiert sofort.\n"
+            "Die Prüfung fragt welche Geräte welches Modell nutzen."
+        ),
         why_important = "LPIC-1 fragt nach dem Unterschied zwischen coldplug und hotplug Geräten.",
         explanation = (
             "Plug-Konzepte:\n\n"
@@ -1727,6 +1811,12 @@ CHAPTER_1_MISSIONS = [
         xp          = 30,
         chapter     = 1,
         speaker     = "SYSTEM",
+        story       = (
+            "SYSTEM: hwinfo — der tiefste Scan den du bekommen kannst.\n"
+            "Nicht auf allen Distros vorinstalliert, aber mächtig.\n"
+            "hwinfo --short gibt dir die Kurzfassung.\n"
+            "hwinfo --disk geht tiefer. Kenn deine Werkzeuge."
+        ),
         why_important = "hwinfo ist ein weiteres umfassendes Hardware-Tool, auf manchen Distros vorhanden.",
         explanation = (
             "hwinfo — Hardware Information Tool\n"

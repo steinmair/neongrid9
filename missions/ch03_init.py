@@ -100,6 +100,12 @@ CHAPTER_3_MISSIONS = [
         title="Runlevel 0–6 — Alle Runlevels",
         mtype="SCAN", xp=25, chapter=3,
         speaker="DAEMON",
+        story=(
+            "DAEMON: Sieben Zustände. Sieben Runlevels.\n"
+            "0 tötet. 6 startet neu. 1 gibt dir die Notfall-Shell.\n"
+            "Zwischen 2 und 5 liegt die eigentliche Arbeit.\n"
+            "Kenn sie auswendig — die Prüfung testet jeden einzelnen."
+        ),
         why_important="Runlevels sind fundamentales SysVinit-Konzept und LPIC-1 Prüfungsstoff.",
         explanation=(
             "SysVinit Runlevels:\n\n"
@@ -173,6 +179,12 @@ CHAPTER_3_MISSIONS = [
         title="runlevel Befehl — aktuellen Runlevel",
         mtype="INFILTRATE", xp=25, chapter=3,
         speaker="SYSTEM",
+        story=(
+            "SYSTEM: In welchem Runlevel befindest du dich?\n"
+            "Der Befehl 'runlevel' gibt zwei Zahlen zurück.\n"
+            "Vorheriger Runlevel. Aktueller Runlevel. 'N' = kein vorheriger.\n"
+            "Einfach. Direkt. Merke es dir."
+        ),
         why_important="Der 'runlevel' Befehl ist LPIC-1 Prüfungsstoff.",
         explanation=(
             "runlevel — aktuellen und vorherigen Runlevel anzeigen\n\n"
@@ -217,6 +229,12 @@ CHAPTER_3_MISSIONS = [
         title="telinit — Runlevel wechseln",
         mtype="INFILTRATE", xp=30, chapter=3,
         speaker="DAEMON",
+        story=(
+            "DAEMON: Du willst das System in den Rettungsmodus bringen?\n"
+            "telinit 1 — sofortiger Wechsel zu Runlevel 1.\n"
+            "telinit 0 — Shutdown. telinit 6 — Reboot.\n"
+            "Der init-Daemon gehorcht. Du befiehlst."
+        ),
         why_important="telinit ist der klassische Befehl zum Runlevel-Wechsel in SysVinit.",
         explanation=(
             "telinit — tell init\n\n"
@@ -354,6 +372,12 @@ CHAPTER_3_MISSIONS = [
         title="/etc/init.d/ — Service-Skripte",
         mtype="DECODE", xp=30, chapter=3,
         speaker="DAEMON",
+        story=(
+            "DAEMON: Vor systemd gab es /etc/init.d/.\n"
+            "Jeder Dienst ein Shell-Skript. start, stop, restart, status.\n"
+            "Alte Systeme leben noch. Legacy-Wissen rettet Jobs.\n"
+            "Lern die Skript-Struktur — sie lebt weiter."
+        ),
         why_important="SysVinit-Dienst-Skripte in /etc/init.d/ sind LPIC-1 Pflichtthema.",
         explanation=(
             "/etc/init.d/ — SysVinit Dienst-Skripte\n\n"
@@ -433,6 +457,12 @@ CHAPTER_3_MISSIONS = [
         title="service Befehl — Dienste steuern",
         mtype="INFILTRATE", xp=30, chapter=3,
         speaker="SYSTEM",
+        story=(
+            "SYSTEM: service — der Wrapper der alles vereinfacht.\n"
+            "service ssh start ruft /etc/init.d/ssh start auf.\n"
+            "Portabel über Distros. Merkt sich den Runlevel.\n"
+            "Kenn ihn. Er ist überall."
+        ),
         why_important="'service' ist der Standard-Befehl für SysVinit-Dienste. LPIC-1 Pflicht.",
         explanation=(
             "service — Wrapper für /etc/init.d/ Skripte\n\n"
@@ -496,6 +526,12 @@ CHAPTER_3_MISSIONS = [
         title="update-rc.d — Dienste aktivieren (Debian)",
         mtype="INFILTRATE", xp=35, chapter=3,
         speaker="DAEMON",
+        story=(
+            "DAEMON: /etc/rc3.d/S20ssh — das bedeutet:\n"
+            "Beim Start von Runlevel 3, starte (S) ssh mit Priorität 20.\n"
+            "update-rc.d erstellt und löscht diese Symlinks.\n"
+            "Debian-Weg. update-rc.d enable ssh — fertig."
+        ),
         why_important="update-rc.d verwaltet Dienst-Symlinks in /etc/rcX.d/ auf Debian-Systemen.",
         explanation=(
             "update-rc.d — Update /etc/rcX.d/ Links\n\n"
@@ -550,6 +586,12 @@ CHAPTER_3_MISSIONS = [
         title="chkconfig — Dienste (RHEL/CentOS)",
         mtype="INFILTRATE", xp=30, chapter=3,
         speaker="SYSTEM",
+        story=(
+            "SYSTEM: RHEL nutzt chkconfig statt update-rc.d.\n"
+            "chkconfig --list zeigt alle Dienste in allen Runlevels.\n"
+            "chkconfig sshd on aktiviert für alle Standard-Runlevels.\n"
+            "Kenn beide — die Prüfung fragt welches Tool welche Distro."
+        ),
         why_important="chkconfig ist das RHEL-Äquivalent zu update-rc.d. LPIC-1 prüft beide.",
         explanation=(
             "chkconfig — Check Configuration (RHEL/CentOS)\n\n"
@@ -671,6 +713,12 @@ CHAPTER_3_MISSIONS = [
         title="Units & Targets — systemd Unit-Typen",
         mtype="SCAN", xp=30, chapter=3,
         speaker="LYRA-7",
+        story=(
+            "LYRA-7: systemd denkt in Units. Nicht in Prozessen.\n"
+            ".service, .socket, .timer, .mount, .target — sechs Typen die zählen.\n"
+            "Jede Unit ist eine Datei in /etc/systemd/system/ oder /lib/systemd/system/.\n"
+            "Versteh die Typen — dann verstehst du systemd."
+        ),
         why_important="Units sind das Herzstück von systemd. Jeder Admin muss sie kennen.",
         explanation=(
             "systemd Units — Verwaltungseinheiten\n\n"
@@ -754,6 +802,12 @@ CHAPTER_3_MISSIONS = [
         title="systemctl status — Dienst-Status",
         mtype="INFILTRATE", xp=25, chapter=3,
         speaker="SYSTEM",
+        story=(
+            "SYSTEM: Läuft der Dienst? Warum nicht?\n"
+            "systemctl status ssh — eine Zeile für alles.\n"
+            "Active: active (running) — gut. Failed — problem.\n"
+            "Die letzten Log-Zeilen direkt dabei. Kein journalctl nötig."
+        ),
         why_important="systemctl status ist der meistgenutzte systemd-Befehl. Täglich im Einsatz.",
         explanation=(
             "systemctl status <unit>\n\n"
@@ -810,6 +864,12 @@ CHAPTER_3_MISSIONS = [
         title="systemctl start/stop/restart — Dienste steuern",
         mtype="INFILTRATE", xp=25, chapter=3,
         speaker="SYSTEM",
+        story=(
+            "SYSTEM: start, stop, restart — die drei Grundbefehle.\n"
+            "start: Dienst läuft jetzt. stop: Dienst stoppt jetzt.\n"
+            "restart: stop + start. Verbindungen werden unterbrochen.\n"
+            "Einfach. Direkt. Täglich im Einsatz."
+        ),
         why_important="Grundlegende Dienst-Steuerung mit systemctl. Tägliche Admin-Praxis.",
         explanation=(
             "systemctl Dienst-Steuerung:\n\n"
@@ -863,6 +923,12 @@ CHAPTER_3_MISSIONS = [
         title="systemctl enable/disable — Autostart",
         mtype="INFILTRATE", xp=30, chapter=3,
         speaker="DAEMON",
+        story=(
+            "DAEMON: start startet jetzt. enable startet beim nächsten Boot.\n"
+            "Das ist der kritische Unterschied — und die häufigste Verwechslung.\n"
+            "systemctl enable --now: beides auf einmal.\n"
+            "Vergiss enable — und nach dem Reboot läuft nichts mehr."
+        ),
         why_important=(
             "enable/disable steuert ob ein Dienst beim Boot automatisch startet.\n"
             "Kritischer Unterschied zu start/stop!"
@@ -939,6 +1005,12 @@ CHAPTER_3_MISSIONS = [
         title="systemctl restart/reload — Unterschied",
         mtype="INFILTRATE", xp=30, chapter=3,
         speaker="SYSTEM",
+        story=(
+            "SYSTEM: nginx -s reload lädt die Konfiguration neu.\n"
+            "Keine Verbindungsunterbrechung. Kein Downtime.\n"
+            "nginx restart dagegen tötet alle Verbindungen.\n"
+            "Auf Prod-Systemen ist der Unterschied kritisch."
+        ),
         why_important="Der Unterschied zwischen restart (Neustart, Verbindungsunterbrechung) und reload (SIGHUP, keine Unterbrechung) ist LPIC-1-Prüfungsstoff und produktionskritisch.",
         explanation=(
             "restart vs reload — detailliert:\n\n"
@@ -989,6 +1061,12 @@ CHAPTER_3_MISSIONS = [
         title="systemctl is-active/is-enabled — Prüfen",
         mtype="INFILTRATE", xp=25, chapter=3,
         speaker="SYSTEM",
+        story=(
+            "SYSTEM: Skript schreibt: 'Ist ssh aktiv?'\n"
+            "systemctl is-active ssh gibt 'active' zurück — Exit-Code 0.\n"
+            "Perfekt für if-Bedingungen in Bash.\n"
+            "is-active vs is-enabled: läuft jetzt vs startet beim Boot."
+        ),
         why_important="is-active und is-enabled sind ideal für Scripts und Automatisierung.",
         explanation=(
             "systemctl Prüfbefehle:\n\n"
@@ -1045,6 +1123,12 @@ CHAPTER_3_MISSIONS = [
         title="systemctl list-units — Units anzeigen",
         mtype="INFILTRATE", xp=30, chapter=3,
         speaker="LYRA-7",
+        story=(
+            "LYRA-7: Wieviele Units läuft systemd gerade?\n"
+            "systemctl list-units zeigt alle aktiven Units.\n"
+            "list-units --failed zeigt nur kaputte.\n"
+            "list-unit-files zeigt alle — auch inaktive."
+        ),
         why_important="list-units gibt vollständige Übersicht aller systemd-Units.",
         explanation=(
             "systemctl list-units — alle Units anzeigen\n\n"
@@ -1107,6 +1191,12 @@ CHAPTER_3_MISSIONS = [
         title="systemd Targets — Zielzustände",
         mtype="SCAN", xp=30, chapter=3,
         speaker="LYRA-7",
+        story=(
+            "LYRA-7: systemd ersetzt Runlevels durch Targets.\n"
+            "multi-user.target ≈ Runlevel 3. graphical.target ≈ Runlevel 5.\n"
+            "rescue.target ≈ Runlevel 1. poweroff.target ≈ Runlevel 0.\n"
+            "Die LPIC-1-Äquivalenz-Tabelle sitzt? Gut."
+        ),
         why_important="Targets sind der Ersatz für Runlevels. LPIC-1 prüft die Äquivalenz.",
         explanation=(
             "systemd Targets — Gruppen von Units\n\n"
@@ -1228,6 +1318,12 @@ CHAPTER_3_MISSIONS = [
         title="isolate Target — Sofortiger Wechsel",
         mtype="INFILTRATE", xp=35, chapter=3,
         speaker="DAEMON",
+        story=(
+            "DAEMON: systemctl isolate rescue.target — sofort.\n"
+            "Keine Warnung. Alle nicht-rescue-Units stoppen.\n"
+            "Wie telinit 1 — aber für systemd.\n"
+            "Mächtig. Nutze es mit Vorsicht."
+        ),
         why_important="isolate wechselt sofort das aktive Target — wie telinit für systemd.",
         explanation=(
             "systemctl isolate <target>\n\n"
@@ -1525,6 +1621,12 @@ CHAPTER_3_MISSIONS = [
         title="journalctl -u — Dienst-Logs",
         mtype="INFILTRATE", xp=30, chapter=3,
         speaker="LYRA-7",
+        story=(
+            "LYRA-7: SSH meldet sich nicht mehr an. Was ist passiert?\n"
+            "journalctl -u ssh zeigt die Logs dieses Dienstes.\n"
+            "journalctl -u ssh -f folgt live.\n"
+            "Diagnose in Sekunden statt Minuten."
+        ),
         why_important="Service-spezifische Logs sind die häufigste journalctl-Anwendung.",
         explanation=(
             "journalctl -u <unit> — Unit-spezifische Logs\n\n"
@@ -1571,6 +1673,12 @@ CHAPTER_3_MISSIONS = [
         title="journalctl --since/--until — Zeitfilter",
         mtype="INFILTRATE", xp=35, chapter=3,
         speaker="LYRA-7",
+        story=(
+            "LYRA-7: Der Incident war um 03:42 Uhr.\n"
+            "journalctl --since '2024-01-15 03:00' --until '2024-01-15 04:00'\n"
+            "Genau das Zeitfenster das zählt.\n"
+            "Incident-Analyse ohne Zeitfilter ist Nadel im Heuhaufen."
+        ),
         why_important="Zeitbasierte Filterung ist essentiell für Incident-Analyse.",
         explanation=(
             "journalctl Zeitfilter:\n\n"
@@ -1623,6 +1731,12 @@ CHAPTER_3_MISSIONS = [
         title="systemd-analyze — Boot-Performance",
         mtype="INFILTRATE", xp=35, chapter=3,
         speaker="LYRA-7",
+        story=(
+            "LYRA-7: Der Server braucht 47 Sekunden zum Booten. Warum?\n"
+            "systemd-analyze blame zeigt den Übeltäter.\n"
+            "systemd-analyze plot > boot.svg — visuell als SVG.\n"
+            "Optimiere den Boot. Sekunden zählen."
+        ),
         why_important="systemd-analyze zeigt Boot-Performance und hilft Boot-Zeit zu optimieren.",
         explanation=(
             "systemd-analyze — Boot-Analyse\n\n"
@@ -1684,6 +1798,12 @@ CHAPTER_3_MISSIONS = [
         title="shutdown/halt/reboot — System herunterfahren",
         mtype="INFILTRATE", xp=30, chapter=3,
         speaker="DAEMON",
+        story=(
+            "DAEMON: shutdown -h now — ich benachrichtige alle User.\n"
+            "Ich schreibe Buffers. Ich unmounte Dateisysteme.\n"
+            "Dann erst schalte ich ab. Kein Datenverlust.\n"
+            "Den Stecker ziehen ist Sabotage. Lern den richtigen Weg."
+        ),
         why_important="Korrekte Shutdown-Befehle sind essentiell. Nie einfach den Stecker ziehen.",
         explanation=(
             "System herunterfahren/neustarten:\n\n"
@@ -1787,6 +1907,12 @@ CHAPTER_3_MISSIONS = [
         title="Prüfungsfalle: SysVinit Runlevel 2 Debian vs RHEL",
         mtype="QUIZ", xp=25, chapter=3,
         speaker="KERNEL-ORAKEL",
+        story=(
+            "KERNEL-ORAKEL: Runlevel 2 — Multi-User mit Netzwerk.\n"
+            "Auf Debian. Auf RHEL ist Runlevel 2 Multi-User OHNE Netzwerk.\n"
+            "Die Prüfung stellt diese Frage. Mit voller Absicht.\n"
+            "Welches System machst du gerade? Das ändert die Antwort."
+        ),
         why_important="Debian und RHEL haben unterschiedliche Runlevel-Bedeutungen — eine der häufigsten Verwechslungen in LPIC-1-Prüfungen.",
         quiz_questions=[
             QuizQuestion(
@@ -1813,6 +1939,12 @@ CHAPTER_3_MISSIONS = [
         title="systemctl mask/unmask",
         mtype="INFILTRATE", xp=30, chapter=3,
         speaker="DAEMON",
+        story=(
+            "DAEMON: disable verhindert Autostart. mask verhindert ALLES.\n"
+            "Auch manuelles start geht nicht durch mask.\n"
+            "Die Unit wird auf /dev/null gelinkt. Kein Entkommen.\n"
+            "Wenn du einen Dienst wirklich sperren willst — mask."
+        ),
         why_important="mask ist stärker als disable. Verhindert jeden Start.",
         explanation=(
             "systemctl mask/unmask:\n\n"

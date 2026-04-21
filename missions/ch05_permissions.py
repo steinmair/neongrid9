@@ -1801,7 +1801,7 @@ CHAPTER_5_MISSIONS: list[Mission] = [
             "Hard Link: selbe Inode, kein Dateisystemübergang.\n"
             "Symlink: ln -s, eigene Inode, kann dangling sein."
         ),
-        memory_tip       = "",
+        memory_tip       = "rwx=421. SUID=4, SGID=2, Sticky=1 vorne. umask subtrahiert von 666/777. Hard Link: gleiche Inode, kein Cross-FS.",
         gear_reward      = None,
         faction_reward   = ("Root Collective", 8),
     ),
@@ -1924,6 +1924,8 @@ CHAPTER_5_MISSIONS: list[Mission] = [
                 xp_value    = 40,
             ),
         ],
+        exam_tip         = "Boss-Wiederholung: SUID=4, SGID=2, Sticky=1. umask 022 → Dateien 644, Verzeichnisse 755. Hard Link = gleiche Inode. find -perm -4000 = SUID-Check.",
+        memory_tip       = "Oktale Sonderrechte vorne: chmod 4755=SUID+rwxr-xr-x. ls -l zeigt 's' bei SUID. Sticky Bit auf /tmp zeigt 't'.",
         gear_reward      = "regex_scope",
         faction_reward   = ("Root Collective", 25),
     ),

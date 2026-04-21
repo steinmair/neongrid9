@@ -2533,7 +2533,7 @@ CHAPTER_13_MISSIONS: list[Mission] = [
             "  - uname: -r=version, -m=arch, -a=alles\n"
             "  - dmesg -T = mit Zeitstempel"
         ),
-        memory_tip   = "",
+        memory_tip   = "modprobe=mit Dependencies, insmod=ohne. Blacklist in /etc/modprobe.d/. sysctl: -w=sofort, -p=aus Datei, -a=alle anzeigen. uname -r=kernel-release.",
         gear_reward  = None,
         faction_reward = ("Kernel Syndicate", 15),
     ),

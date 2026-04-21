@@ -1830,7 +1830,7 @@ CHAPTER_7_MISSIONS: list[Mission] = [
             "renice ändert laufende Prozesse. nice beim Start.\n"
             "Ctrl+Z=pausiert (SIGSTOP). bg=weiter im BG. fg=Vordergrund."
         ),
-        memory_tip       = "",
+        memory_tip       = "Signale: 1=HUP, 9=KILL, 15=TERM, 19=STOP. nice: -20=max, 19=min. Jobs: Ctrl+Z=stop, bg=hinter, fg=vorder, jobs=liste.",
         gear_reward      = None,
         faction_reward   = ("Kernel Syndicate", 8),
     ),
@@ -1960,6 +1960,8 @@ CHAPTER_7_MISSIONS: list[Mission] = [
                 xp_value    = 45,
             ),
         ],
+        exam_tip         = "Boss-Wiederholung: SIGKILL=9, SIGTERM=15, SIGHUP=1. nice -20=max-Prio (nur root), 19=min. ps aux vs ps -ef. top 'k'=kill, 'r'=renice.",
+        memory_tip       = "Signalnummern merken: 1-HUP (reload), 9-KILL (sofort), 15-TERM (höflich). Kill sendet TERM, kill -9 sendet KILL. Kein Entrinnen aus -9.",
         gear_reward      = "kernel_beacon",
         faction_reward   = ("Kernel Syndicate", 30),
     ),
