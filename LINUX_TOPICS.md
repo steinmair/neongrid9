@@ -1,12 +1,12 @@
-# NeonGrid-9 to LPIC-1 Exam Topic Mapping
+# NeonGrid-9 to Linux Exam Topic Mapping
 
-This guide shows how NeonGrid-9 chapters align with official LPIC-1 exam objectives. Use this to study for the real certification exam (101 & 102).
+This guide shows how NeonGrid-9 chapters align with official Linux exam objectives. Use this to study for the real certification exam (101 & 102).
 
 ---
 
-## 📋 LPIC-1 Exam Structure
+## 📋 Linux Exam Structure
 
-**LPIC-1** consists of two exams:
+**Linux** consists of two exams:
 - **101-500:** System Architecture & Linux Installation (4 topics)
 - **102-500:** Linux Administration (6 topics)
 
@@ -20,7 +20,7 @@ Each exam:
 
 ## 🎮 Topic Breakdown
 
-### ✅ LPIC-1 Exam 101-500: System Architecture & Installation
+### ✅ Linux Exam 101-500: System Architecture & Installation
 
 ---
 
@@ -158,7 +158,7 @@ mdadm         # RAID management
 
 ---
 
-### ✅ LPIC-1 Exam 102-500: Linux Administration
+### ✅ Linux Exam 102-500: Linux Administration
 
 ---
 
@@ -412,7 +412,7 @@ nmtui, nmcli  # Network Manager (modern systems)
 
 ## 🎯 Study Strategy
 
-### For LPIC-1 101-500 (System Architecture)
+### For Linux 101-500 (System Architecture)
 
 **Week 1-2: Hardware & Boot (Topics 101.1-101.3)**
 - Play Ch01 (Hardware Basics)
@@ -433,7 +433,7 @@ nmtui, nmcli  # Network Manager (modern systems)
 
 ---
 
-### For LPIC-1 102-500 (Linux Administration)
+### For Linux 102-500 (Linux Administration)
 
 **Week 1-2: User Management & Services (Topics 102.2, 102.3, 102.4)**
 - Play Ch06 (Users & Groups)
@@ -459,11 +459,11 @@ nmtui, nmcli  # Network Manager (modern systems)
 
 **Official LPIC Resources:**
 - [Linux Professional Institute](https://www.lpi.org/)
-- [LPIC-1 Exam Details](https://www.lpi.org/our-certifications/lpic-1-overview)
+- [Linux Exam Details](https://www.lpi.org/our-certifications/lpic-1-overview)
 - [Exam objectives PDF](https://www.lpi.org/en/our-certifications/lpic-1-exam-102-500-overview)
 
 **Supplementary Study:**
-- Linux Academy / A Cloud Guru LPIC-1 courses
+- Linux Academy / A Cloud Guru Linux courses
 - CompTIA Linux+ (similar scope)
 - Linux man pages (`man` command in Linux)
 - Official distro documentation (Debian, CentOS, Ubuntu)
@@ -483,6 +483,6 @@ nmtui, nmcli  # Network Manager (modern systems)
 
 ---
 
-**Good luck on your LPIC-1 journey! NeonGrid-9 provides the foundation. The rest is practice.** 🚀
+**Good luck on your Linux journey! NeonGrid-9 provides the foundation. The rest is practice.** 🚀
 
 *— Certification Path Unlocked*

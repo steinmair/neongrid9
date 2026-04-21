@@ -1,8 +1,8 @@
 # NeonGrid-9 Gameplay Guide
 
-## Welcome to the Cyberpunk LPIC-1 Learning Game
+## Welcome to the Cyberpunk Linux Learning Game
 
-NeonGrid-9 is an immersive terminal-based game that teaches Linux system administration through interactive missions, boss encounters, and faction reputation. Complete all 22 chapters to master LPIC-1 topics and become a legendary Net Runner.
+NeonGrid-9 is an immersive terminal-based game that teaches Linux system administration through interactive missions, boss encounters, and faction reputation. Complete all 22 chapters to master Linux topics and become a legendary Net Runner.
 
 ---
 
@@ -126,7 +126,7 @@ Every mission has up to 3 hints. Use them strategically:
 ### Late Game (500-5000 XP each)
 - ⚔️ **Daemon Slayer** — Defeat your first boss mission
 - 💀 **Boss Killer** — Defeat 5 boss missions
-- 👑 **LPIC-1 Master** — Defeat all 22 boss missions
+- 👑 **Linux Master** — Defeat all 22 boss missions
 - 🏆 **Faction Leader** — Reach max level (100) with a faction
 - 🤝 **Diplomat** — Reach level 2+ with all 5 factions
 - 🔄 **Grinder** — Complete 100+ missions
@@ -237,9 +237,9 @@ python3 main.py  # New game
 2. **No-hints run** — Beat chapter with zero hints for **Self-Reliant** achievement
 3. **Quiz focus** — Answer all quiz questions without hints for deeper retention
 
-### Linking to LPIC-1 Exam
+### Linking to Linux Exam
 
-| Chapter | LPIC-1 Topics |
+| Chapter | Linux Topics |
 |---------|---------------|
 | Ch01-03 | 101.1, 101.2 (Hardware, Boot) |
 | Ch04-05 | 101.3, 102.1 (Filesystems, Partitions) |
@@ -338,7 +338,7 @@ For 100% completion:
 
 ## 📚 Further Reading
 
-- **LPIC_1_MAPPING.md** — How chapters map to LPIC-1 exam topics
+- **LPIC_1_MAPPING.md** — How chapters map to Linux exam topics
 - **TIPS_TRICKS.md** — Advanced strategies and speedrun tactics
 - **BOSS_GUIDE.md** — Detailed boss fight breakdowns
 - **LORE.md** — Full world/story timeline and characters

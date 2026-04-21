@@ -2,7 +2,7 @@
 
 ```
 ╔══════════════════════════════════════════════════════════════════╗
-║  NEONGRID-9 :: LPIC-1 COMBAT TRAINING SYSTEM                     ║
+║  NEONGRID-9 :: Linux COMBAT TRAINING SYSTEM                     ║
 ║  Version 2.0  |  22 Kapitel — 500 Missionen                      ║
 ║                                                                  ║
 ║  "The system does not care who you are.                          ║
@@ -11,7 +11,7 @@
 ╚══════════════════════════════════════════════════════════════════╝
 ```
 
-> Ein Cyberpunk-Terminal-Lernspiel für die LPIC-1-Zertifizierung.  
+> Ein Cyberpunk-Terminal-Lernspiel für die Linux-Zertifizierung.  
 > Kein Browser. Kein GUI. Kein Bullshit. Nur Terminal.
 
 ---
@@ -35,9 +35,9 @@ python3 main.py
 | Boss-Missionen | 22 |
 | Quiz-Fragen | 1 117 |
 | Max XP | 47 610 |
-| LPIC-1 Domains | 101.x – 110.x |
+| Linux Domains | 101.x – 110.x |
 | Fraktionen | 5 |
-| Prüfungsmodus | 27 Blöcke / LPIC-1 komplett |
+| Prüfungsmodus | 27 Blöcke / Linux komplett |
 | Quiz-Abdeckung | 100 % (501/501) |
 
 ---
@@ -71,7 +71,7 @@ python3 main.py
 
 ---
 
-## LPIC-1 Coverage
+## Linux Coverage
 
 | Domain | Thema | Kapitel |
 |---|---|---|
@@ -129,9 +129,9 @@ python3 main.py
 - Fortschritt wird kapitelweise gespeichert
 
 **Prüfungsmodus (Kapitel 18)**
-- 26 Exam-Blöcke mit LPIC-1-Stil Fragen
+- 26 Exam-Blöcke mit Linux-Stil Fragen
 - Alle Domains 101–110 abgedeckt
-- Boss: Simulierte LPIC-1-Prüfung
+- Boss: Simulierte Linux-Prüfung
 
 ---
 
@@ -176,7 +176,7 @@ neongrid9/
 
 New players should read in this order:
 1. **[GAMEPLAY_GUIDE.md](GAMEPLAY_GUIDE.md)** — How to play, mission types, progression, achievements
-2. **[LPIC_1_MAPPING.md](LPIC_1_MAPPING.md)** — Map chapters to LPIC-1 exam topics (101 & 102)
+2. **[LINUX_TOPICS.md](LINUX_TOPICS.md)** — Map chapters to Linux exam topics (101 & 102)
 3. **[TIPS_TRICKS.md](TIPS_TRICKS.md)** — Advanced strategies, speedrun tactics, optimization
 
 ---
@@ -232,8 +232,8 @@ python3 main.py
 
 ## 📖 Learning Path
 
-### For LPIC-1 Exam Prep
-1. Read **LPIC_1_MAPPING.md** to understand exam coverage
+### For Linux Exam Prep
+1. Read **LINUX_TOPICS.md** to understand exam coverage
 2. Complete chapters sequentially (Ch01-22)
 3. Focus on chapters matching exam domains
 4. Use **TIPS_TRICKS.md** for optimization strategies
@@ -332,9 +332,9 @@ print(f"Hints: {mission.hints}")
 
 ## 📄 License & Attribution
 
-**NeonGrid-9** - LPIC-1 Cyberpunk Learning Game
+**NeonGrid-9** - Linux Cyberpunk Learning Game
 
-*A cyberpunk-themed terminal learning game for LPIC-1 certification exam prep.*
+*A cyberpunk-themed terminal learning game for Linux certification exam prep.*
 
 Created with pedagogical intent: making complex Linux system administration concepts accessible through interactive gameplay.
 

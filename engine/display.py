@@ -82,7 +82,7 @@ def header(title: str, subtitle: str = ""):
 ║  ██║╚██╗██║██╔══╝  ██║   ██║██║╚██╗██║██║   ██║██╔══██╗██║██║  ██║ ║
 ║  ██║ ╚████║███████╗╚██████╔╝██║ ╚████║╚██████╔╝██║  ██║██║██████╔╝ ║
 ╚══════════════════════════════════════════════════════════════════╝""" + C.RESET)
-    print(C.GRAY + f"  {'NeonGrid-9:: LPIC-1 Combat Training System':^66}" + C.RESET)
+    print(C.GRAY + f"  {'NeonGrid-9:: Linux Combat Training System':^66}" + C.RESET)
     print(C.RED + f"  {'⚙  Powered by Chaoswerk  ⚙':^66}" + C.RESET)
     if subtitle:
         print(C.YELLOW + f"  {subtitle:^66}" + C.RESET)
@@ -190,7 +190,7 @@ def show_success(text: str):
 def show_exam_tip(text: str):
     """Prüfungshinweis-Box."""
     print()
-    print(C.YELLOW + "  ╔═[ LPIC-1 PRÜFUNGSWISSEN ]" + C.RESET)
+    print(C.YELLOW + "  ╔═[ Linux PRÜFUNGSWISSEN ]" + C.RESET)
     for line in text.strip().split('\n'):
         print(C.YELLOW + "  ║  " + C.RESET + line.strip())
     print(C.YELLOW + "  ╚═" + C.RESET)

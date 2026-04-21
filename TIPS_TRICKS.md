@@ -156,7 +156,7 @@ Story hints: "The legacy useradd command creates users. Check its syntax..."
 - 🟢 **First Signal** — Complete mission 1 (automatic)
 - ⚙️ **Hardware Hacker** — Finish Ch01 (automatic by playing)
 - 🔐 **Permission Master** — Finish Ch05 (automatic by playing)
-- 👑 **LPIC-1 Master** — Beat all 22 bosses (end goal)
+- 👑 **Linux Master** — Beat all 22 bosses (end goal)
 
 **Tier 2: Requires Strategy**
 
@@ -403,7 +403,7 @@ If much lower, you may be using too many hints or skipping missions.
 My NeonGrid-9 Profile:
 - Highest Level: 14 (Master Operator)
 - Speedrun Record: 4:47 (all chapters + bosses)
-- Achievements: 16/18 (missing: Diplomat, LPIC-1 Master)
+- Achievements: 16/18 (missing: Diplomat, Linux Master)
 - Favorite Chapter: Ch13 (Kernel mastery)
 - Total Time: 18 hours 45 minutes
 ```
@@ -496,7 +496,7 @@ My NeonGrid-9 Profile:
 - First Mission
 - Hardware Hacker
 - Permission Master
-- LPIC-1 Master
+- Linux Master
 - Scholar
 
 **Grinders (3 achievements):**

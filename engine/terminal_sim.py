@@ -3877,7 +3877,7 @@ cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce47d0d13c5d85f2b0
     "zcat file.txt.gz": """\
 Inhalt der komprimierten Datei:
 Zeile 1: NeonGrid-9
-Zeile 2: LPIC-1 Training
+Zeile 2: Linux Training
 Zeile 3: Ghost Mode Active""",
 
     "bzip2 file.txt": "(file.txt → file.txt.bz2 komprimiert)",
@@ -3889,7 +3889,7 @@ Zeile 3: Ghost Mode Active""",
     "bzcat file.txt.bz2": """\
 Inhalt der bzip2-komprimierten Datei:
 Zeile 1: NeonGrid-9
-Zeile 2: LPIC-1 Training""",
+Zeile 2: Linux Training""",
 
     "xz file.txt": "(file.txt → file.txt.xz komprimiert — stärkste Kompression)",
 
@@ -3900,7 +3900,7 @@ Zeile 2: LPIC-1 Training""",
     "xzcat file.txt.xz": """\
 Inhalt der xz-komprimierten Datei:
 Zeile 1: NeonGrid-9
-Zeile 2: LPIC-1 Training""",
+Zeile 2: Linux Training""",
 
     "tar -czf archive.tar.gz /etc/network": """\
 (Erstellt archive.tar.gz aus /etc/network)""",
