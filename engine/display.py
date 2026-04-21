@@ -241,7 +241,9 @@ def prompt_input(label: str = "terminal", valid_choices: tuple = None) -> str:
         if valid_choices is not None:
             if response.lower() in valid_choices:
                 return response.lower()
-            # Invalid choice, loop silently
+            # Invalid choice - show what's expected
+            valid_str = ", ".join(f"'{c}'" for c in valid_choices)
+            print(C.WARN + f"  ✗ Bitte nur: {valid_str}" + C.RESET)
             continue
 
         # No validation needed, return as-is
