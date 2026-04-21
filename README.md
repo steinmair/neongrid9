@@ -287,18 +287,6 @@ python3 scripts/test_gameflow.py
 
 **Ergebnis:** ✅ ALLE TESTS BESTANDEN (5/5)
 
-### Eine Mission debuggen
-
-```python
-import sys
-sys.path.insert(0, '/home/ande/neongrid9')
-from missions.ch01_hardware import CHAPTER_1_MISSIONS
-mission = CHAPTER_1_MISSIONS[0]
-print(f"Mission: {mission.title}")
-print(f"XP: {mission.xp}")
-print(f"Hints: {mission.hints}")
-```
-
 ---
 
 ## Lizenz & Zuschreibung
@@ -308,8 +296,3 @@ print(f"Hints: {mission.hints}")
 *Ein cyberpunk-inspiriertes Terminal-Lernspiel für Linux-Systemadministration.*
 
 Mit pädagogischer Absicht erstellt: Komplexe Linux-Systemverwaltungskonzepte durch interaktives Gameplay zugänglich machen.
-
----
-
-*Powered By Chaoswerk*  
-*Produktionsreif* 🚀
