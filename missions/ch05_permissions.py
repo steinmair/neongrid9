@@ -244,6 +244,22 @@ CHAPTER_5_MISSIONS: list[Mission] = [
         task_description  = "Zeige Dateien mit Owner und Group",
         expected_commands = ["ls -l", "stat"],
         hint_text         = "ls -l zeigt Owner und Group in Spalte 3 und 4",
+        quiz_questions    = [
+            QuizQuestion(
+                question    = "Was macht 'chown :gruppe datei' (nur Doppelpunkt + Gruppe)?",
+                options     = ['A) Setzt Owner und Gruppe', 'B) Setzt nur die Gruppe', 'C) Fehler', 'D) Löscht den Owner'],
+                correct     = 'B',
+                explanation = 'chown :gruppe = nur Gruppe setzen (wie chgrp). chown user:gruppe = beides.',
+                xp_value    = 20,
+            ),
+            QuizQuestion(
+                question    = 'Welcher Befehl ändert Besitzer rekursiv für ein ganzes Verzeichnis?',
+                options     = ['A) chown user /verz', 'B) chown -R user:group /verz', 'C) chgrp -r user /verz', 'D) chmod -R user /verz'],
+                correct     = 'B',
+                explanation = 'chown -R = rekursiv. Ändert Owner und Gruppe aller Dateien im Verzeichnis.',
+                xp_value    = 20,
+            ),
+        ],
         exam_tip          = (
             "chown user:group = Owner und Group gleichzeitig setzen.\n"
             "chown :group = nur Group (wie chgrp).\n"
@@ -688,6 +704,22 @@ CHAPTER_5_MISSIONS: list[Mission] = [
         task_description  = "Finde den Pfad des Befehls 'ls' mit which",
         expected_commands = ["which ls", "which", "whereis ls"],
         hint_text         = "which ls zeigt wo der ls-Befehl installiert ist",
+        quiz_questions    = [
+            QuizQuestion(
+                question    = 'Was ist der Unterschied zwischen locate und find?',
+                options     = ['A) locate sucht in Echtzeit, find aus Datenbank', 'B) locate nutzt Datenbank (schnell), find sucht aktuell (langsam)', 'C) Kein Unterschied', 'D) locate nur für Verzeichnisse'],
+                correct     = 'B',
+                explanation = 'locate = schnell via Datenbank (kann veraltet sein). find = langsam aber immer aktuell.',
+                xp_value    = 20,
+            ),
+            QuizQuestion(
+                question    = 'Welcher Befehl aktualisiert die locate-Datenbank?',
+                options     = ['A) locate -update', 'B) updatedb', 'C) find -update', 'D) locate --refresh'],
+                correct     = 'B',
+                explanation = 'updatedb aktualisiert die mlocate-Datenbank. Ohne updatedb zeigt locate veraltete Ergebnisse.',
+                xp_value    = 20,
+            ),
+        ],
         exam_tip          = (
             "locate = schnell aber veraltet → updatedb nötig.\n"
             "find = langsam aber aktuell.\n"
@@ -857,6 +889,22 @@ CHAPTER_5_MISSIONS: list[Mission] = [
         task_description  = "Zeige Metadaten einer Datei mit stat",
         expected_commands = ["stat", "file"],
         hint_text         = "stat /etc/passwd zeigt alle Metadaten einer Datei",
+        quiz_questions    = [
+            QuizQuestion(
+                question    = 'Was bedeutet ctime bei einer Datei?',
+                options     = ['A) Creation time (Erstellungszeit)', 'B) Change time (Metadaten geändert)', 'C) Current time', 'D) Copy time'],
+                correct     = 'B',
+                explanation = 'ctime ≠ Creation! ctime = change time (Metadaten wie Rechte, Owner geändert). mtime = Inhalt geändert.',
+                xp_value    = 20,
+            ),
+            QuizQuestion(
+                question    = 'Welcher Befehl zeigt den tatsächlichen Typ einer Datei (z.B. ob sie wirklich eine Textdatei ist)?',
+                options     = ['A) stat datei', 'B) ls -l datei', 'C) file datei', 'D) type datei'],
+                correct     = 'C',
+                explanation = 'file erkennt Dateitype am Inhalt (Magic Bytes), nicht an der Endung.',
+                xp_value    = 20,
+            ),
+        ],
         exam_tip          = (
             "ctime ≠ creation time! ctime = change time (Metadaten geändert).\n"
             "mtime = Inhalt geändert. atime = zugegriffen.\n"

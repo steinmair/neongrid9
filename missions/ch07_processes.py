@@ -66,6 +66,22 @@ CHAPTER_7_MISSIONS: list[Mission] = [
         task_description  = "Zeige die Prozess-Hierarchie",
         expected_commands = ["pstree", "ps"],
         hint_text         = "pstree -p zeigt alle Prozesse als Baum mit PIDs",
+        quiz_questions    = [
+            QuizQuestion(
+                question    = 'Was ist PID 1 bei einem modernen Linux-System?',
+                options     = ['A) bash', 'B) kernel', 'C) systemd (oder init)', 'D) cron'],
+                correct     = 'C',
+                explanation = 'PID 1 = systemd (oder init bei alten Systemen). Alle anderen Prozesse sind Kinder davon.',
+                xp_value    = 20,
+            ),
+            QuizQuestion(
+                question    = 'Was ist ein Zombie-Prozess?',
+                options     = ['A) Prozess ohne CPU-Zeit', 'B) Beendeter Prozess, dessen Exit-Status noch nicht vom Elternprozess abgerufen wurde', 'C) Prozess mit negativer Priorität', 'D) Daemon ohne Terminal'],
+                correct     = 'B',
+                explanation = 'Zombie (Z-State): Prozess fertig, aber Eltern hat wait() noch nicht aufgerufen. Zeigt Z in ps.',
+                xp_value    = 20,
+            ),
+        ],
         exam_tip          = (
             "PID 1 = systemd (oder init bei alten Systemen).\n"
             "PPID = Parent PID. Alle Prozesse stammen von PID 1 ab.\n"
@@ -240,6 +256,22 @@ CHAPTER_7_MISSIONS: list[Mission] = [
         task_description  = "Zeige Systemlaufzeit und Load Average",
         expected_commands = ["uptime", "top"],
         hint_text         = "uptime zeigt Systemlaufzeit und Load Average",
+        quiz_questions    = [
+            QuizQuestion(
+                question    = 'Was bedeuten die drei Load-Average-Werte in top/uptime?',
+                options     = ['A) RAM, CPU, Disk', 'B) Letzte 1, 5 und 15 Minuten', 'C) Min, Avg, Max CPU', 'D) 3 CPU-Kerne'],
+                correct     = 'B',
+                explanation = 'Load Average: 3 Werte für 1/5/15 Minuten. Load 1.0 auf 1-Core = 100% ausgelastet.',
+                xp_value    = 20,
+            ),
+            QuizQuestion(
+                question    = "Mit welcher Taste sortiert man 'top' nach RAM-Nutzung?",
+                options     = ['A) R', 'B) P', 'C) M', 'D) S'],
+                correct     = 'C',
+                explanation = "top: M = nach Memory, P = nach CPU, N = nach PID. 'k' = kill.",
+                xp_value    = 20,
+            ),
+        ],
         exam_tip          = (
             "Load Average: 3 Werte für 1/5/15 Minuten.\n"
             "Load = 1.0 auf 1-Core-System = voll ausgelastet.\n"
@@ -410,6 +442,22 @@ CHAPTER_7_MISSIONS: list[Mission] = [
         task_description  = "Starte einen Hintergrundprozess und zeige Jobs",
         expected_commands = ["jobs", "ps"],
         hint_text         = "jobs zeigt alle Hintergrundprozesse der aktuellen Shell",
+        quiz_questions    = [
+            QuizQuestion(
+                question    = "Was macht 'Ctrl+Z' bei einem laufenden Prozess?",
+                options     = ['A) Beendet den Prozess', 'B) Pausiert den Prozess (SIGSTOP) und schickt ihn in den Hintergrund', 'C) Wechselt in den Hintergrund ohne Pause', 'D) Öffnet neues Terminal'],
+                correct     = 'B',
+                explanation = "Ctrl+Z = SIGSTOP = Prozess pausieren. Dann 'bg' zum Weiterlaufen im Hintergrund.",
+                xp_value    = 20,
+            ),
+            QuizQuestion(
+                question    = 'Was macht nohup?',
+                options     = ['A) Kein Hang-Up: Prozess läuft weiter auch nach SSH-Logout', 'B) Höhere Priorität', 'C) Keine CPU-Nutzung', 'D) Nur für Hintergrundprozesse'],
+                correct     = 'A',
+                explanation = 'nohup = no hangup. Prozess ignoriert SIGHUP beim SSH-Logout. Ausgabe → nohup.out.',
+                xp_value    = 20,
+            ),
+        ],
         exam_tip          = (
             "& = im Hintergrund starten.\n"
             "Ctrl+Z = pausieren (SIGSTOP). Dann: bg = weiterlaufen im BG.\n"
@@ -567,6 +615,22 @@ CHAPTER_7_MISSIONS: list[Mission] = [
         task_description  = "Zeige RAM-Nutzung mit free",
         expected_commands = ["free", "free -h"],
         hint_text         = "free -h zeigt RAM in lesbarem Format",
+        quiz_questions    = [
+            QuizQuestion(
+                question    = 'Was bedeutet si/so > 0 in vmstat?',
+                options     = ['A) System-Idle > 0', 'B) Das System lagert Speicher aus (swap in/out) — RAM-Problem!', 'C) I/O-Operationen', 'D) System-Interrupts'],
+                correct     = 'B',
+                explanation = 'vmstat si=swap in, so=swap out. Beide > 0 = System swappt = RAM knapp!',
+                xp_value    = 20,
+            ),
+            QuizQuestion(
+                question    = "Was zeigt 'free -h' im Feld 'available'?",
+                options     = ['A) Freier RAM (physisch leer)', 'B) Tatsächlich verfügbarer RAM (inkl. Cache der freigegeben werden kann)', 'C) Swap-Größe', 'D) Shared Memory'],
+                correct     = 'B',
+                explanation = "'available' ist wichtiger als 'free'! Enthält freien + freigebbaren Cache.",
+                xp_value    = 20,
+            ),
+        ],
         exam_tip          = (
             "free -h: 'available' = was wirklich nutzbar ist (nicht 'free'!).\n"
             "vmstat: si/so > 0 = System swappt = RAM-Problem!\n"
@@ -632,6 +696,22 @@ CHAPTER_7_MISSIONS: list[Mission] = [
         task_description  = "Zeige Prozesse die einen bestimmten Port nutzen",
         expected_commands = ["lsof -i :22", "lsof", "fuser"],
         hint_text         = "lsof -i :22 zeigt welcher Prozess Port 22 nutzt",
+        quiz_questions    = [
+            QuizQuestion(
+                question    = 'Wie findest du, welcher Prozess Port 80 belegt?',
+                options     = ['A) ps -p 80', 'B) lsof -i :80', 'C) top --port 80', 'D) netstat -pid 80'],
+                correct     = 'B',
+                explanation = 'lsof -i :80 zeigt Prozess auf Port 80. ss -tulpn | grep :80 geht auch.',
+                xp_value    = 20,
+            ),
+            QuizQuestion(
+                question    = "Was tust du, wenn umount 'device is busy' meldet?",
+                options     = ['A) Reboot sofort', 'B) lsof /mnt oder fuser -m /mnt', 'C) umount --ignore-busy', 'D) rm -rf /mnt/*'],
+                correct     = 'B',
+                explanation = 'lsof /mountpoint zeigt welche Prozesse das Dateisystem offen halten.',
+                xp_value    = 20,
+            ),
+        ],
         exam_tip          = (
             "umount: device busy → lsof /mnt oder fuser -m /mnt.\n"
             "lsof -i :80 = wer nutzt Port 80?\n"
@@ -700,6 +780,22 @@ CHAPTER_7_MISSIONS: list[Mission] = [
         task_description  = "Zeige laufende Screen-Sessions",
         expected_commands = ["screen -ls", "tmux ls"],
         hint_text         = "screen -ls zeigt alle aktiven Screen-Sessions",
+        quiz_questions    = [
+            QuizQuestion(
+                question    = "Was macht 'Ctrl+A d' in screen?",
+                options     = ['A) Alle Sessions löschen', 'B) Session detachen (läuft im Hintergrund weiter)', 'C) Neues Fenster öffnen', 'D) Screen beenden'],
+                correct     = 'B',
+                explanation = "Ctrl+A d = detach. Session läuft weiter. 'screen -r' zum Wiederverbinden.",
+                xp_value    = 20,
+            ),
+            QuizQuestion(
+                question    = 'Welcher Befehl listet alle laufenden screen-Sessions auf?',
+                options     = ['A) screen -list', 'B) screen -ls', 'C) screen --show', 'D) sessions -screen'],
+                correct     = 'B',
+                explanation = 'screen -ls zeigt alle Sessions. screen -r SESSION zum Verbinden.',
+                xp_value    = 20,
+            ),
+        ],
         exam_tip          = (
             "screen -S name = Session mit Name erstellen.\n"
             "Ctrl+A d = detach (Session läuft weiter).\n"
@@ -1628,7 +1724,7 @@ CHAPTER_7_MISSIONS: list[Mission] = [
     # 7.19 — Quiz: Prozesse & Signale
     # ══════════════════════════════════════════════════════════════════════
     Mission(
-        mission_id   = "7.10",
+        mission_id   = "7.19",
         chapter      = 7,
         title        = "QUIZ: Prozesse, Signale & Prioritäten",
         mtype        = "QUIZ",

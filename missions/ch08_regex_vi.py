@@ -67,6 +67,22 @@ CHAPTER_8_MISSIONS: list[Mission] = [
         task_description = "Zeige Zeilen aus /etc/passwd die mit 'root' beginnen",
         expected_commands = ["grep '^root' /etc/passwd"],
         hint_text    = "^ bedeutet Zeilenanfang: grep '^root' /etc/passwd",
+        quiz_questions    = [
+            QuizQuestion(
+                question    = 'Was ist der Unterschied zwischen BRE und ERE in grep?',
+                options     = ['A) BRE unterstützt mehr Sonderzeichen', 'B) ERE nutzt + ? | ohne Backslash, BRE braucht \\+', 'C) Kein Unterschied', 'D) BRE = für Dateien, ERE = für Stdin'],
+                correct     = 'B',
+                explanation = 'ERE (Extended): + ? | ( ) ohne Backslash. BRE (Basic): braucht \\+ \\? usw.',
+                xp_value    = 20,
+            ),
+            QuizQuestion(
+                question    = 'Welcher Flag aktiviert Extended Regular Expressions in grep?',
+                options     = ['A) grep -B', 'B) grep -E (oder egrep)', 'C) grep -X', 'D) grep -r'],
+                correct     = 'B',
+                explanation = "grep -E oder egrep = Extended Regex. LPIC-1 prüft: 'Wie ERE aktivieren?'",
+                xp_value    = 20,
+            ),
+        ],
         exam_tip     = (
             "LPIC-1 Prüfung: BRE vs ERE!\n"
             "  grep 'x'     → BRE (Basic)\n"
@@ -134,6 +150,22 @@ CHAPTER_8_MISSIONS: list[Mission] = [
         task_description = "Zeige Zeilen aus /var/log/syslog die 'error' oder 'warning' enthalten",
         expected_commands = ["grep -E 'error|warning' /var/log/syslog"],
         hint_text    = "grep -E erlaubt | für ODER: grep -E 'error|warning' /var/log/syslog",
+        quiz_questions    = [
+            QuizQuestion(
+                question    = "Was macht 'grep -v ^$' mit einer Datei?",
+                options     = ['A) Zeigt nur leere Zeilen', 'B) Entfernt/filtert Leerzeilen heraus', 'C) Zählt Zeilen', 'D) Fehler: ungültiger Ausdruck'],
+                correct     = 'B',
+                explanation = 'grep -v = invertieren. ^$ = leere Zeile (Anfang direkt Zeilenende). Also: alle nicht-leeren Zeilen.',
+                xp_value    = 20,
+            ),
+            QuizQuestion(
+                question    = "Was gibt 'grep -c MUSTER datei' zurück?",
+                options     = ['A) Die gefundenen Zeilen mit Zeilennummern', 'B) Nur die Anzahl der Treffer (keine Zeilen)', 'C) Alle Dateien mit Treffern', 'D) Kontext-Zeilen'],
+                correct     = 'B',
+                explanation = 'grep -c = count = gibt nur die Anzahl der Treffer-Zeilen zurück.',
+                xp_value    = 20,
+            ),
+        ],
         exam_tip     = (
             "Häufige Prüfungsfrage: 'grep -v ^$ datei' entfernt Leerzeilen.\n"
             "grep -c gibt NUR die Anzahl zurück, keine Zeilen!\n"
@@ -198,6 +230,22 @@ CHAPTER_8_MISSIONS: list[Mission] = [
         task_description = "Ersetze alle Vorkommen von 'error' durch 'ERROR' in /var/log/test.log",
         expected_commands = ["sed 's/error/ERROR/g' /var/log/test.log"],
         hint_text    = "sed 's/suche/ersetze/g' datei — /g macht es global (alle Vorkommen)",
+        quiz_questions    = [
+            QuizQuestion(
+                question    = "Was macht 'sed s/alt/neu/' ohne /g-Flag?",
+                options     = ['A) Ersetzt alle Vorkommen', 'B) Ersetzt nur das ERSTE Vorkommen in jeder Zeile', 'C) Fehler', 'D) Ersetzt letztes Vorkommen'],
+                correct     = 'B',
+                explanation = 'Ohne /g: nur erstes Vorkommen pro Zeile. Mit /g: alle. PRÜFUNGS-FALLE!',
+                xp_value    = 20,
+            ),
+            QuizQuestion(
+                question    = 'Was macht sed -i?',
+                options     = ['A) Ignoriert Fehler', 'B) Ändert die Datei direkt (In-Place)', 'C) Interaktiver Modus', 'D) Case-insensitive'],
+                correct     = 'B',
+                explanation = 'sed -i = In-Place, ändert die Datei direkt. Ohne -i: nur Ausgabe auf stdout.',
+                xp_value    = 20,
+            ),
+        ],
         exam_tip     = (
             "PRÜFUNGS-FALLE: sed 's/x/y/' ohne /g ersetzt nur das ERSTE Vorkommen!\n"
             "sed -i ändert die Datei DIREKT — ohne -i wird nur stdout verändert.\n"
@@ -265,6 +313,22 @@ CHAPTER_8_MISSIONS: list[Mission] = [
         task_description = "Zeige nur Benutzernamen (1. Feld) aus /etc/passwd mit Trenner ':'",
         expected_commands = ["awk -F: '{print $1}' /etc/passwd"],
         hint_text    = "awk -F: setzt das Trennzeichen auf ':'. $1 ist das erste Feld.",
+        quiz_questions    = [
+            QuizQuestion(
+                question    = "Was druckt 'awk '{print $NF}' datei'?",
+                options     = ['A) Erste Spalte', 'B) Letzte Spalte jeder Zeile', 'C) Anzahl der Felder', 'D) Fehler'],
+                correct     = 'B',
+                explanation = '$NF = letztes Feld (Number of Fields). NR = aktuelle Zeilennummer.',
+                xp_value    = 20,
+            ),
+            QuizQuestion(
+                question    = "Welcher awk-Befehl filtert Zeilen, die 'root' enthalten?",
+                options     = ["A) awk 'root' datei", "B) awk '/root/ {print}' datei", "C) awk -g 'root' datei", 'D) awk --match root datei'],
+                correct     = 'B',
+                explanation = "awk '/MUSTER/' = filtert Zeilen mit Muster. Ohne Aktion = print (Standard).",
+                xp_value    = 20,
+            ),
+        ],
         exam_tip     = (
             "PRÜFUNGSTIPP: awk vs grep vs sed:\n"
             "  grep  → nur filtern\n"
@@ -337,6 +401,22 @@ CHAPTER_8_MISSIONS: list[Mission] = [
         task_description = "Öffne /etc/hosts mit vi und beende ohne Änderungen",
         expected_commands = ["vi /etc/hosts"],
         hint_text    = "Starte vi mit: vi /etc/hosts — zum Beenden: ESC dann :q!",
+        quiz_questions    = [
+            QuizQuestion(
+                question    = 'Welche vi-Taste bringt dich IMMER in den Normal-Modus?',
+                options     = ['A) Enter', 'B) q', 'C) ESC', 'D) Ctrl+C'],
+                correct     = 'C',
+                explanation = 'ESC = immer Normal-Modus. Mehrfach drücken schadet nicht. Essenziell für vi!',
+                xp_value    = 20,
+            ),
+            QuizQuestion(
+                question    = 'Wie speicherst und beendest du vi?',
+                options     = ['A) :save', 'B) :wq oder ZZ', 'C) Ctrl+S', 'D) :exit!'],
+                correct     = 'B',
+                explanation = ':wq = write+quit. ZZ = Kurzform. :q! = quit ohne Speichern.',
+                xp_value    = 20,
+            ),
+        ],
         exam_tip     = (
             "MERKE: ESC bringt dich IMMER in den Normal-Modus.\n"
             "Du kannst ESC mehrfach drücken — kein Schaden.\n"
@@ -411,6 +491,22 @@ CHAPTER_8_MISSIONS: list[Mission] = [
         task_description = "Welcher vi-Befehl löscht die aktuelle Zeile?",
         expected_commands = ["dd"],
         hint_text    = "dd = delete line. Löscht die Zeile in den Puffer (mit p wieder einfügbar)",
+        quiz_questions    = [
+            QuizQuestion(
+                question    = "Was macht 'dd' in vi (im Normal-Modus)?",
+                options     = ['A) Löscht ein Zeichen', 'B) Löscht die aktuelle Zeile (in Puffer)', 'C) Öffnet neues Dokument', 'D) Dupliziert die Zeile'],
+                correct     = 'B',
+                explanation = 'dd = delete line. Der Inhalt ist im Puffer! dd + p = Zeile verschieben.',
+                xp_value    = 20,
+            ),
+            QuizQuestion(
+                question    = 'Wie kopiert man 3 Zeilen in vi?',
+                options     = ['A) 3yy', 'B) copy 3', 'C) yank 3', 'D) c3'],
+                correct     = 'A',
+                explanation = "3yy = yank (kopieren) 3 Zeilen. Dann 'p' zum Einfügen nach dem Cursor.",
+                xp_value    = 20,
+            ),
+        ],
         exam_tip     = (
             "dd LÖSCHT in Puffer — der Inhalt ist nicht weg!\n"
             "dd + p = Zeile ausschneiden + einfügen = Zeile verschieben.\n"
@@ -484,6 +580,22 @@ CHAPTER_8_MISSIONS: list[Mission] = [
         task_description = "Wie ersetzt du in vi alle Vorkommen von 'http' durch 'https' in der ganzen Datei?",
         expected_commands = [":%s/http/https/g"],
         hint_text    = ":%s/suche/ersatz/g — % bedeutet GESAMTE Datei, /g = global (alle Vorkommen)",
+        quiz_questions    = [
+            QuizQuestion(
+                question    = "Wie ersetzt man in vi ALLE Vorkommen von 'alt' durch 'neu' in der ganzen Datei?",
+                options     = ['A) :s/alt/neu/', 'B) :%s/alt/neu/g', 'C) :replace alt neu', 'D) /alt → :change/neu'],
+                correct     = 'B',
+                explanation = ':%s/alt/neu/g = % (ganze Datei) s (substitute) /g (global). :s ohne % = nur aktuelle Zeile.',
+                xp_value    = 20,
+            ),
+            QuizQuestion(
+                question    = "Was bedeutet ':q!' in vi?",
+                options     = ['A) Speichern und beenden', 'B) Beenden OHNE zu speichern (force quit)', 'C) Quit interaktiv', 'D) Fehler: ungültiger Befehl'],
+                correct     = 'B',
+                explanation = ':q! = force quit ohne Speichern. Das ! überschreibt die Änderungs-Warnung.',
+                xp_value    = 20,
+            ),
+        ],
         exam_tip     = (
             "KRITISCH für LPIC-1:\n"
             "  :s/x/y/   → NUR erste Vorkommen in DIESER Zeile\n"
@@ -552,6 +664,22 @@ CHAPTER_8_MISSIONS: list[Mission] = [
         task_description = "Zeige Zeilen in /etc/passwd die mindestens eine Ziffer enthalten (POSIX-Klasse)",
         expected_commands = ["grep '[[:digit:]]' /etc/passwd"],
         hint_text    = "POSIX-Klasse für Ziffern: [[:digit:]] — in doppelten eckigen Klammern!",
+        quiz_questions    = [
+            QuizQuestion(
+                question    = "Wie schreibt man 'eine oder mehrere Ziffern' als POSIX-Klasse in grep?",
+                options     = ["A) grep '[digit]+' datei", "B) grep '[[:digit:]]\\+' datei", "C) grep '\\d+' datei", "D) grep '[0-9]+' datei"],
+                correct     = 'B',
+                explanation = 'POSIX: [[:digit:]] in doppelten Klammern. Mit BRE braucht + einen Backslash: \\+',
+                xp_value    = 20,
+            ),
+            QuizQuestion(
+                question    = 'Was ist der Unterschied zwischen [[:alpha:]] und [a-z]?',
+                options     = ['A) Kein Unterschied', 'B) [[:alpha:]] ist POSIX-konform und locale-aware', 'C) [a-z] ist korrekter', 'D) [[:alpha:]] nur für Großbuchstaben'],
+                correct     = 'B',
+                explanation = '[[:alpha:]] ist POSIX-offiziell und berücksichtigt Locale (Umlaute etc.). Beide funktionieren aber POSIX ist korrekter.',
+                xp_value    = 20,
+            ),
+        ],
         exam_tip     = (
             "POSIX-Klassen stehen in doppelten Klammern: [[:digit:]]\n"
             "Nicht verwechseln mit [0-9] (auch korrekt aber nicht POSIX-offiziell)\n"
@@ -2205,6 +2333,15 @@ CHAPTER_8_MISSIONS: list[Mission] = [
         task_description = "BOSS: Zeige UIDs >= 1000 aus /etc/passwd mit awk",
         expected_commands = ["awk -F: '$3 >= 1000 {print $1}' /etc/passwd"],
         hint_text    = "awk -F: setzt Trennzeichen, $3 ist die UID-Spalte, >= 1000 = normale User",
+        quiz_questions    = [
+            QuizQuestion(
+                question    = "Was macht 'grep -E'?",
+                options     = ['A) Erweiterte Ausgabe', 'B) Aktiviert Extended Regular Expressions', 'C) Ergebnis in Datei', 'D) Rekursive Suche'],
+                correct     = 'B',
+                explanation = 'grep -E = Extended Regex. Ermöglicht + ? | ohne Backslash.',
+                xp_value    = 20,
+            ),
+        ],
         exam_tip     = (
             "LPIC-1 FINAL CHECK:\n"
             "  grep -E | egrep — Extended Regex\n"

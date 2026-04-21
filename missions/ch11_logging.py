@@ -88,6 +88,22 @@ CHAPTER_11_MISSIONS: list[Mission] = [
         task_description = "Zeige die letzten 20 Zeilen von /var/log/syslog",
         expected_commands = ["tail -n 20 /var/log/syslog"],
         hint_text    = "tail -n 20 /var/log/syslog zeigt die letzten 20 Log-Einträge",
+        quiz_questions    = [
+            QuizQuestion(
+                question    = 'Was ist die Syntax einer rsyslog-Regel?',
+                options     = ['A) facility.severity  Ziel', 'B) severity:facility  Ziel', 'C) Ziel  facility.severity', 'D) facility → severity → Ziel'],
+                correct     = 'A',
+                explanation = 'rsyslog: FACILITY.SEVERITY  Ziel. z.B. kern.err /var/log/kernel.log',
+                xp_value    = 20,
+            ),
+            QuizQuestion(
+                question    = 'Welche Syslog-Facility ist für den Kernel?',
+                options     = ['A) system', 'B) kern', 'C) daemon', 'D) local0'],
+                correct     = 'B',
+                explanation = 'kern = Kernel-Messages. daemon = System-Daemons. mail = Mail-System.',
+                xp_value    = 20,
+            ),
+        ],
         exam_tip     = (
             "PRÜFUNG: Severity-Level auswendig kennen!\n"
             "  0=emerg 1=alert 2=crit 3=err 4=warn 5=notice 6=info 7=debug\n"
@@ -171,6 +187,22 @@ CHAPTER_11_MISSIONS: list[Mission] = [
         task_description = "Zeige alle Fehler-Logs (Priorität err und höher) von heute",
         expected_commands = ["journalctl -p err --since today"],
         hint_text    = "journalctl -p err filtert auf Fehler. --since today auf den heutigen Tag.",
+        quiz_questions    = [
+            QuizQuestion(
+                question    = 'Welcher journalctl-Befehl zeigt Logs seit heute Morgen?',
+                options     = ['A) journalctl --since today', "B) journalctl --since '00:00'", 'C) journalctl -today', 'D) A oder B'],
+                correct     = 'D',
+                explanation = "journalctl --since today oder --since '00:00'. Auch: --since '2024-01-01 08:00'.",
+                xp_value    = 20,
+            ),
+            QuizQuestion(
+                question    = 'Was macht journalctl -p err?',
+                options     = ['A) Zeigt Fehler-Prioritäts-Logs (error und höher)', "B) Zeigt nur exakte 'err'-Meldungen", 'C) Prüft Journal-Integrität', 'D) Persistenz aktivieren'],
+                correct     = 'A',
+                explanation = '-p err = priority filter: zeigt err, crit, alert, emerg (alle schwerwiegenden).',
+                xp_value    = 20,
+            ),
+        ],
         exam_tip     = (
             "HÄUFIGE PRÜFUNGSFRAGEN:\n"
             "  journalctl -b = aktueller Boot\n"
@@ -255,6 +287,22 @@ CHAPTER_11_MISSIONS: list[Mission] = [
         task_description = "Zeige die logrotate-Konfigurationen in /etc/logrotate.d/",
         expected_commands = ["ls /etc/logrotate.d/"],
         hint_text    = "ls /etc/logrotate.d/ zeigt alle service-spezifischen logrotate-Configs",
+        quiz_questions    = [
+            QuizQuestion(
+                question    = "Was macht logrotate mit dem 'rotate 4'-Parameter?",
+                options     = ['A) Log alle 4 Stunden rotieren', 'B) Maximal 4 alte Log-Versionen behalten', 'C) 4 Log-Dateien pro Verzeichnis', 'D) Alle 4 KB rotieren'],
+                correct     = 'B',
+                explanation = 'rotate N = behalte N alte Versionen. Ältere werden gelöscht.',
+                xp_value    = 20,
+            ),
+            QuizQuestion(
+                question    = "Was bedeutet 'compress' in einer logrotate-Konfiguration?",
+                options     = ['A) Neue Logs komprimieren', 'B) Rotierte Logs mit gzip komprimieren', 'C) Log-Kompressionsrate erhöhen', 'D) Space-Limit setzen'],
+                correct     = 'B',
+                explanation = "compress = rotierte Logs mit gzip packen (.gz). 'delaycompress' = erst beim nächsten Durchlauf.",
+                xp_value    = 20,
+            ),
+        ],
         exam_tip     = (
             "PRÜFUNGSTHEMEN:\n"
             "  rotate N = N alte Logs behalten (dann löschen)\n"
@@ -332,6 +380,22 @@ CHAPTER_11_MISSIONS: list[Mission] = [
         task_description = "Zeige den aktuellen Zeitdienst-Status mit timedatectl",
         expected_commands = ["timedatectl"],
         hint_text    = "timedatectl zeigt Systemzeit, Zeitzone und NTP-Synchronisationsstatus",
+        quiz_questions    = [
+            QuizQuestion(
+                question    = 'Was macht timedatectl set-ntp true?',
+                options     = ['A) NTP manuell konfigurieren', 'B) Automatische Zeitsynchronisation über NTP aktivieren', 'C) Zeitzone setzen', 'D) NTP-Server anzeigen'],
+                correct     = 'B',
+                explanation = 'timedatectl set-ntp true = NTP aktivieren (systemd-timesyncd). False = deaktivieren.',
+                xp_value    = 20,
+            ),
+            QuizQuestion(
+                question    = 'Was ist hwclock?',
+                options     = ['A) Hardware-Clock (BIOS/UEFI-Uhr) lesen und setzen', 'B) Software-Clock', 'C) NTP-Client', 'D) Zeitzone-Tool'],
+                correct     = 'A',
+                explanation = 'hwclock = Hardware Clock (RTC). hwclock -s = Systemzeit aus HW-Uhr setzen.',
+                xp_value    = 20,
+            ),
+        ],
         exam_tip     = (
             "PRÜFUNGSFRAGEN:\n"
             "  Welche Datei enthält die Zeitzone? → /etc/timezone (Debian)\n"
@@ -421,6 +485,22 @@ CHAPTER_11_MISSIONS: list[Mission] = [
         task_description = "Zeige die aktuelle Crontab des Benutzers",
         expected_commands = ["crontab -l"],
         hint_text    = "crontab -l listet alle Cron-Jobs des aktuellen Benutzers",
+        quiz_questions    = [
+            QuizQuestion(
+                question    = "Was ist der crontab-Eintrag für 'jeden Tag um 03:30'?",
+                options     = ['A) 3 30 * * *', 'B) 30 3 * * *', 'C) * * 30 3 *', 'D) 0 3 30 * *'],
+                correct     = 'B',
+                explanation = 'crontab: MIN STD TAG MON WOT. 30 3 * * * = 03:30 jeden Tag.',
+                xp_value    = 20,
+            ),
+            QuizQuestion(
+                question    = 'Welcher Befehl bearbeitet den crontab des aktuellen Benutzers?',
+                options     = ['A) crontab -l', 'B) crontab -e', 'C) cron -edit', 'D) vi /etc/crontab'],
+                correct     = 'B',
+                explanation = 'crontab -e = edit (öffnet Editor). crontab -l = list (anzeigen). crontab -r = remove!',
+                xp_value    = 20,
+            ),
+        ],
         exam_tip     = (
             "PRÜFUNGS-FALLE: /etc/crontab hat 6 Felder (mit USER!):\n"
             "  MIN STD TAG MON WOT USER BEFEHL\n"
@@ -496,6 +576,22 @@ CHAPTER_11_MISSIONS: list[Mission] = [
         task_description = "Zeige alle ausstehenden at-Jobs",
         expected_commands = ["atq"],
         hint_text    = "atq zeigt die Warteschlange der geplanten at-Jobs",
+        quiz_questions    = [
+            QuizQuestion(
+                question    = "Wie plant man einen Job mit at für 'morgen um 14:00'?",
+                options     = ['A) at 14:00+1', 'B) at 14:00 tomorrow', 'C) at --time 14:00 --day tomorrow', 'D) at next 14:00'],
+                correct     = 'B',
+                explanation = "at 14:00 tomorrow. Weitere: 'at now + 2 hours', 'at midnight'. Befehle per stdin eingeben.",
+                xp_value    = 20,
+            ),
+            QuizQuestion(
+                question    = 'Welcher Befehl zeigt alle ausstehenden at-Jobs?',
+                options     = ['A) at -list', 'B) atq', 'C) at --queue', 'D) jobs --at'],
+                correct     = 'B',
+                explanation = 'atq = at queue. Zeigt alle geplanten Jobs. atrm JOBNR = löschen.',
+                xp_value    = 20,
+            ),
+        ],
         exam_tip     = (
             "at vs cron:\n"
             "  cron  → wiederkehrende Jobs\n"
@@ -577,6 +673,22 @@ CHAPTER_11_MISSIONS: list[Mission] = [
         task_description = "Zeige alle aktiven systemd Timer Units",
         expected_commands = ["systemctl list-timers"],
         hint_text    = "systemctl list-timers zeigt alle aktiven Timer mit nächstem Ausführungszeitpunkt",
+        quiz_questions    = [
+            QuizQuestion(
+                question    = 'Was ist ein systemd-Timer im Vergleich zu cron?',
+                options     = ['A) Langsamer als cron', 'B) Besser in systemd integriert, mit Abhängigkeiten und Logging', 'C) Nur für root', 'D) Nur für einmalige Jobs'],
+                correct     = 'B',
+                explanation = 'systemd Timer: Logging via journalctl, Abhängigkeiten, präzise Zeitsteuerung. Cron: einfacher.',
+                xp_value    = 20,
+            ),
+            QuizQuestion(
+                question    = 'Was macht OnCalendar=daily in einem systemd-Timer?',
+                options     = ['A) Täglich um Mitternacht ausführen', 'B) Täglich zur aktuellen Zeit', 'C) Alle 24 Stunden ab Start', 'D) Einmal pro Kalender'],
+                correct     = 'A',
+                explanation = 'OnCalendar=daily = täglich um Mitternacht. OnCalendar=weekly = montags 00:00.',
+                xp_value    = 20,
+            ),
+        ],
         exam_tip     = (
             "CRON vs SYSTEMD TIMER:\n"
             "  Cron: /etc/crontab, crontab -e\n"
@@ -663,6 +775,22 @@ CHAPTER_11_MISSIONS: list[Mission] = [
         task_description = "Zeige alle Konfigurationsdateien in /etc/logrotate.d/",
         expected_commands = ["ls /etc/logrotate.d/"],
         hint_text    = "ls /etc/logrotate.d/ listet service-spezifische logrotate-Configs",
+        quiz_questions    = [
+            QuizQuestion(
+                question    = "Was macht 'logrotate -d /etc/logrotate.conf'?",
+                options     = ['A) Debug: Dry-run ohne Änderungen', 'B) Löscht Log-Dateien', 'C) Deaktiviert logrotate', 'D) Zeigt Log-Statistiken'],
+                correct     = 'A',
+                explanation = 'logrotate -d = debug/dry-run. Zeigt was passieren würde ohne etwas zu ändern.',
+                xp_value    = 20,
+            ),
+            QuizQuestion(
+                question    = 'Wo liegen anwendungsspezifische logrotate-Konfigurationen?',
+                options     = ['A) /etc/logrotate.conf', 'B) /etc/logrotate.d/', 'C) /var/log/rotate.d/', 'D) ~/.logrotate/'],
+                correct     = 'B',
+                explanation = '/etc/logrotate.d/ = Drop-in-Verzeichnis. Jede Anwendung hat eigene Datei dort.',
+                xp_value    = 20,
+            ),
+        ],
         exam_tip     = (
             "PRÜFUNGSTHEMEN:\n"
             "  size N = nach Größe rotieren | daily/weekly/monthly = Zeitbasiert\n"
@@ -743,6 +871,22 @@ CHAPTER_11_MISSIONS: list[Mission] = [
         task_description = "Zeige den aktuellen Journal-Speicherverbrauch",
         expected_commands = ["journalctl --disk-usage"],
         hint_text    = "journalctl --disk-usage zeigt wie viel Speicher das Journal belegt",
+        quiz_questions    = [
+            QuizQuestion(
+                question    = 'Wie prüft man die Größe des systemd-Journals?',
+                options     = ['A) du -sh /var/log/journal', 'B) journalctl --disk-usage', 'C) systemctl status journald', 'D) ls -lh /var/log/journal'],
+                correct     = 'B',
+                explanation = 'journalctl --disk-usage zeigt belegten Speicher. journalctl --vacuum-size=500M bereinigt.',
+                xp_value    = 20,
+            ),
+            QuizQuestion(
+                question    = 'Was ist der Unterschied zwischen persistentem und flüchtigem Journal?',
+                options     = ['A) Kein Unterschied nach Reboot', 'B) Persistent: /var/log/journal (überlebt Reboot), flüchtig: /run/log/journal', 'C) Persistent ist komprimiert', 'D) Flüchtig ist schneller'],
+                correct     = 'B',
+                explanation = 'Storage=persistent in journald.conf → /var/log/journal. Storage=volatile → /run (weg nach Reboot).',
+                xp_value    = 20,
+            ),
+        ],
         exam_tip     = (
             "PRÜFUNGSTHEMEN:\n"
             "  Storage=persistent = /var/log/journal (über Reboots)\n"
@@ -836,6 +980,22 @@ CHAPTER_11_MISSIONS: list[Mission] = [
         task_description = "Liste alle aktiven systemd Timer Units auf",
         expected_commands = ["systemctl list-timers"],
         hint_text    = "systemctl list-timers zeigt alle aktiven Timer mit nächstem Auslösezeitpunkt",
+        quiz_questions    = [
+            QuizQuestion(
+                question    = "Was macht 'systemctl list-timers'?",
+                options     = ['A) Zeigt alle aktiven crontabs', 'B) Zeigt alle systemd-Timer mit nächster Ausführung', 'C) Listet Timer-Dateien', 'D) Startet alle Timer'],
+                correct     = 'B',
+                explanation = 'systemctl list-timers zeigt Timer, letzten und nächsten Ausführungszeitpunkt.',
+                xp_value    = 20,
+            ),
+            QuizQuestion(
+                question    = 'Wie aktiviert man einen systemd-Timer dauerhaft?',
+                options     = ['A) crontab -e', 'B) systemctl enable --now NAME.timer', 'C) systemctl start NAME.timer', 'D) timerctl enable NAME'],
+                correct     = 'B',
+                explanation = 'systemctl enable --now NAME.timer = aktivieren + sofort starten.',
+                xp_value    = 20,
+            ),
+        ],
         exam_tip     = (
             "ONCALENDAR WICHTIGE WERTE:\n"
             "  daily   = *-*-* 00:00:00\n"
@@ -924,6 +1084,22 @@ CHAPTER_11_MISSIONS: list[Mission] = [
         task_description = "Zeige alle wartenden at-Jobs mit atq",
         expected_commands = ["atq"],
         hint_text    = "atq (at queue) zeigt alle geplanten einmaligen Jobs",
+        quiz_questions    = [
+            QuizQuestion(
+                question    = "Was ist 'batch' im Vergleich zu 'at'?",
+                options     = ['A) batch ist interaktiver', 'B) batch führt Jobs aus wenn System-Load niedrig genug', 'C) batch ist für root', 'D) batch läuft täglich'],
+                correct     = 'B',
+                explanation = 'batch = last-abhängige at-Variante. Führt Job aus wenn Load < 1.5 (konfigurierbar).',
+                xp_value    = 20,
+            ),
+            QuizQuestion(
+                question    = 'Wie zeigt man den Inhalt eines at-Jobs an?',
+                options     = ['A) at -view JOBNR', 'B) at -c JOBNR', 'C) atq -show JOBNR', 'D) cat /var/spool/at/JOBNR'],
+                correct     = 'B',
+                explanation = 'at -c JOBNR = cat job. Zeigt das vollständige Skript inkl. Umgebungsvariablen.',
+                xp_value    = 20,
+            ),
+        ],
         exam_tip     = (
             "PRÜFUNGS-MERKSÄTZE:\n"
             "  at   = einmaliger Job zu festgelegter Zeit\n"
@@ -1005,6 +1181,22 @@ CHAPTER_11_MISSIONS: list[Mission] = [
         task_description = "Zeige den Inhalt von /etc/cron.deny (falls vorhanden)",
         expected_commands = ["cat /etc/cron.deny"],
         hint_text    = "cat /etc/cron.deny zeigt die Liste der gesperrten Cron-Benutzer",
+        quiz_questions    = [
+            QuizQuestion(
+                question    = 'Was passiert wenn cron.allow existiert?',
+                options     = ['A) Alle außer gelisteten dürfen crontab nutzen', 'B) Nur gelistete Benutzer dürfen crontab nutzen', 'C) Root kann crontab für alle bearbeiten', 'D) cron läuft im allow-only Modus'],
+                correct     = 'B',
+                explanation = 'cron.allow: nur gelistete Benutzer dürfen crontab. Existiert cron.deny: alle außer gelisteten.',
+                xp_value    = 20,
+            ),
+            QuizQuestion(
+                question    = 'Was wenn cron.allow existiert aber leer ist?',
+                options     = ['A) Alle dürfen cron nutzen', 'B) Niemand außer root darf crontab nutzen', 'C) Cron-Dienst startet nicht', 'D) Nur root-Gruppe'],
+                correct     = 'B',
+                explanation = 'cron.allow leer = niemand (außer root) darf crontab. Root ist immer erlaubt.',
+                xp_value    = 20,
+            ),
+        ],
         exam_tip     = (
             "PRÜFUNGS-MERKSÄTZE:\n"
             "  cron.allow VORHANDEN → nur darin genannte User (cron.deny ignoriert)\n"
@@ -1868,6 +2060,15 @@ CHAPTER_11_MISSIONS: list[Mission] = [
         task_description = "BOSS: Aktiviere NTP-Synchronisation mit timedatectl",
         expected_commands = ["timedatectl set-ntp true"],
         hint_text    = "timedatectl set-ntp true aktiviert automatische Zeitsynchronisation via NTP",
+        quiz_questions    = [
+            QuizQuestion(
+                question    = "Was macht 'journalctl -b -1'?",
+                options     = ['A) Letzter Boot-Zyklus', 'B) Logs vom vorletzten Boot', 'C) Boot-Statistiken', 'D) Letzten 1 Eintrag'],
+                correct     = 'B',
+                explanation = 'journalctl -b 0 = aktueller Boot. -b -1 = vorletzter Boot. Nützlich nach Abstürzen.',
+                xp_value    = 20,
+            ),
+        ],
         exam_tip     = (
             "LPIC-1 FINAL SYSLOG CHECK:\n"
             "  Severity: 0=emerg..7=debug\n"

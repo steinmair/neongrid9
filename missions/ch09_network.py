@@ -81,6 +81,22 @@ CHAPTER_9_MISSIONS: list[Mission] = [
         task_description = "Zeige alle Netzwerk-Interfaces mit IP-Adressen",
         expected_commands = ["ip addr show"],
         hint_text    = "ip addr show zeigt alle Interfaces mit IPv4 und IPv6 Adressen",
+        quiz_questions    = [
+            QuizQuestion(
+                question    = 'Wie viele nutzbare Hosts hat ein /24-Netz?',
+                options     = ['A) 256', 'B) 255', 'C) 254', 'D) 253'],
+                correct     = 'C',
+                explanation = '256 Adressen - 2 (Netz + Broadcast) = 254 nutzbare Hosts.',
+                xp_value    = 20,
+            ),
+            QuizQuestion(
+                question    = 'Welcher Adressbereich ist ein privates Klasse-C-Netz?',
+                options     = ['A) 10.0.0.0/8', 'B) 172.16.0.0/12', 'C) 192.168.0.0/16', 'D) 169.254.0.0/16'],
+                correct     = 'C',
+                explanation = 'Private Bereiche: 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16 (RFC 1918).',
+                xp_value    = 20,
+            ),
+        ],
         exam_tip     = (
             "LPIC-1 fragt: Welches Subnetz für 192.168.1.0/24?\n"
             "→ 254 nutzbare Hosts (256 - 2 für Netz + Broadcast)\n"
@@ -157,6 +173,22 @@ CHAPTER_9_MISSIONS: list[Mission] = [
         task_description = "Zeige die aktuelle Routing-Tabelle",
         expected_commands = ["ip route show"],
         hint_text    = "ip route show zeigt die Routing-Tabelle. Kurz: ip r",
+        quiz_questions    = [
+            QuizQuestion(
+                question    = "Was zeigt 'ip route show'?",
+                options     = ['A) Routing-Tabelle des Kernels', 'B) Netzwerk-Interfaces', 'C) Offene Verbindungen', 'D) DNS-Server'],
+                correct     = 'A',
+                explanation = 'ip route show = Routing-Tabelle. ip addr show = Interfaces+IPs. ip link show = Layer-2.',
+                xp_value    = 20,
+            ),
+            QuizQuestion(
+                question    = 'Wie deaktiviert man ein Netzwerk-Interface mit ip?',
+                options     = ['A) ip link off eth0', 'B) ip link set eth0 down', 'C) ip addr remove eth0', 'D) ifdown eth0'],
+                correct     = 'B',
+                explanation = 'ip link set DEV down/up. Das moderne Tool ersetzt ifconfig.',
+                xp_value    = 20,
+            ),
+        ],
         exam_tip     = (
             "PRÜFUNGSTIPP:\n"
             "  ip addr show  → Interfaces + IP-Adressen\n"
@@ -230,6 +262,22 @@ CHAPTER_9_MISSIONS: list[Mission] = [
         task_description = "Zeige alle lauschenden TCP- und UDP-Ports mit Prozessnamen",
         expected_commands = ["ss -tulpn"],
         hint_text    = "ss -tulpn: t=TCP u=UDP l=listening p=processes n=numeric",
+        quiz_questions    = [
+            QuizQuestion(
+                question    = "Was zeigt 'ss -tulpn'?",
+                options     = ['A) TCP/UDP Listening Ports mit Prozessnamen', 'B) Netzwerk-Statistiken', 'C) Alle Netzwerk-Geräte', 'D) DNS-Anfragen'],
+                correct     = 'A',
+                explanation = 'ss -tulpn: t=TCP, u=UDP, l=listening, p=Prozess, n=numerisch (keine Namen auflösen).',
+                xp_value    = 20,
+            ),
+            QuizQuestion(
+                question    = 'Was ist der Unterschied zwischen ss und netstat?',
+                options     = ['A) Kein Unterschied', 'B) ss ist modern/schneller, netstat ist deprecated', 'C) netstat ist moderner', 'D) ss nur für UDP'],
+                correct     = 'B',
+                explanation = 'ss ersetzt netstat. Aber LPIC-1 prüft noch netstat! Beide kennen.',
+                xp_value    = 20,
+            ),
+        ],
         exam_tip     = (
             "MERKE: ss -tulpn ist der go-to Befehl für offene Ports.\n"
             "netstat ist deprecated aber noch in Prüfungen!\n"
@@ -295,6 +343,22 @@ CHAPTER_9_MISSIONS: list[Mission] = [
         task_description = "Sende genau 4 ICMP-Pakete an 8.8.8.8",
         expected_commands = ["ping -c 4 8.8.8.8"],
         hint_text    = "ping -c 4 begrenzt auf 4 Pakete. Ohne -c läuft ping endlos.",
+        quiz_questions    = [
+            QuizQuestion(
+                question    = 'Wie stoppst du ping nach genau 5 Paketen?',
+                options     = ['A) ping --count=5', 'B) ping -c 5 HOST', 'C) ping -n 5 HOST', 'D) ping -p 5 HOST'],
+                correct     = 'B',
+                explanation = 'ping -c COUNT = Anzahl der Pakete. ping -c 5 host → stoppt nach 5.',
+                xp_value    = 20,
+            ),
+            QuizQuestion(
+                question    = 'Was ist tracepath im Vergleich zu traceroute?',
+                options     = ['A) Identisch', 'B) tracepath braucht keine Root-Rechte, traceroute schon', 'C) tracepath ist schneller', 'D) traceroute ist deprecated'],
+                correct     = 'B',
+                explanation = 'tracepath: kein Root nötig. traceroute: braucht oft root. Beide zeigen Routing-Pfade.',
+                xp_value    = 20,
+            ),
+        ],
         exam_tip     = (
             "PRÜFUNGSFRAGE: Wie stoppst du ping nach 5 Paketen?\n"
             "→ ping -c 5 hostname\n"
@@ -376,6 +440,22 @@ CHAPTER_9_MISSIONS: list[Mission] = [
         task_description = "Führe einen DNS-Lookup für google.com durch",
         expected_commands = ["dig google.com"],
         hint_text    = "dig google.com zeigt alle DNS-Informationen. dig +short für nur die IP.",
+        quiz_questions    = [
+            QuizQuestion(
+                question    = 'Welcher dig-Befehl macht einen Reverse-Lookup (IP → Name)?',
+                options     = ['A) dig HOST reverse', 'B) dig -x IP', 'C) dig PTR IP', 'D) dig --reverse IP'],
+                correct     = 'B',
+                explanation = 'dig -x IP = Reverse DNS Lookup (PTR-Record). host IP funktioniert auch.',
+                xp_value    = 20,
+            ),
+            QuizQuestion(
+                question    = 'Welche Datei definiert die Reihenfolge von DNS vs. /etc/hosts?',
+                options     = ['A) /etc/dns.conf', 'B) /etc/nsswitch.conf', 'C) /etc/resolv.conf', 'D) /etc/hosts.conf'],
+                correct     = 'B',
+                explanation = '/etc/nsswitch.conf: hosts: files dns = erst /etc/hosts dann DNS.',
+                xp_value    = 20,
+            ),
+        ],
         exam_tip     = (
             "LPIC-1 testet:\n"
             "  dig -x IP → Reverse-Lookup (PTR)\n"
@@ -452,6 +532,22 @@ CHAPTER_9_MISSIONS: list[Mission] = [
         task_description = "Generiere ein neues ED25519 SSH-Schlüsselpaar",
         expected_commands = ["ssh-keygen -t ed25519"],
         hint_text    = "ssh-keygen -t ed25519 erstellt modernes Schlüsselpaar in ~/.ssh/",
+        quiz_questions    = [
+            QuizQuestion(
+                question    = 'Was ist der sichere SSH-Schlüsseltyp für neue Systeme?',
+                options     = ['A) rsa 1024', 'B) dsa', 'C) ed25519', 'D) ecdsa 256'],
+                correct     = 'C',
+                explanation = 'ed25519 ist modern, sicher und schnell. RSA 4096 geht auch. DSA = veraltet!',
+                xp_value    = 20,
+            ),
+            QuizQuestion(
+                question    = "Was macht 'PermitRootLogin no' in sshd_config?",
+                options     = ['A) SSH deaktivieren', 'B) Root-Login über SSH verbieten', 'C) Passwort-Login für root deaktivieren', 'D) Root-Befehle blockieren'],
+                correct     = 'B',
+                explanation = 'PermitRootLogin no = kein direkter Root-SSH. Erst als User, dann sudo.',
+                xp_value    = 20,
+            ),
+        ],
         exam_tip     = (
             "SICHERHEITS-BEST-PRACTICES für LPIC-1:\n"
             "  PermitRootLogin no    → Root-Login deaktivieren\n"
@@ -527,6 +623,22 @@ CHAPTER_9_MISSIONS: list[Mission] = [
         task_description = "Zeige den aktuellen Hostnamen des Systems",
         expected_commands = ["hostname"],
         hint_text    = "hostname zeigt den aktuellen Hostnamen. hostnamectl für systemd-Systeme.",
+        quiz_questions    = [
+            QuizQuestion(
+                question    = 'Wo wird der Hostname dauerhaft gespeichert?',
+                options     = ['A) /etc/sysconfig/network', 'B) /etc/hostname', 'C) /proc/hostname', 'D) /etc/hosts'],
+                correct     = 'B',
+                explanation = '/etc/hostname = dauerhafter Hostname. hostnamectl set-hostname NAME schreibt dorthin.',
+                xp_value    = 20,
+            ),
+            QuizQuestion(
+                question    = 'Was macht nmcli device status?',
+                options     = ['A) Startet NetworkManager', 'B) Zeigt Status aller Netzwerkgeräte', 'C) Konfiguriert DNS', 'D) Zeigt Routing-Tabelle'],
+                correct     = 'B',
+                explanation = 'nmcli device status = Übersicht aller Netzwerkgeräte und deren Verbindungsstatus.',
+                xp_value    = 20,
+            ),
+        ],
         exam_tip     = (
             "PRÜFUNGSFRAGEN:\n"
             "  Wo wird der Hostname dauerhaft gespeichert? → /etc/hostname\n"

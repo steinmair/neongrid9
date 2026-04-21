@@ -75,6 +75,15 @@ CHAPTER_10_MISSIONS: list[Mission] = [
         task_description = "Zeige den Eintrag für den Benutzer 'ghost' in /etc/passwd",
         expected_commands = ["getent passwd ghost"],
         hint_text    = "getent passwd ghost zeigt den /etc/passwd-Eintrag für 'ghost'",
+        quiz_questions    = [
+            QuizQuestion(
+                question    = 'Welche Datei enthält verschlüsselte Passwörter?',
+                options     = ['A) /etc/passwd', 'B) /etc/shadow', 'C) /etc/password', 'D) /etc/login'],
+                correct     = 'B',
+                explanation = '/etc/shadow enthält gehashte Passwörter (nur root lesbar). /etc/passwd ist world-readable.',
+                xp_value    = 20,
+            ),
+        ],
         exam_tip     = (
             "PRÜFUNG: /etc/passwd-Felder in Reihenfolge kennen!\n"
             "  user:pass:UID:GID:GECOS:home:shell\n"
@@ -152,6 +161,22 @@ CHAPTER_10_MISSIONS: list[Mission] = [
         task_description = "Zeige die Passwort-Aging-Informationen für Benutzer 'ghost'",
         expected_commands = ["chage -l ghost"],
         hint_text    = "chage -l ghost zeigt Passwort-Alter, Ablauf und Warnzeiten",
+        quiz_questions    = [
+            QuizQuestion(
+                question    = "Was macht 'useradd -m username'?",
+                options     = ['A) Erstellt Benutzer ohne Homeverzeichnis', 'B) Erstellt Benutzer MIT Homeverzeichnis (/home/username)', 'C) Modifiziert bestehenden Benutzer', 'D) Erstellt System-Benutzer'],
+                correct     = 'B',
+                explanation = 'useradd -m = create home directory. Ohne -m: kein /home/username erstellt.',
+                xp_value    = 20,
+            ),
+            QuizQuestion(
+                question    = 'Welcher Befehl ändert das Passwort eines Benutzers als Root?',
+                options     = ['A) useradd --password user', 'B) passwd username', 'C) chpasswd username', 'D) usermod --password user'],
+                correct     = 'B',
+                explanation = 'passwd USERNAME als root ändert das Passwort für jeden Benutzer.',
+                xp_value    = 20,
+            ),
+        ],
         exam_tip     = (
             "PRÜFUNGSFRAGE: Was bedeutet '!' am Anfang des Passwort-Hash?\n"
             "→ Account ist gesperrt (locked)!\n"
@@ -223,6 +248,22 @@ CHAPTER_10_MISSIONS: list[Mission] = [
         task_description = "Erstelle einen neuen Benutzer 'operator' mit Home-Verzeichnis und bash-Shell",
         expected_commands = ["useradd -m -s /bin/bash operator"],
         hint_text    = "useradd -m erstellt Home-Verzeichnis, -s /bin/bash setzt die Shell",
+        quiz_questions    = [
+            QuizQuestion(
+                question    = "Was macht 'groupadd entwickler'?",
+                options     = ['A) Benutzer zu Gruppe hinzufügen', "B) Neue Gruppe 'entwickler' erstellen", 'C) Gruppenpasswort setzen', 'D) Gruppenmitglieder anzeigen'],
+                correct     = 'B',
+                explanation = 'groupadd GRUPPENNAME erstellt eine neue Gruppe in /etc/group.',
+                xp_value    = 20,
+            ),
+            QuizQuestion(
+                question    = 'Wie fügt man einen Benutzer zu einer Gruppe hinzu ohne andere Gruppen zu entfernen?',
+                options     = ['A) usermod -g gruppe user', 'B) usermod -aG gruppe user', 'C) groupadd -u user gruppe', 'D) gpasswd gruppe user'],
+                correct     = 'B',
+                explanation = 'usermod -aG = append to Group. Ohne -a würde -G alle anderen Gruppen entfernen!',
+                xp_value    = 20,
+            ),
+        ],
         exam_tip     = (
             "KRITISCH: usermod -aG vs usermod -G\n"
             "  -aG = append (Gruppe hinzufügen, bestehende behalten!)\n"
@@ -299,6 +340,15 @@ CHAPTER_10_MISSIONS: list[Mission] = [
         task_description = "Füge den Benutzer 'ghost' zur Gruppe 'sudo' hinzu",
         expected_commands = ["gpasswd -a ghost sudo"],
         hint_text    = "gpasswd -a USER GROUP fügt einen Benutzer zu einer Gruppe hinzu",
+        quiz_questions    = [
+            QuizQuestion(
+                question    = 'Was enthält /etc/passwd pro Zeile (7 Felder)?',
+                options     = ['A) user:pass:uid:gid:comment:home:shell', 'B) user:uid:gid:home:shell:pass:groups', 'C) user:pass:home:shell:uid:gid:comment', 'D) uid:user:pass:gid:home:shell:comment'],
+                correct     = 'A',
+                explanation = '/etc/passwd: username:password(x):UID:GID:GECOS:Homedir:Shell',
+                xp_value    = 20,
+            ),
+        ],
         exam_tip     = (
             "MERKE: gpasswd -a vs usermod -aG:\n"
             "  gpasswd -a ghost docker  → gleicher Effekt wie usermod -aG docker ghost\n"
@@ -373,6 +423,22 @@ CHAPTER_10_MISSIONS: list[Mission] = [
         task_description = "Zeige alle erlaubten sudo-Befehle für den aktuellen Benutzer",
         expected_commands = ["sudo -l"],
         hint_text    = "sudo -l listet alle Befehle die du mit sudo ausführen darfst",
+        quiz_questions    = [
+            QuizQuestion(
+                question    = 'Was macht chage -l username?',
+                options     = ['A) Ändert Passwort-Ablauf', 'B) Zeigt Passwort-Ablauf-Informationen', 'C) Sperrt das Konto', 'D) Löscht Ablauf-Daten'],
+                correct     = 'B',
+                explanation = 'chage -l = list. Zeigt Passwort-Ablauf, letztes Änderungsdatum, etc.',
+                xp_value    = 20,
+            ),
+            QuizQuestion(
+                question    = 'Wie sperrt man ein Benutzerkonto (kein Login möglich)?',
+                options     = ['A) usermod -L username', 'B) usermod -d /bin/false username', 'C) passwd --lock username', 'D) A oder C'],
+                correct     = 'D',
+                explanation = 'usermod -L = lock (! vor Passwort in shadow). passwd --lock macht dasselbe.',
+                xp_value    = 20,
+            ),
+        ],
         exam_tip     = (
             "KRITISCH: visudo statt direktem Editieren von /etc/sudoers!\n"
             "visudo prüft die Syntax VOR dem Speichern.\n"
@@ -448,6 +514,22 @@ CHAPTER_10_MISSIONS: list[Mission] = [
         task_description = "Zeige die PAM-Konfigurationen im /etc/pam.d/ Verzeichnis",
         expected_commands = ["ls /etc/pam.d/"],
         hint_text    = "ls /etc/pam.d/ zeigt alle Service-spezifischen PAM-Konfigurationen",
+        quiz_questions    = [
+            QuizQuestion(
+                question    = 'Wo werden Sudo-Rechte konfiguriert?',
+                options     = ['A) /etc/sudoers und /etc/sudoers.d/', 'B) /etc/sudo.conf', 'C) ~/.sudorc', 'D) /etc/pam.d/sudo'],
+                correct     = 'A',
+                explanation = '/etc/sudoers (bearbeiten NUR mit visudo!). /etc/sudoers.d/ für zusätzliche Dateien.',
+                xp_value    = 20,
+            ),
+            QuizQuestion(
+                question    = 'Was macht visudo besonders sicher?',
+                options     = ['A) Verschlüsselt die sudoers-Datei', 'B) Prüft Syntax vor dem Speichern (verhindert kaputte sudo-Config)', 'C) Erstellt Backup automatisch', 'D) Setzt Rechte automatisch'],
+                correct     = 'B',
+                explanation = 'visudo prüft Syntax vor Speicherung. Kaputte sudoers = kein sudo mehr = gesperrt!',
+                xp_value    = 20,
+            ),
+        ],
         exam_tip     = (
             "PAM PRÜFUNGS-SCHWERPUNKTE:\n"
             "  Die 4 Typen: auth account password session\n"
@@ -516,6 +598,15 @@ CHAPTER_10_MISSIONS: list[Mission] = [
         task_description = "Zeige den Inhalt der systemweiten /etc/profile",
         expected_commands = ["cat /etc/profile"],
         hint_text    = "/etc/profile wird für alle Login-Shells geladen (systemweit)",
+        quiz_questions    = [
+            QuizQuestion(
+                question    = 'Was ist getent?',
+                options     = ['A) Holt Einträge aus Datenbanken (passwd, group, hosts) inkl. LDAP/NIS', 'B) Gibt Umgebungsvariablen aus', 'C) Zeigt Netzwerk-Entitäten', 'D) Listet Benutzer-Entitlements'],
+                correct     = 'A',
+                explanation = 'getent = get entries. getent passwd username zeigt Benutzerinfos aus allen konfigurierten Quellen (lokal + LDAP).',
+                xp_value    = 20,
+            ),
+        ],
         exam_tip     = (
             "PRÜFUNGS-FALLE:\n"
             "  SSH-Login lädt: /etc/profile, dann ~/.bash_profile\n"
@@ -2049,6 +2140,15 @@ CHAPTER_10_MISSIONS: list[Mission] = [
         task_description = "BOSS: Entsperre den gesperrten Account 'ghost'",
         expected_commands = ["passwd -u ghost"],
         hint_text    = "passwd -u ghost entsperrt (unlock) einen gesperrten Benutzer-Account",
+        quiz_questions    = [
+            QuizQuestion(
+                question    = 'Welcher Befehl zeigt alle Mitglieder einer Gruppe?',
+                options     = ['A) groups GRUPPE', 'B) getent group GRUPPE', 'C) groupmembers GRUPPE', 'D) cat /etc/group | grep GRUPPE'],
+                correct     = 'B',
+                explanation = 'getent group GRUPPE zeigt alle Mitglieder. grep funktioniert auch.',
+                xp_value    = 20,
+            ),
+        ],
         exam_tip     = (
             "LPIC-1 FINAL USER CHECK:\n"
             "  useradd -m -s /bin/bash USER → vollständiger Account\n"

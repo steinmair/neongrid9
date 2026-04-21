@@ -59,6 +59,22 @@ CHAPTER_4_MISSIONS: list[Mission] = [
         task_description  = "Zeige die Partitionstabelle von /dev/nvme0n1",
         expected_commands = ["fdisk -l"],
         hint_text         = "fdisk mit Flag -l listet alle Partitionstabellen auf",
+        quiz_questions    = [
+            QuizQuestion(
+                question    = 'Welche maximale Festplattengröße unterstützt MBR?',
+                options     = ['A) 4 TB', 'B) 2 TB', 'C) 8 TB', 'D) 1 TB'],
+                correct     = 'B',
+                explanation = 'MBR nutzt 32-bit LBA → max 2 TB. GPT nutzt 64-bit → praktisch unbegrenzt.',
+                xp_value    = 20,
+            ),
+            QuizQuestion(
+                question    = 'Wie viele primäre Partitionen erlaubt MBR maximal?',
+                options     = ['A) 8', 'B) 16', 'C) 4', 'D) 128'],
+                correct     = 'C',
+                explanation = 'MBR: max 4 primäre Partitionen. Mehr geht nur mit Extended+Logical.',
+                xp_value    = 20,
+            ),
+        ],
         exam_tip          = (
             "MBR: max 4 primäre Partitionen, max 2 TB.\n"
             "GPT: bis 128 Partitionen, praktisch unbegrenzt.\n"
@@ -123,6 +139,22 @@ CHAPTER_4_MISSIONS: list[Mission] = [
         task_description  = "Zeige alle Partitionen mit fdisk",
         expected_commands = ["fdisk -l"],
         hint_text         = "fdisk -l zeigt alle Partitionstabellen (kein interaktiver Modus)",
+        quiz_questions    = [
+            QuizQuestion(
+                question    = 'Welcher fdisk-Befehl schreibt Änderungen permanent auf die Platte?',
+                options     = ['A) s', 'B) w', 'C) q', 'D) p'],
+                correct     = 'B',
+                explanation = "'w' in fdisk = Write. Ohne 'w' werden keine Änderungen gespeichert.",
+                xp_value    = 20,
+            ),
+            QuizQuestion(
+                question    = 'Was ist der Hex-Code für eine Linux-Partition in fdisk?',
+                options     = ['A) ef', 'B) 82', 'C) 83', 'D) 8e'],
+                correct     = 'C',
+                explanation = '83 = Linux, 82 = Linux Swap, 8e = Linux LVM, ef = EFI System.',
+                xp_value    = 20,
+            ),
+        ],
         exam_tip          = (
             "fdisk-Falle: Änderungen werden erst mit 'w' geschrieben!\n"
             "Kein 'w' = keine Änderungen = sicher zum Üben.\n"
@@ -179,6 +211,22 @@ CHAPTER_4_MISSIONS: list[Mission] = [
         task_description  = "Zeige die Partitionstabelle",
         expected_commands = ["fdisk -l"],
         hint_text         = "fdisk -l funktioniert auch für GPT-Laufwerke zur Anzeige",
+        quiz_questions    = [
+            QuizQuestion(
+                question    = 'Was ist der gdisk-Typcode für eine EFI System Partition?',
+                options     = ['A) 8300', 'B) 8200', 'C) ef00', 'D) fd00'],
+                correct     = 'C',
+                explanation = 'ef00 = EFI System, 8300 = Linux filesystem, 8200 = Linux swap.',
+                xp_value    = 20,
+            ),
+            QuizQuestion(
+                question    = 'Welches Tool ist nativ für GPT-Partitionierung optimiert?',
+                options     = ['A) fdisk', 'B) cfdisk', 'C) parted', 'D) gdisk'],
+                correct     = 'D',
+                explanation = 'gdisk = GPT disk, nativ für GUID Partition Table. fdisk kann GPT lesen, aber gdisk versteht es vollständig.',
+                xp_value    = 20,
+            ),
+        ],
         exam_tip          = (
             "fdisk = traditionell (MBR-fokussiert, kann auch GPT).\n"
             "gdisk = GPT-nativ, für UEFI-Systeme empfohlen.\n"
@@ -241,6 +289,22 @@ CHAPTER_4_MISSIONS: list[Mission] = [
         task_description  = "Zeige alle Partitionen mit fdisk",
         expected_commands = ["fdisk -l"],
         hint_text         = "fdisk -l oder parted -l zur Anzeige",
+        quiz_questions    = [
+            QuizQuestion(
+                question    = "Was bedeutet 'mklabel msdos' in parted?",
+                options     = ['A) Erstellt MS-DOS-Partition', 'B) Erstellt MBR-Partitionstabelle', 'C) Erstellt ext2-Dateisystem', 'D) Fehler: ungültiger Befehl'],
+                correct     = 'B',
+                explanation = "In parted heißt MBR 'msdos'. 'mklabel gpt' für GPT, 'mklabel msdos' für MBR.",
+                xp_value    = 20,
+            ),
+            QuizQuestion(
+                question    = 'Wann schreibt parted Änderungen auf die Festplatte?',
+                options     = ["A) Erst nach 'w'", "B) Erst nach 'commit'", 'C) Sofort bei jedem Befehl', "D) Erst nach 'quit'"],
+                correct     = 'C',
+                explanation = "parted schreibt SOFORT! Kein 'w' wie bei fdisk. Das ist die kritische Falle.",
+                xp_value    = 20,
+            ),
+        ],
         exam_tip          = (
             "parted-Falle: Änderungen werden SOFORT geschrieben!\n"
             "'mklabel msdos' = MBR erstellen (nicht 'mbr'!)\n"
@@ -304,6 +368,22 @@ CHAPTER_4_MISSIONS: list[Mission] = [
         task_description  = "Zeige Partitionen und ihre Dateisysteme",
         expected_commands = ["lsblk", "blkid"],
         hint_text         = "lsblk -f zeigt Dateisystem-Typ und Mount-Punkt",
+        quiz_questions    = [
+            QuizQuestion(
+                question    = 'Welcher Befehl erstellt ein ext4-Dateisystem auf /dev/sda1?',
+                options     = ['A) mkfs /dev/sda1', 'B) format -t ext4 /dev/sda1', 'C) mkfs.ext4 /dev/sda1', 'D) newfs ext4 /dev/sda1'],
+                correct     = 'C',
+                explanation = 'mkfs.ext4 /dev/sda1 oder mkfs -t ext4 /dev/sda1 sind gleichwertig.',
+                xp_value    = 20,
+            ),
+            QuizQuestion(
+                question    = "Was bedeutet 'mkfs ohne Typ-Suffix' (nur mkfs /dev/sda1)?",
+                options     = ['A) Erstellt ext4', 'B) Erstellt ext2 (kein Journaling)', 'C) Fehler', 'D) Erstellt XFS'],
+                correct     = 'B',
+                explanation = 'mkfs ohne Suffix = mkfs.ext2 — veraltet und ohne Journaling!',
+                xp_value    = 20,
+            ),
+        ],
         exam_tip          = (
             "'Wie erstellt man ein ext4-Dateisystem?'\n"
             "→ mkfs.ext4 /dev/sdXY  ODER  mkfs -t ext4 /dev/sdXY\n"
@@ -436,6 +516,22 @@ CHAPTER_4_MISSIONS: list[Mission] = [
         task_description  = "Zeige Partitionen und Dateisysteme",
         expected_commands = ["lsblk", "blkid"],
         hint_text         = "blkid oder lsblk -f zeigt den Dateisystem-Typ",
+        quiz_questions    = [
+            QuizQuestion(
+                question    = 'Welcher Befehl vergrößert ein XFS-Dateisystem?',
+                options     = ['A) xfs_growfs /dev/sda2', 'B) xfs_growfs /mountpoint', 'C) resize2fs /dev/sda2', 'D) xfs_resize /data'],
+                correct     = 'B',
+                explanation = 'xfs_growfs braucht den MOUNTPOINT, nicht das Device! Das ist die XFS-Falle im Examen.',
+                xp_value    = 20,
+            ),
+            QuizQuestion(
+                question    = 'XFS kann...',
+                options     = ['A) vergrößert und verkleinert werden', 'B) nur vergrößert, nicht verkleinert werden', 'C) nur verkleinert werden', 'D) nicht geändert werden ohne Neuformat'],
+                correct     = 'B',
+                explanation = 'XFS kann NUR vergrößert werden. Verkleinern ist nicht möglich — Datenverlust!',
+                xp_value    = 20,
+            ),
+        ],
         exam_tip          = (
             "XFS-Falle: xfs_growfs braucht den MOUNTPOINT!\n"
             "Richtig:  xfs_growfs /data\n"
@@ -494,6 +590,22 @@ CHAPTER_4_MISSIONS: list[Mission] = [
         task_description  = "Zeige Partitionen (Swap erkennbar am Typ)",
         expected_commands = ["fdisk -l", "swapon --show", "free"],
         hint_text         = "swapon --show oder free -h zeigt Swap-Nutzung",
+        quiz_questions    = [
+            QuizQuestion(
+                question    = 'Was ist die korrekte Reihenfolge zum Einrichten von Swap?',
+                options     = ['A) swapon → mkswap → fstab', 'B) mkswap → fstab → swapon', 'C) mkswap → swapon → fstab', 'D) fstab → mkswap → swapon'],
+                correct     = 'C',
+                explanation = 'Erst mkswap (formatieren), dann swapon (aktivieren), dann fstab (permanent).',
+                xp_value    = 20,
+            ),
+            QuizQuestion(
+                question    = 'Welcher fstab-Eintrag aktiviert eine Swap-Partition permanent?',
+                options     = ['A) /dev/sda2  /swap  swap  defaults  0  0', 'B) /dev/sda2  none  swap  sw  0  0', 'C) /dev/sda2  swap  ext4  defaults  0  0', 'D) /dev/sda2  none  none  swap  0  0'],
+                correct     = 'B',
+                explanation = "Swap-fstab: Gerät, 'none' als Mountpunkt, 'swap' als Typ, 'sw' als Option.",
+                xp_value    = 20,
+            ),
+        ],
         exam_tip          = (
             "mkswap = formatiert Partition als Swap.\n"
             "swapon = aktiviert Swap.\n"
@@ -641,6 +753,22 @@ CHAPTER_4_MISSIONS: list[Mission] = [
         task_description  = "Zeige alle aktuell gemounteten Dateisysteme",
         expected_commands = ["mount", "findmnt", "cat /proc/mounts"],
         hint_text         = "mount ohne Argumente zeigt alle gemounteten Dateisysteme",
+        quiz_questions    = [
+            QuizQuestion(
+                question    = "Was tust du, wenn umount 'device is busy' meldet?",
+                options     = ['A) Reboot', 'B) umount -f', 'C) lsof /mountpoint', 'D) mount -r'],
+                correct     = 'C',
+                explanation = 'lsof /mountpoint oder fuser -m /mountpoint zeigt, welche Prozesse das FS belegen.',
+                xp_value    = 20,
+            ),
+            QuizQuestion(
+                question    = 'Welcher Befehl mountet alle Dateisysteme aus /etc/fstab?',
+                options     = ['A) mount /all', 'B) mount --fstab', 'C) mount -a', 'D) fstab-mount'],
+                correct     = 'C',
+                explanation = 'mount -a = alle aus fstab mounten. Gut zum Testen nach fstab-Änderungen.',
+                xp_value    = 20,
+            ),
+        ],
         exam_tip          = (
             "mount -a = alle fstab-Einträge mounten (testen!)\n"
             "mount -o remount,rw / = Root live auf rw umschalten\n"
@@ -769,6 +897,22 @@ CHAPTER_4_MISSIONS: list[Mission] = [
         task_description  = "Zeige Partitions-Informationen",
         expected_commands = ["lsblk", "blkid"],
         hint_text         = "lsblk zeigt Partitionen und Mountpoints",
+        quiz_questions    = [
+            QuizQuestion(
+                question    = 'Wann darf fsck auf einer Partition laufen?',
+                options     = ['A) Immer, auch während des Betriebs', 'B) Nur auf unmounted Partitionen', 'C) Nur bei Reboot', 'D) Nur auf Read-Only-Partitionen'],
+                correct     = 'B',
+                explanation = 'fsck NIEMALS auf gemounteten Partitionen! Nur unmounted oder Read-Only.',
+                xp_value    = 20,
+            ),
+            QuizQuestion(
+                question    = 'Was macht fsck -n?',
+                options     = ['A) Kein Backup erstellen', 'B) Nur prüfen ohne Reparieren (Dry Run)', 'C) Nicht interaktiv', 'D) Nein zu allen Fragen'],
+                correct     = 'B',
+                explanation = 'fsck -n = nur prüfen, nichts reparieren. Sicher für erste Diagnose.',
+                xp_value    = 20,
+            ),
+        ],
         exam_tip          = (
             "fsck NUR auf unmounted Partitionen!\n"
             "fsck -y = alle Fehler automatisch korrigieren.\n"
@@ -829,6 +973,22 @@ CHAPTER_4_MISSIONS: list[Mission] = [
         task_description  = "Zeige alle Block-Geräte mit Dateisystem-Infos",
         expected_commands = ["lsblk", "lsblk -f"],
         hint_text         = "lsblk -f zeigt Dateisystem-Typ, UUID und Mountpoint",
+        quiz_questions    = [
+            QuizQuestion(
+                question    = "Was zeigt 'lsblk -f'?",
+                options     = ['A) Nur Festplattengrößen', 'B) Dateisystem-Typ, UUID und Mountpoint', 'C) Nur Partitionstypen', 'D) Festplatten-Fehler'],
+                correct     = 'B',
+                explanation = 'lsblk -f = kombiniert Gerätebaum mit FSTYPE, UUID und MOUNTPOINTS.',
+                xp_value    = 20,
+            ),
+            QuizQuestion(
+                question    = 'Warum nutzt man UUID statt /dev/sda1 in /etc/fstab?',
+                options     = ['A) UUID ist kürzer', 'B) UUID ist stabiler bei Geräteänderungen', 'C) /dev/sda1 funktioniert nicht', 'D) UUID ist schneller'],
+                correct     = 'B',
+                explanation = '/dev/sdX kann sich ändern (neue USB-Geräte). UUID bleibt immer gleich — stabiler!',
+                xp_value    = 20,
+            ),
+        ],
         exam_tip          = (
             "lsblk = Block-Geräte Baumansicht.\n"
             "blkid = UUID und Dateisystem-Typ.\n"

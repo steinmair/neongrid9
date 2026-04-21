@@ -754,6 +754,94 @@ CHAPTER_18_MISSIONS: list[Mission] = [
     ),
 
     # ══════════════════════════════════════════════════════════════════════
+    # 18.06 — Topic 101: System Architecture Deep Quiz
+    # ══════════════════════════════════════════════════════════════════════
+    Mission(
+        mission_id   = "18.06",
+        chapter      = 18,
+        title        = "Exam Block 6 — Topic 101: System Architecture Deep Quiz",
+        mtype        = "QUIZ",
+        xp           = 200,
+        speaker      = "EXAMINATOR",
+        story        = (
+            "Domain 101 — System Architecture.\n"
+            "Hardware, Boot, Init, Kernel.\n"
+            "Das Fundament. Ohne dieses Wissen bricht alles.\n\n"
+            "EXAMINATOR: 'Tiefenprüfung beginnt.'"
+        ),
+        why_important = "Domain 101 macht ~20% der LPIC-101-Prüfung aus. Hardware-IDs, Boot-Sequenz, SysVinit vs systemd und Kernel-Parameter sind garantierte Prüfungsthemen.",
+        explanation   = (
+            "Prüfungsblock 6 testet die gesamte Domain 101 in der Tiefe:\n"
+            "• 101.1: BIOS/UEFI, POST, IRQ, DMA, /proc, /sys, /dev\n"
+            "• 101.2: GRUB2, MBR, GPT, initramfs, efibootmgr\n"
+            "• 101.3: SysVinit-Runlevels, systemd-Targets, Unit-Files\n"
+            "Fokus: Prüfungsfallen, Distro-Unterschiede, exakte Syntax."
+        ),
+        quiz_questions = [
+            QuizQuestion(
+                question    = "Welcher Runlevel entspricht in systemd dem 'rescue.target'?",
+                options     = ["A) Runlevel 0", "B) Runlevel 1", "C) Runlevel 3", "D) Runlevel 5"],
+                correct     = "B",
+                explanation = "Runlevel 1 (Single-User) = rescue.target in systemd. Runlevel 0 = poweroff.target, 6 = reboot.target.",
+                xp_value    = 20,
+            ),
+            QuizQuestion(
+                question    = "Welcher Befehl zeigt alle geladenen systemd-Units an?",
+                options     = ["A) systemctl list-all", "B) systemctl status", "C) systemctl list-units", "D) systemctl show"],
+                correct     = "C",
+                explanation = "'systemctl list-units' zeigt alle aktiven Units. Mit '--all' auch inaktive.",
+                xp_value    = 20,
+            ),
+            QuizQuestion(
+                question    = "Wo liegt die GRUB2-Konfigurationsdatei die NICHT manuell bearbeitet werden soll?",
+                options     = ["A) /etc/default/grub", "B) /boot/grub/grub.cfg", "C) /etc/grub.d/", "D) /boot/grub2/custom.cfg"],
+                correct     = "B",
+                explanation = "/boot/grub/grub.cfg wird von update-grub generiert — niemals direkt bearbeiten. Änderungen gehören in /etc/default/grub.",
+                xp_value    = 20,
+            ),
+            QuizQuestion(
+                question    = "Was ist der Zweck von 'mkinitramfs'?",
+                options     = ["A) GRUB installieren", "B) Kernel kompilieren", "C) Initiales RAM-Dateisystem erstellen", "D) Kernel-Module laden"],
+                correct     = "C",
+                explanation = "mkinitramfs erstellt das initramfs-Image — ein temporäres Root-Dateisystem das beim Boot vor dem echten Root-FS geladen wird.",
+                xp_value    = 20,
+            ),
+            QuizQuestion(
+                question    = "Welcher Befehl aktiviert eine Unit dauerhaft (Autostart bei Boot)?",
+                options     = ["A) systemctl start nginx", "B) systemctl enable nginx", "C) systemctl activate nginx", "D) systemctl load nginx"],
+                correct     = "B",
+                explanation = "'enable' = Symlink in /etc/systemd/system/ anlegen → Autostart. 'start' = nur jetzt starten, kein Autostart.",
+                xp_value    = 20,
+            ),
+            QuizQuestion(
+                question    = "In welcher Datei stehen die IRQ-Zuordnungen zur Laufzeit?",
+                options     = ["A) /sys/bus/irq", "B) /proc/interrupts", "C) /dev/irq", "D) /etc/irq.conf"],
+                correct     = "B",
+                explanation = "/proc/interrupts zeigt alle aktuellen IRQ-Zuordnungen zur Laufzeit. Klassische LPIC-Frage.",
+                xp_value    = 20,
+            ),
+            QuizQuestion(
+                question    = "Welcher SysVinit-Runlevel ist auf Debian-Systemen der Standard für Multi-User mit Netzwerk?",
+                options     = ["A) Runlevel 3", "B) Runlevel 5", "C) Runlevel 2", "D) Runlevel 4"],
+                correct     = "C",
+                explanation = "Auf Debian ist Runlevel 2 der Standard (Multi-User + Netzwerk). Auf RHEL/CentOS ist es Runlevel 3 (ohne GUI) oder 5 (mit GUI).",
+                xp_value    = 20,
+            ),
+            QuizQuestion(
+                question    = "Was macht 'systemctl isolate multi-user.target'?",
+                options     = ["A) Startet alle Units", "B) Wechselt sofort zu multi-user.target", "C) Erstellt multi-user.target", "D) Listet Units des Targets"],
+                correct     = "B",
+                explanation = "'isolate' wechselt sofort zum angegebenen Target — stoppt alle inkompatiblen Units. Äquivalent zu telinit in SysVinit.",
+                xp_value    = 20,
+            ),
+        ],
+        exam_tip     = "101-Prüfungsfallen: Runlevel 2 Debian vs RHEL | grub.cfg vs /etc/default/grub | rescue.target vs emergency.target | systemctl enable vs start",
+        memory_tip   = "Domain 101 = Hardware sehen (lspci/lsusb) + Boot steuern (GRUB2) + Init verstehen (SysVinit/systemd)",
+        gear_reward  = None,
+        faction_reward = ("Kernel Syndicate", 15),
+    ),
+
+    # ══════════════════════════════════════════════════════════════════════
     # 18.07 — Topic 102: Installation & Package Management Quiz
     # ══════════════════════════════════════════════════════════════════════
     Mission(

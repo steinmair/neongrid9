@@ -90,6 +90,22 @@ CHAPTER_14_MISSIONS: list[Mission] = [
         task_description = "Mache das Skript backup.sh ausführbar",
         expected_commands = ["chmod +x backup.sh"],
         hint_text    = "chmod +x datei.sh macht eine Datei ausführbar (execute-Bit setzen)",
+        quiz_questions    = [
+            QuizQuestion(
+                question    = 'Was ist die Shebang-Zeile und warum wichtig?',
+                options     = ['A) Kommentar-Zeile', 'B) Erste Zeile: #!/bin/bash — definiert den Interpreter für das Skript', 'C) Sicherheits-Header', 'D) Encoding-Deklaration'],
+                correct     = 'B',
+                explanation = '#!/bin/bash = Shebang. Ohne Shebang: Skript wird als aktuelle Shell interpretiert.',
+                xp_value    = 20,
+            ),
+            QuizQuestion(
+                question    = 'Welche Rechte braucht ein Skript zum Ausführen?',
+                options     = ['A) Read + Execute', 'B) Write + Execute', 'C) Nur Execute', 'D) Alle Rechte (777)'],
+                correct     = 'A',
+                explanation = 'chmod +x oder chmod 755. Read+Execute reicht zum Ausführen.',
+                xp_value    = 20,
+            ),
+        ],
         exam_tip     = (
             "PRÜFUNG: Shebang MUSS erste Zeile sein!\n"
             "  #!/bin/bash = absoluter Pfad\n"
@@ -176,6 +192,22 @@ CHAPTER_14_MISSIONS: list[Mission] = [
         task_description = "Wie lautet die spezielle Variable für den Exit-Code des letzten Befehls?",
         expected_commands = ["echo $?"],
         hint_text    = "$? enthält den Exit-Code des letzten ausgeführten Befehls (0=Erfolg)",
+        quiz_questions    = [
+            QuizQuestion(
+                question    = 'Was enthält $#?',
+                options     = ['A) Exit-Code des letzten Befehls', 'B) Anzahl der Skript-Argumente', 'C) Letztes Argument', 'D) Skriptname'],
+                correct     = 'B',
+                explanation = '$# = Anzahl der Parameter. $1 $2 ... = einzelne Parameter. $@ = alle als Array.',
+                xp_value    = 20,
+            ),
+            QuizQuestion(
+                question    = 'Was ist der Unterschied zwischen $@ und $*?',
+                options     = ['A) Kein Unterschied', 'B) "$@" bewahrt einzelne Argumente (gequotet), "$*" macht einen String', 'C) $* ist veraltet', 'D) $@ nur in Funktionen'],
+                correct     = 'B',
+                explanation = '"$@" = jedes Argument separat gequotet. "$*" = alle als ein String. $@ fast immer bevorzugt.',
+                xp_value    = 20,
+            ),
+        ],
         exam_tip     = (
             "PRÜFUNGS-FALLE: Kein Leerzeichen um '=' beim Setzen!\n"
             "  VAR=wert   ✓  KORREKT\n"
@@ -272,6 +304,22 @@ CHAPTER_14_MISSIONS: list[Mission] = [
         task_description = "Welcher test-Operator prüft ob eine Datei existiert und ausführbar ist?",
         expected_commands = ["test -x /bin/bash"],
         hint_text    = "test -x DATEI (oder [ -x DATEI ]) prüft ob eine Datei ausführbar ist",
+        quiz_questions    = [
+            QuizQuestion(
+                question    = 'Welche test-Bedingung prüft ob eine Datei existiert?',
+                options     = ['A) [ -e DATEI ]', 'B) [ -x DATEI ]', 'C) [ -f DATEI ]', 'D) [ -d DATEI ]'],
+                correct     = 'A',
+                explanation = '-e = exists. -f = regular file. -d = directory. -x = executable. -r = readable.',
+                xp_value    = 20,
+            ),
+            QuizQuestion(
+                question    = "Was macht '[ -z $VAR ]'?",
+                options     = ['A) Prüft ob Variable zero ist (Zahl)', 'B) Prüft ob Variable leer (zero length) ist', 'C) Prüft ob Variable gesetzt ist', 'D) Prüft Datei-Größe'],
+                correct     = 'B',
+                explanation = '-z = zero length (leer). -n = not empty. Immer quoten: [ -z "$VAR" ]!',
+                xp_value    = 20,
+            ),
+        ],
         exam_tip     = (
             "HÄUFIGE PRÜFUNGSFRAGEN:\n"
             "  -e = exists (any type)\n"
@@ -368,6 +416,22 @@ CHAPTER_14_MISSIONS: list[Mission] = [
         task_description = "Wie iteriert man mit for über alle .sh-Dateien im aktuellen Verzeichnis?",
         expected_commands = ["for f in *.sh; do echo $f; done"],
         hint_text    = "for f in *.sh; do ... done iteriert über alle .sh-Dateien per Glob",
+        quiz_questions    = [
+            QuizQuestion(
+                question    = 'Was ist der Unterschied zwischen for und while in Bash?',
+                options     = ['A) Kein Unterschied', 'B) for iteriert über Liste, while läuft solange Bedingung wahr', 'C) while ist schneller', 'D) for nur für Zahlen'],
+                correct     = 'B',
+                explanation = 'for VAR in LISTE: iteriert. while BEDINGUNG: läuft solange Bedingung 0 (true).',
+                xp_value    = 20,
+            ),
+            QuizQuestion(
+                question    = 'Wie iteriert man über alle Argumente in einer for-Schleife?',
+                options     = ['A) for arg in $@; do', 'B) for arg in "$@"; do', 'C) for arg; do (implizit $@)', 'D) B oder C'],
+                correct     = 'D',
+                explanation = 'for arg in "$@"; do ODER kurz: for arg; do (iteriert implizit über "$@").',
+                xp_value    = 20,
+            ),
+        ],
         exam_tip     = (
             "MERKE: for..in..do..done und while..do..done\n"
             "IFS= read -r ZEILE = sicher Zeilenweise lesen\n"
@@ -469,6 +533,22 @@ CHAPTER_14_MISSIONS: list[Mission] = [
         task_description = "Wie endet ein case-Block in Bash?",
         expected_commands = ["esac"],
         hint_text    = "case endet mit 'esac' (case rückwärts). Jedes Muster endet mit ;;",
+        quiz_questions    = [
+            QuizQuestion(
+                question    = "Wie ruft man eine Funktion 'myfunc' in Bash auf?",
+                options     = ['A) call myfunc', 'B) myfunc [argumente]', 'C) function myfunc', 'D) invoke myfunc'],
+                correct     = 'B',
+                explanation = 'Funktionen einfach wie Befehle aufrufen: myfunc arg1 arg2. Definition: myfunc() { ... }',
+                xp_value    = 20,
+            ),
+            QuizQuestion(
+                question    = 'Was macht case $VAR in bei Bash?',
+                options     = ['A) Prüft jeden Buchstaben', 'B) Switch/Case: prüft Variable gegen Muster, führt passenden Block aus', 'C) Iteriert über Variable', 'D) Nur für Zahlen'],
+                correct     = 'B',
+                explanation = 'case $VAR in MUSTER) Befehle ;; esac. Muster: a|b = oder, * = default.',
+                xp_value    = 20,
+            ),
+        ],
         exam_tip     = (
             "case SYNTAX:\n"
             "  case $VAR in\n"
@@ -560,6 +640,22 @@ CHAPTER_14_MISSIONS: list[Mission] = [
         task_description = "Berechne 15 modulo 4 mit Bash-Arithmetik",
         expected_commands = ["echo $((15 % 4))"],
         hint_text    = "$(( )) ist Bash-Arithmetic. % ist Modulo-Operator. Ergebnis: 3",
+        quiz_questions    = [
+            QuizQuestion(
+                question    = 'Wie berechnet man 2+3 in Bash?',
+                options     = ['A) expr 2 + 3', 'B) echo $((2+3))', 'C) let result=2+3', 'D) A, B oder C'],
+                correct     = 'D',
+                explanation = 'Alle drei sind gültig! $(( )) = arithmetic expansion. let und expr auch möglich.',
+                xp_value    = 20,
+            ),
+            QuizQuestion(
+                question    = 'Wie greift man auf alle Elemente eines Bash-Arrays zu?',
+                options     = ['A) $ARRAY', 'B) ${ARRAY[@]}', 'C) $ARRAY[*]', 'D) ${ARRAY[all]}'],
+                correct     = 'B',
+                explanation = '${ARRAY[@]} = alle Elemente (gequotet). ${#ARRAY[@]} = Anzahl der Elemente.',
+                xp_value    = 20,
+            ),
+        ],
         exam_tip     = (
             "$(( )) = Bash-eigene Arithmetik (schnell, ganzzahlig)\n"
             "expr = POSIX, braucht Leerzeichen: expr 3 + 4\n"
@@ -649,6 +745,22 @@ CHAPTER_14_MISSIONS: list[Mission] = [
         task_description = "Welche getopts-Variable enthält das Argument einer Option?",
         expected_commands = ["echo $OPTARG"],
         hint_text    = "$OPTARG enthält den Wert der letzten Option mit Argument (z.B. -f DATEI → $OPTARG=DATEI)",
+        quiz_questions    = [
+            QuizQuestion(
+                question    = "Was ist 'getopts' in Bash?",
+                options     = ['A) Paket-Manager', 'B) Verarbeitet Kommandozeilen-Optionen (-v, -f, etc.)', 'C) Debugger', 'D) Eingabe-Validator'],
+                correct     = 'B',
+                explanation = "getopts 'hv:f:' = parsed -h (kein Arg), -v (mit Arg :), -f (mit Arg :). $OPTARG = Argument.",
+                xp_value    = 20,
+            ),
+            QuizQuestion(
+                question    = 'Was macht \'read -p "Eingabe: " VAR\'?',
+                options     = ['A) Liest Variable aus Datei', 'B) Zeigt Prompt und liest Eingabe in Variable', 'C) Passwort-Eingabe', 'D) Liest Prozess-ID'],
+                correct     = 'B',
+                explanation = 'read -p PROMPT VAR = Benutzereingabe mit Prompt. read -s = silent (für Passwörter).',
+                xp_value    = 20,
+            ),
+        ],
         exam_tip     = (
             "GETOPTS MERKSÄTZE:\n"
             "  ':' nach Option = Option erwartet Argument\n"
@@ -2631,6 +2743,15 @@ CHAPTER_14_MISSIONS: list[Mission] = [
         task_description = "BOSS: Prüfe die Skript-Syntax von cleanup.sh ohne Ausführung",
         expected_commands = ["bash -n cleanup.sh"],
         hint_text    = "bash -n SKRIPT prüft die Syntax ohne das Skript auszuführen (dry-run)",
+        quiz_questions    = [
+            QuizQuestion(
+                question    = 'Was ist $? in Bash?',
+                options     = ['A) Anzahl der Parameter', 'B) Exit-Code des letzten Befehls (0=Erfolg)', 'C) Prozess-ID', 'D) Letztes Argument'],
+                correct     = 'B',
+                explanation = '$? = Exit-Code. 0 = Erfolg. 1-255 = Fehler. Immer nach kritischen Befehlen prüfen!',
+                xp_value    = 20,
+            ),
+        ],
         exam_tip     = (
             "LPIC-1 FINAL SCRIPT CHECK:\n"
             "  bash -x = debug (trace)\n"

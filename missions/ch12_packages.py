@@ -79,6 +79,22 @@ CHAPTER_12_MISSIONS: list[Mission] = [
         task_description = "Zeige alle installierten Pakete mit dpkg",
         expected_commands = ["dpkg -l"],
         hint_text    = "dpkg -l listet alle installierten Pakete. Pipe zu grep um zu filtern.",
+        quiz_questions    = [
+            QuizQuestion(
+                question    = "Was macht 'dpkg -l'?",
+                options     = ['A) Installiert Paket', 'B) Listet alle installierten Pakete', 'C) Zeigt Paket-Log', 'D) Löscht Paket'],
+                correct     = 'B',
+                explanation = 'dpkg -l = list all installed packages. dpkg -L PKG = listet Dateien eines Pakets.',
+                xp_value    = 20,
+            ),
+            QuizQuestion(
+                question    = 'Welcher Befehl zeigt, zu welchem Paket eine Datei gehört?',
+                options     = ['A) dpkg -s /pfad', 'B) dpkg -S /pfad/zur/datei', 'C) dpkg -q datei', 'D) apt-file datei'],
+                correct     = 'B',
+                explanation = 'dpkg -S = search. Zeigt welches Paket die Datei installiert hat.',
+                xp_value    = 20,
+            ),
+        ],
         exam_tip     = (
             "PRÜFUNGS-MERKSÄTZE:\n"
             "  dpkg -i = install\n"
@@ -166,6 +182,22 @@ CHAPTER_12_MISSIONS: list[Mission] = [
         task_description = "Aktualisiere die Paketlisten vom Repository",
         expected_commands = ["apt update"],
         hint_text    = "apt update holt aktuelle Paketlisten von den konfigurierten Repos",
+        quiz_questions    = [
+            QuizQuestion(
+                question    = "Was macht 'apt upgrade' im Vergleich zu 'apt full-upgrade'?",
+                options     = ['A) Kein Unterschied', 'B) apt upgrade entfernt keine Pakete, full-upgrade schon (bei Konflikten)', 'C) full-upgrade ist sicherer', 'D) apt upgrade ist für Kernel'],
+                correct     = 'B',
+                explanation = 'apt upgrade: keine Pakete entfernt. full-upgrade (dist-upgrade): entfernt bei Bedarf.',
+                xp_value    = 20,
+            ),
+            QuizQuestion(
+                question    = "Warum muss man 'apt update' vor 'apt install' ausführen?",
+                options     = ['A) Lädt Paket herunter', 'B) Aktualisiert die lokale Paketliste (Metadaten) vom Repository', 'C) Prüft Abhängigkeiten', 'D) Authentifiziert Repository'],
+                correct     = 'B',
+                explanation = 'apt update = Paketliste aktualisieren (keine Installation!). Ohne update: veraltete Infos.',
+                xp_value    = 20,
+            ),
+        ],
         exam_tip     = (
             "REIHENFOLGE MERKEN:\n"
             "  1. apt update      (Listen holen)\n"
@@ -246,6 +278,22 @@ CHAPTER_12_MISSIONS: list[Mission] = [
         task_description = "Zeige die konfigurierten APT-Paketquellen",
         expected_commands = ["cat /etc/apt/sources.list"],
         hint_text    = "/etc/apt/sources.list enthält die konfigurierten Repository-URLs",
+        quiz_questions    = [
+            QuizQuestion(
+                question    = 'Was steht in /etc/apt/sources.list?',
+                options     = ['A) Installierte Pakete', 'B) Repository-URLs und Komponenten (main, contrib, etc.)', 'C) GPG-Schlüssel', 'D) Paket-Cache'],
+                correct     = 'B',
+                explanation = '/etc/apt/sources.list: Repository-Quellen. /etc/apt/sources.list.d/: Drop-in Dateien.',
+                xp_value    = 20,
+            ),
+            QuizQuestion(
+                question    = "Was macht 'apt-key add -'?",
+                options     = ['A) Fügt leeren Schlüssel hinzu', 'B) Fügt GPG-Schlüssel aus Stdin zum apt-Keyring hinzu', 'C) Erstellt neuen Schlüssel', 'D) Zeigt alle Schlüssel'],
+                correct     = 'B',
+                explanation = 'apt-key add KEY = GPG-Signaturschlüssel für Repository-Verifikation hinzufügen.',
+                xp_value    = 20,
+            ),
+        ],
         exam_tip     = (
             "PRÜFUNGSFRAGE: Was macht 'deb-src'?\n"
             "→ Quellcode-Pakete herunterladen (für apt-get source)\n"
@@ -324,6 +372,22 @@ CHAPTER_12_MISSIONS: list[Mission] = [
         task_description = "Welches Paket enthält die Datei /usr/bin/python3 (rpm)?",
         expected_commands = ["rpm -qf /usr/bin/python3"],
         hint_text    = "rpm -qf /pfad/zur/datei zeigt welches Paket die Datei gehört",
+        quiz_questions    = [
+            QuizQuestion(
+                question    = 'Welcher rpm-Befehl zeigt, zu welchem Paket eine Datei gehört?',
+                options     = ['A) rpm -qi /pfad', 'B) rpm -qf /pfad/zur/datei', 'C) rpm -ql datei', 'D) rpm -qs datei'],
+                correct     = 'B',
+                explanation = 'rpm -qf = query file. rpm -qi = query info. rpm -ql = query list (Dateien des Pakets).',
+                xp_value    = 20,
+            ),
+            QuizQuestion(
+                question    = "Was macht 'rpm -ivh paket.rpm'?",
+                options     = ['A) Informationen anzeigen', 'B) Installieren mit verbose + Fortschrittsbalken', 'C) Auf Updates prüfen', 'D) Verify Hashsumme'],
+                correct     = 'B',
+                explanation = 'rpm -ivh: i=install, v=verbose, h=hash (Fortschrittsbalken #####).',
+                xp_value    = 20,
+            ),
+        ],
         exam_tip     = (
             "DPKG vs RPM Vergleich:\n"
             "  dpkg -i    = rpm -ivh   (install)\n"
@@ -415,6 +479,22 @@ CHAPTER_12_MISSIONS: list[Mission] = [
         task_description = "Suche nach dem Paket 'httpd' mit yum",
         expected_commands = ["yum search httpd"],
         hint_text    = "yum search PAKETNAME durchsucht alle konfigurierten Repositories",
+        quiz_questions    = [
+            QuizQuestion(
+                question    = 'Was ist der Unterschied zwischen yum und dnf?',
+                options     = ['A) yum ist moderner', 'B) dnf ist der moderne Nachfolger von yum (schneller, bessere Abhängigkeiten)', 'C) Kein Unterschied', 'D) yum ist für RHEL, dnf für Fedora'],
+                correct     = 'B',
+                explanation = 'dnf = Dandified YUM, moderner Ersatz. RHEL8+ nutzt dnf. yum ist oft ein Alias.',
+                xp_value    = 20,
+            ),
+            QuizQuestion(
+                question    = "Was macht 'yum/dnf provides /pfad/zur/datei'?",
+                options     = ['A) Zeigt Abhängigkeiten', 'B) Zeigt welches Paket diese Datei bereitstellt', 'C) Überprüft Datei-Integrität', 'D) Installiert Datei'],
+                correct     = 'B',
+                explanation = 'provides = Gegenstück zu dpkg -S. Sucht Paket das eine bestimmte Datei enthält.',
+                xp_value    = 20,
+            ),
+        ],
         exam_tip     = (
             "APT vs YUM/DNF:\n"
             "  apt update        = yum check-update / dnf check-update\n"
@@ -495,6 +575,22 @@ CHAPTER_12_MISSIONS: list[Mission] = [
         task_description = "Zeige alle konfigurierten zypper-Repositories",
         expected_commands = ["zypper repos"],
         hint_text    = "zypper repos (oder zypper lr) listet alle konfigurierten Repositories",
+        quiz_questions    = [
+            QuizQuestion(
+                question    = "Was macht 'zypper search PKG'?",
+                options     = ['A) Installiert Paket', 'B) Sucht nach Paket in Repositories', 'C) Zeigt Paket-Details', 'D) Entfernt Paket'],
+                correct     = 'B',
+                explanation = 'zypper search (oder se) sucht. zypper install (in), zypper remove (rm).',
+                xp_value    = 20,
+            ),
+            QuizQuestion(
+                question    = 'Zypper ist der Paketmanager für welche Distributionen?',
+                options     = ['A) Debian/Ubuntu', 'B) RHEL/CentOS', 'C) SUSE/openSUSE', 'D) Arch Linux'],
+                correct     = 'C',
+                explanation = 'zypper = SUSE/openSUSE. apt/dpkg = Debian/Ubuntu. yum/dnf/rpm = RHEL.',
+                xp_value    = 20,
+            ),
+        ],
         exam_tip     = (
             "MERKE: Alle drei Familien nutzen rpm als Low-Level-Format!\n"
             "Nur Debian nutzt .deb — alle anderen nutzen .rpm\n"
@@ -572,6 +668,22 @@ CHAPTER_12_MISSIONS: list[Mission] = [
         task_description = "Zeige die Library-Abhängigkeiten von /usr/bin/python3",
         expected_commands = ["ldd /usr/bin/python3"],
         hint_text    = "ldd zeigt alle Shared Libraries die ein Programm benötigt",
+        quiz_questions    = [
+            QuizQuestion(
+                question    = "Was zeigt 'ldd /pfad/zum/programm'?",
+                options     = ['A) Dateiformat des Programms', 'B) Benötigte Shared Libraries (dynamische Abhängigkeiten)', 'C) Debug-Symbole', 'D) Programmversion'],
+                correct     = 'B',
+                explanation = 'ldd = list dynamic dependencies. Zeigt alle .so-Dateien die das Programm braucht.',
+                xp_value    = 20,
+            ),
+            QuizQuestion(
+                question    = 'Was macht ldconfig?',
+                options     = ['A) Library konfigurieren (kompilieren)', 'B) Shared Library Cache aktualisieren (nach Installation neuer .so-Dateien)', 'C) Alle Libraries auflisten', 'D) Library-Pfade in .bashrc setzen'],
+                correct     = 'B',
+                explanation = 'ldconfig aktualisiert den ld.so-Cache. Nach neuer Library: ldconfig ausführen!',
+                xp_value    = 20,
+            ),
+        ],
         exam_tip     = (
             "PRÜFUNGSFRAGE: Was macht ldconfig?\n"
             "→ Erstellt/aktualisiert den Shared-Library-Cache (/etc/ld.so.cache)\n"
@@ -1833,6 +1945,15 @@ CHAPTER_12_MISSIONS: list[Mission] = [
         task_description = "BOSS: Bereinige das System — entferne Paket 'backdoor-agent' vollständig inkl. Config",
         expected_commands = ["apt purge backdoor-agent"],
         hint_text    = "apt purge entfernt Paket UND Konfigurationsdateien vollständig",
+        quiz_questions    = [
+            QuizQuestion(
+                question    = "Was ist der Unterschied zwischen 'dpkg -r' und 'dpkg -P'?",
+                options     = ['A) Kein Unterschied', 'B) -r entfernt Paket (Konfig bleibt), -P purge (Konfig auch gelöscht)', 'C) -r ist für RHEL, -P für Debian', 'D) -P ist sicherer'],
+                correct     = 'B',
+                explanation = 'dpkg -r = remove (Konfigurationsdateien bleiben). dpkg -P = purge (alles weg).',
+                xp_value    = 20,
+            ),
+        ],
         exam_tip     = (
             "LPIC-1 FINAL PACKAGE CHECK:\n"
             "  dpkg -i/-r/-P/-l/-L/-S\n"

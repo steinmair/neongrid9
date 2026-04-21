@@ -79,6 +79,22 @@ CHAPTER_13_MISSIONS: list[Mission] = [
         task_description = "Zeige alle aktuell geladenen Kernel-Module",
         expected_commands = ["lsmod"],
         hint_text    = "lsmod zeigt alle geladenen Kernel-Module mit Größe und Verwendung",
+        quiz_questions    = [
+            QuizQuestion(
+                question    = 'Welcher Befehl lädt ein Kernel-Modul mit allen Abhängigkeiten?',
+                options     = ['A) insmod modul', 'B) modprobe modul', 'C) lsmod modul', 'D) modload modul'],
+                correct     = 'B',
+                explanation = 'modprobe = lädt Modul + alle Abhängigkeiten automatisch. insmod = nur das Modul selbst.',
+                xp_value    = 20,
+            ),
+            QuizQuestion(
+                question    = "Was zeigt 'lsmod'?",
+                options     = ['A) Verfügbare Module auf Disk', 'B) Aktuell geladene Kernel-Module', 'C) Module-Konfiguration', 'D) Modul-Fehler'],
+                correct     = 'B',
+                explanation = 'lsmod = list modules. Zeigt geladene Module + Größe + Verwendungen.',
+                xp_value    = 20,
+            ),
+        ],
         exam_tip     = (
             "KRITISCH: modprobe vs insmod!\n"
             "  modprobe = löst Abhängigkeiten (EMPFOHLEN)\n"
@@ -156,6 +172,22 @@ CHAPTER_13_MISSIONS: list[Mission] = [
         task_description = "Zeige welche Module beim Boot automatisch geladen werden",
         expected_commands = ["cat /etc/modules"],
         hint_text    = "/etc/modules listet Module die automatisch beim Systemstart geladen werden",
+        quiz_questions    = [
+            QuizQuestion(
+                question    = 'Wo konfiguriert man Module die beim Boot automatisch geladen werden?',
+                options     = ['A) /etc/modules-load.d/ oder /etc/modules', 'B) /boot/grub/modules', 'C) /lib/modules/', 'D) /etc/modprobe.conf'],
+                correct     = 'A',
+                explanation = '/etc/modules (Debian) oder /etc/modules-load.d/*.conf (systemd) = automatisches Laden.',
+                xp_value    = 20,
+            ),
+            QuizQuestion(
+                question    = 'Wie blockiert man ein Kernel-Modul dauerhaft?',
+                options     = ['A) rmmod --permanent modul', 'B) blacklist modul in /etc/modprobe.d/', 'C) modprobe -b modul', 'D) touch /etc/modules.blacklist'],
+                correct     = 'B',
+                explanation = 'blacklist MODUL in /etc/modprobe.d/blacklist.conf. Dann: update-initramfs -u',
+                xp_value    = 20,
+            ),
+        ],
         exam_tip     = (
             "PRÜFUNGSFRAGE: Wie verhindert man dauerhaft das Laden eines Moduls?\n"
             "→ 'blacklist MODULNAME' in /etc/modprobe.d/blacklist.conf\n"
@@ -234,6 +266,22 @@ CHAPTER_13_MISSIONS: list[Mission] = [
         task_description = "Zeige die aktuelle Kernel-Version",
         expected_commands = ["uname -r"],
         hint_text    = "uname -r zeigt die Kernel-Release-Version. uname -a zeigt alles.",
+        quiz_questions    = [
+            QuizQuestion(
+                question    = 'Was zeigt cat /proc/cpuinfo?',
+                options     = ['A) CPU-Auslastung', 'B) CPU-Modell, Kerne, Flags und Taktrate', 'C) CPU-Temperatur', 'D) Prozess-Liste'],
+                correct     = 'B',
+                explanation = '/proc/cpuinfo = CPU-Details vom Kernel. /proc/meminfo = RAM-Details.',
+                xp_value    = 20,
+            ),
+            QuizQuestion(
+                question    = "Was macht 'uname -r'?",
+                options     = ['A) Zeigt alle Kernel-Infos', 'B) Zeigt die laufende Kernel-Version', 'C) Zeigt Release-Datum', 'D) Root-Prüfung'],
+                correct     = 'B',
+                explanation = 'uname -r = release (Kernel-Version). uname -a = alle Infos.',
+                xp_value    = 20,
+            ),
+        ],
         exam_tip     = (
             "PRÜFUNG: uname Flags kennen!\n"
             "  -r = release (nur Versionsnummer)\n"
@@ -318,6 +366,22 @@ CHAPTER_13_MISSIONS: list[Mission] = [
         task_description = "Aktiviere IP-Forwarding mit sysctl",
         expected_commands = ["sysctl -w net.ipv4.ip_forward=1"],
         hint_text    = "sysctl -w schreibt den Wert. net.ipv4.ip_forward=1 aktiviert IP-Weiterleitung.",
+        quiz_questions    = [
+            QuizQuestion(
+                question    = 'Wie setzt man einen sysctl-Parameter dauerhaft?',
+                options     = ['A) sysctl -w param=wert (dauerhaft)', 'B) Eintrag in /etc/sysctl.conf oder /etc/sysctl.d/', 'C) Kernel-Recompile', 'D) Nur via Reboot'],
+                correct     = 'B',
+                explanation = 'sysctl -w = temporär (bis Reboot). Dauerhaft: /etc/sysctl.conf, dann sysctl -p.',
+                xp_value    = 20,
+            ),
+            QuizQuestion(
+                question    = "Was macht 'sysctl -p'?",
+                options     = ['A) Listet alle Parameter', 'B) Lädt Konfiguration aus /etc/sysctl.conf neu', 'C) Persistenz prüfen', 'D) Setzt Default-Werte'],
+                correct     = 'B',
+                explanation = 'sysctl -p = apply persistent settings. Liest /etc/sysctl.conf und aktiviert.',
+                xp_value    = 20,
+            ),
+        ],
         exam_tip     = (
             "PRÜFUNGSFRAGEN:\n"
             "  Wie dauerhaft setzen? → /etc/sysctl.conf + sysctl -p\n"
@@ -402,6 +466,22 @@ CHAPTER_13_MISSIONS: list[Mission] = [
         task_description = "Zeige Informationen über das Gerät /dev/sda mit udevadm",
         expected_commands = ["udevadm info /dev/sda"],
         hint_text    = "udevadm info /dev/sda zeigt alle udev-Attribute des Block-Geräts",
+        quiz_questions    = [
+            QuizQuestion(
+                question    = 'Was ist udev?',
+                options     = ['A) UDP Event Daemon', 'B) Kernel-Geräteverwaltungs-Daemon (erstellt /dev-Einträge dynamisch)', 'C) User Device Manager', 'D) USB Detector'],
+                correct     = 'B',
+                explanation = 'udev = Userspace Device Manager. Erstellt /dev-Einträge dynamisch bei Hardware-Erkennung.',
+                xp_value    = 20,
+            ),
+            QuizQuestion(
+                question    = 'Welcher Befehl zeigt udev-Informationen zu einem Gerät?',
+                options     = ['A) udev-info /dev/sda', 'B) udevadm info /dev/sda', 'C) udev list /dev/sda', 'D) devinfo /dev/sda'],
+                correct     = 'B',
+                explanation = 'udevadm info = udev admin info. udevadm monitor = Live-Events beobachten.',
+                xp_value    = 20,
+            ),
+        ],
         exam_tip     = (
             "PRÜFUNGSFRAGEN:\n"
             "  udev-Regeln liegen in: /etc/udev/rules.d/\n"
@@ -482,6 +562,22 @@ CHAPTER_13_MISSIONS: list[Mission] = [
         task_description = "Zeige Kernel-Nachrichten mit lesbaren Zeitstempeln",
         expected_commands = ["dmesg -T"],
         hint_text    = "dmesg -T zeigt Kernel-Nachrichten mit menschenlesbaren Zeitstempeln",
+        quiz_questions    = [
+            QuizQuestion(
+                question    = "Was macht 'dmesg -T'?",
+                options     = ['A) Teste Kernel-Fehler', 'B) Zeigt Kernel-Nachrichten mit menschenlesbarem Timestamp', 'C) Nur Fehler-Level', 'D) Tail-Modus'],
+                correct     = 'B',
+                explanation = 'dmesg -T = human-readable timestamps (statt Sekunden seit Boot).',
+                xp_value    = 20,
+            ),
+            QuizQuestion(
+                question    = 'Was ist der Unterschied zwischen dmesg und journalctl -k?',
+                options     = ['A) Kein Unterschied', 'B) dmesg zeigt Kernel-Ringpuffer, journalctl -k zeigt Kernel-Logs aus systemd-Journal', 'C) dmesg ist moderner', 'D) journalctl -k ist schneller'],
+                correct     = 'B',
+                explanation = 'Beide zeigen Kernel-Messages. journalctl -k (--dmesg) aus persistentem Journal.',
+                xp_value    = 20,
+            ),
+        ],
         exam_tip     = (
             "MERKE:\n"
             "  dmesg = Boot-Kernel-Nachrichten aus Ringpuffer\n"
@@ -563,6 +659,22 @@ CHAPTER_13_MISSIONS: list[Mission] = [
         task_description = "Liste alle Dateien im /boot-Verzeichnis",
         expected_commands = ["ls /boot/"],
         hint_text    = "ls /boot/ zeigt alle Kernel-Images, initramfs-Dateien und GRUB-Verzeichnisse",
+        quiz_questions    = [
+            QuizQuestion(
+                question    = 'Welche Dateien liegen typischerweise in /boot/?',
+                options     = ['A) Nur GRUB-Dateien', 'B) Kernel-Image (vmlinuz), initrd/initramfs, GRUB-Konfiguration', 'C) Nur initramfs', 'D) Boot-Logs'],
+                correct     = 'B',
+                explanation = '/boot/: vmlinuz-* (Kernel), initrd.img-* (initramfs), grub/ (Bootloader-Konfig).',
+                xp_value    = 20,
+            ),
+            QuizQuestion(
+                question    = 'Was macht update-initramfs -u?',
+                options     = ['A) Updates den Kernel', 'B) Aktualisiert das initramfs-Image für den aktuellen Kernel', 'C) GRUB updaten', 'D) Boot-Parameter setzen'],
+                correct     = 'B',
+                explanation = 'update-initramfs -u = update. Nötig nach Kernelmodul-Änderungen, die beim Boot benötigt werden.',
+                xp_value    = 20,
+            ),
+        ],
         exam_tip     = (
             "MERKE:\n"
             "  vmlinuz = komprimierter Linux-Kernel (z = zipped)\n"
@@ -2454,6 +2566,15 @@ CHAPTER_13_MISSIONS: list[Mission] = [
         task_description = "BOSS: Deaktiviere IP-Forwarding mit sysctl",
         expected_commands = ["sysctl -w net.ipv4.ip_forward=0"],
         hint_text    = "sysctl -w net.ipv4.ip_forward=0 deaktiviert IP-Weiterleitung sofort",
+        quiz_questions    = [
+            QuizQuestion(
+                question    = 'Welcher Befehl lädt ein Modul inkl. Abhängigkeiten?',
+                options     = ['A) insmod', 'B) modprobe', 'C) modload', 'D) lsmod'],
+                correct     = 'B',
+                explanation = 'modprobe = loads module + dependencies. insmod = low-level, no dependencies.',
+                xp_value    = 20,
+            ),
+        ],
         exam_tip     = (
             "LPIC-1 FINAL KERNEL CHECK:\n"
             "  lsmod → geladene Module\n"

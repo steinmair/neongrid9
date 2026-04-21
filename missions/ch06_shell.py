@@ -74,6 +74,22 @@ CHAPTER_6_MISSIONS: list[Mission] = [
         task_description  = "Zeige alle Umgebungsvariablen",
         expected_commands = ["env", "printenv"],
         hint_text         = "env zeigt alle Umgebungsvariablen",
+        quiz_questions    = [
+            QuizQuestion(
+                question    = "Was ist der Unterschied zwischen 'VAR=wert' und 'export VAR=wert'?",
+                options     = ['A) Kein Unterschied', 'B) export macht die Variable für Kind-Prozesse verfügbar', 'C) VAR=wert ist sicherer', 'D) export ist permanenter'],
+                correct     = 'B',
+                explanation = 'export = Umgebungsvariable (an Kinder vererbt). VAR=wert = lokal in aktueller Shell.',
+                xp_value    = 20,
+            ),
+            QuizQuestion(
+                question    = 'Was enthält $?',
+                options     = ['A) Den Dateinamen des aktuellen Skripts', 'B) Den Exit-Code des letzten Befehls', 'C) Die Prozess-ID der Shell', 'D) Den aktuellen Pfad'],
+                correct     = 'B',
+                explanation = '$? = Exit-Code. 0 = Erfolg, 1-255 = Fehler. Wichtig nach jedem Befehl prüfen!',
+                xp_value    = 20,
+            ),
+        ],
         exam_tip          = (
             "Lokale Variable: NAME=wert — nur in aktueller Shell.\n"
             "Umgebungsvariable: export NAME=wert — vererbt an Kinder.\n"
@@ -146,6 +162,22 @@ CHAPTER_6_MISSIONS: list[Mission] = [
         task_description  = "Zeige die letzten 10 Befehle",
         expected_commands = ["history", "history 10"],
         hint_text         = "history oder history 10 zeigt die letzten Befehle",
+        quiz_questions    = [
+            QuizQuestion(
+                question    = "Was macht '!!' in der Bash?",
+                options     = ['A) Führt letzten Befehl als Root aus', 'B) Wiederholt den letzten Befehl', 'C) Zeigt Befehlshistorie', 'D) Löscht History'],
+                correct     = 'B',
+                explanation = "!! = letzten Befehl wiederholen. 'sudo !!' = letzten Befehl als root — sehr praktisch!",
+                xp_value    = 20,
+            ),
+            QuizQuestion(
+                question    = 'Was ist HISTSIZE?',
+                options     = ['A) Maximale Größe von ~/.bash_history auf Disk', 'B) Anzahl der History-Einträge im RAM', 'C) Maximale Befehlslänge', 'D) Anzahl der History-Dateien'],
+                correct     = 'B',
+                explanation = 'HISTSIZE = Einträge im RAM (aktuelle Session). HISTFILESIZE = Einträge in ~/.bash_history.',
+                xp_value    = 20,
+            ),
+        ],
         exam_tip          = (
             "!! = letzten Befehl wiederholen.\n"
             "sudo !! = letzten Befehl als root — sehr nützlich!\n"
@@ -307,6 +339,22 @@ CHAPTER_6_MISSIONS: list[Mission] = [
         task_description  = "Zeige laufende Prozesse mit ps gefiltert durch grep",
         expected_commands = ["ps aux", "ps"],
         hint_text         = "ps aux | grep ssh kombiniert ps und grep per Pipe",
+        quiz_questions    = [
+            QuizQuestion(
+                question    = "Was macht 'tee' in einer Pipeline?",
+                options     = ['A) Leitet stdout in /dev/null', 'B) Schreibt auf stdout UND in eine Datei gleichzeitig', 'C) Dupliziert stderr', 'D) Verbindet zwei Pipes'],
+                correct     = 'B',
+                explanation = 'tee = T-Stück: Ausgabe geht sowohl auf Terminal als auch in Datei. tee -a = append.',
+                xp_value    = 20,
+            ),
+            QuizQuestion(
+                question    = "Was passiert bei 'cmd1 | cmd2'?",
+                options     = ['A) cmd2 liest aus einer Datei', 'B) stdout von cmd1 wird stdin von cmd2', 'C) Beide Befehle laufen nacheinander', 'D) Fehler bei Leerzeichen'],
+                correct     = 'B',
+                explanation = 'Pipe | verbindet stdout des ersten Befehls mit stdin des zweiten.',
+                xp_value    = 20,
+            ),
+        ],
         exam_tip          = (
             "Pipe | verbindet stdout → stdin.\n"
             "tee = T-Stück: Ausgabe geht auf Terminal UND in Datei.\n"
@@ -568,6 +616,22 @@ CHAPTER_6_MISSIONS: list[Mission] = [
         task_description  = "Zeige die ersten 5 Zeilen von /etc/passwd",
         expected_commands = ["head", "head -5 /etc/passwd", "head -n 5 /etc/passwd"],
         hint_text         = "head -5 /etc/passwd zeigt die ersten 5 Zeilen",
+        quiz_questions    = [
+            QuizQuestion(
+                question    = "Was macht 'tail -f /var/log/syslog'?",
+                options     = ['A) Zeigt letzten Fehler', 'B) Zeigt Log-Datei live/in Echtzeit', 'C) Zeigt nur Fehler', 'D) Filtert Log'],
+                correct     = 'B',
+                explanation = 'tail -f = follow = Live-Monitoring. Neue Zeilen werden sofort angezeigt.',
+                xp_value    = 20,
+            ),
+            QuizQuestion(
+                question    = 'Was ist der Unterschied zwischen tail -f und tail -F?',
+                options     = ['A) Kein Unterschied', 'B) -F funktioniert auch nach Log-Rotation (öffnet neue Datei)', 'C) -f ist schneller', 'D) -F zeigt mehr Zeilen'],
+                correct     = 'B',
+                explanation = 'tail -F = --follow=name, öffnet die Datei neu nach Log-Rotation. Wichtig für Produktions-Logs.',
+                xp_value    = 20,
+            ),
+        ],
         exam_tip          = (
             "tail -f = follow = Live-Monitoring von Logfiles.\n"
             "tail -F = wie -f aber funktioniert auch bei Log-Rotation.\n"
@@ -713,6 +777,22 @@ CHAPTER_6_MISSIONS: list[Mission] = [
         task_description  = "Extrahiere Benutzernamen aus /etc/passwd mit awk",
         expected_commands = ["awk", "awk -F: '{print $1}' /etc/passwd"],
         hint_text         = "awk -F: '{print $1}' /etc/passwd druckt erste Spalte",
+        quiz_questions    = [
+            QuizQuestion(
+                question    = 'Was bedeutet $NF in awk?',
+                options     = ['A) Kein Feld gefunden', 'B) Letzte Spalte (Number of Fields)', 'C) Neue Funktion', 'D) Null-Feld'],
+                correct     = 'B',
+                explanation = '$NF = letzte Spalte. $1 = erste, $2 = zweite. NR = aktuelle Zeilennummer.',
+                xp_value    = 20,
+            ),
+            QuizQuestion(
+                question    = 'Welcher awk-Befehl nutzt Doppelpunkt als Feldtrenner?',
+                options     = ["A) awk '$:' /etc/passwd", "B) awk -F: '{print $1}' /etc/passwd", 'C) awk --sep: /etc/passwd', "D) awk ':' /etc/passwd"],
+                correct     = 'B',
+                explanation = 'awk -F: = Feldtrenner Doppelpunkt. Klassisch für /etc/passwd.',
+                xp_value    = 20,
+            ),
+        ],
         exam_tip          = (
             "awk $1=erste Spalte. $NF=letzte Spalte. NR=Zeilennummer.\n"
             "awk -F: = Doppelpunkt als Trennzeichen.\n"
@@ -782,6 +862,22 @@ CHAPTER_6_MISSIONS: list[Mission] = [
         task_description  = "Zeige den Inhalt eines Verzeichnisses",
         expected_commands = ["ls", "ls -la"],
         hint_text         = "ls -la zeigt Verzeichnisinhalt mit Rechten",
+        quiz_questions    = [
+            QuizQuestion(
+                question    = "Was ist der Unterschied zwischen 'cp -a' und 'cp -p'?",
+                options     = ['A) Kein Unterschied', 'B) -a = archive (Rechte+Zeit+Symlinks), -p = nur Rechte+Zeit', 'C) -p ist komplett, -a nur Rechte', 'D) -a für Verzeichnisse, -p für Dateien'],
+                correct     = 'B',
+                explanation = 'cp -a = archive, erhält alles inkl. Symlinks. cp -p = preserve (Rechte+Zeitstempel).',
+                xp_value    = 20,
+            ),
+            QuizQuestion(
+                question    = "Was passiert bei 'rm -rf /verzeichnis/'?",
+                options     = ['A) Nur leere Verzeichnisse werden gelöscht', 'B) Alle Dateien und Verzeichnisse werden sofort gelöscht (kein Undo!)', 'C) Fragt nach Bestätigung', 'D) Verschiebt in Trash'],
+                correct     = 'B',
+                explanation = 'rm -rf = rekursiv force = sofort gelöscht, kein Undo, kein Papierkorb!',
+                xp_value    = 20,
+            ),
+        ],
         exam_tip          = (
             "cp -a = archive (Rechte + Zeitstempel + Symlinks). cp -p nur Rechte/Zeit.\n"
             "rm -rf = rekursiv force = KEIN UNDO!\n"
