@@ -269,26 +269,6 @@ neongrid9/
 
 ---
 
-## Entwicklung & Tests
-
-### Tests ausführen
-
-```bash
-python3 scripts/test_gameflow.py
-```
-
-### Test-Abdeckung
-
-- ✅ Mission-Laden (501 Missionen)
-- ✅ Player-Systeme (XP, Leveling, Achievements)
-- ✅ Mission-Datenintegritä (Hints, Befehle, Format)
-- ✅ Quiz-Fragen (Format, Antworten, Erklärungen)
-- ✅ Kapitelzugriff (alle 22 Kapitel verifiziert)
-
-**Ergebnis:** ✅ ALLE TESTS BESTANDEN (5/5)
-
----
-
 ## Lizenz & Zuschreibung
 
 **NeonGrid-9** — Linux Cyberpunk Lernspiel
