@@ -296,3 +296,7 @@ python3 scripts/test_gameflow.py
 *Ein cyberpunk-inspiriertes Terminal-Lernspiel für Linux-Systemadministration.*
 
 Mit pädagogischer Absicht erstellt: Komplexe Linux-Systemverwaltungskonzepte durch interaktives Gameplay zugänglich machen.
+
+---
+
+*Powered By Chaoswerk*
