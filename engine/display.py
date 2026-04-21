@@ -280,3 +280,32 @@ def level_up_screen(level: int, title: str):
     print()
     time.sleep(1.5)
     input(C.GRAY + "  [ ENTER ] weiter ..." + C.RESET)
+
+
+def show_hint(hint_text: str, hint_level: int, xp_cost: int = 0):
+    """Display a hint with cost information."""
+    colors = [C.GREEN, C.YELLOW, C.DANGER]
+    labels = ["💡 FREE HINT", "💡 STANDARD HINT (20 XP)", "💡 FINAL ANSWER (50 XP)"]
+
+    color = colors[min(hint_level, 2)]
+    label = labels[min(hint_level, 2)]
+
+    print(C.GRAY + "  " + "─" * 70 + C.RESET)
+    print(color + f"  {label}" + C.RESET)
+    print(C.GRAY + "  " + "─" * 70 + C.RESET)
+    show_info(hint_text)
+    print()
+
+
+def show_achievements(achievements: list, xp_earned: int = 0):
+    """Display newly unlocked achievements."""
+    if not achievements:
+        return
+
+    print(C.SUCCESS + "\n  ⭐ ACHIEVEMENTS UNLOCKED!" + C.RESET)
+    for ach in achievements:
+        print(C.NEON + f"    {ach.icon} {ach.name}" + C.RESET)
+        print(C.GRAY + f"    {ach.description}" + C.RESET)
+        if ach.xp_reward > 0:
+            print(C.XP + f"    +{ach.xp_reward} XP" + C.RESET)
+    print()

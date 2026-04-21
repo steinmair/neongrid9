@@ -5,6 +5,7 @@ XP, Level, Reputation, Inventar, Skilltree
 
 from dataclasses import dataclass, field
 from typing import Dict, List, Set
+from engine.features import AchievementTracker
 
 # ── Level-Tabelle ─────────────────────────────────────────────────────────────
 LEVELS = [
@@ -175,6 +176,9 @@ class Player:
 
     # Quiz-Statistiken pro Kapitel: {ch_id: {"asked": N, "correct": N}}
     chapter_quiz_stats: Dict[str, dict] = field(default_factory=dict)
+
+    # Achievements
+    achievements: AchievementTracker = field(default_factory=AchievementTracker)
 
     def add_xp(self, amount: int) -> tuple[int, bool]:
         """XP hinzufügen. Gibt (neues_xp, level_up) zurück."""

@@ -53,6 +53,7 @@ class Mission:
     task_description: str = ""
     expected_commands: List[str] = field(default_factory=list)
     hint_text: str = ""
+    hints: List[str] = field(default_factory=list)  # [free_hint, 20xp_hint, 50xp_final_answer]
 
     # Quiz
     quiz_questions: List[QuizQuestion] = field(default_factory=list)
