@@ -139,9 +139,10 @@ class MissionRunner:
             if mission.hints:
                 while True:
                     hint_choice = prompt_input(
-                        C.CYAN + "  [h]int / [q]uiz / [s]kip? " + C.RESET,
-                        ("h", "q", "s")
+                        C.CYAN + "  [h]int / [q]uiz / [s]kip / Befehl? " + C.RESET
                     )
+                    hint_choice = hint_choice.lower()
+
                     if hint_choice == "h":
                         if hints_used < len(mission.hints):
                             hint_req = HintRequest.create(mission.mission_id, mission.hints, hints_used)
@@ -156,6 +157,9 @@ class MissionRunner:
                         break
                     elif hint_choice == "s":
                         return True  # Skip mission
+                    elif hint_choice.strip():  # Wenn User einen Befehl eingegeben hat
+                        # Benutzer hat Command direkt eingegeben - gehe zum Terminal
+                        break
 
             hint_avail = self.player.has_hint_gear() or bool(mission.hint_text)
             success, attempts_used, final_cmd = run_terminal(
