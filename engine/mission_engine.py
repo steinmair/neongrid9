@@ -134,6 +134,11 @@ class MissionRunner:
             print(C.GREEN + "  ── AUFGABE " + "─" * 56 + C.RESET)
             print(C.WHITE + f"\n  {mission.task_description}\n" + C.RESET)
 
+            # Try to get correct command from hint menu
+            success = False
+            attempts_used = 0
+            final_cmd = ""
+
             # Hint menu loop
             hints_used = 0
             if mission.hints:
@@ -141,9 +146,9 @@ class MissionRunner:
                     hint_choice = prompt_input(
                         C.CYAN + "  [h]int / [q]uiz / [s]kip / Befehl? " + C.RESET
                     )
-                    hint_choice = hint_choice.lower()
+                    hint_choice_lower = hint_choice.lower()
 
-                    if hint_choice == "h":
+                    if hint_choice_lower == "h":
                         if hints_used < len(mission.hints):
                             hint_req = HintRequest.create(mission.mission_id, mission.hints, hints_used)
                             if hint_req:
@@ -153,26 +158,45 @@ class MissionRunner:
                                 hints_used += 1
                         else:
                             show_warn("Keine weiteren Hinweise verfügbar.")
-                    elif hint_choice == "q":
+                    elif hint_choice_lower == "q":
                         break
-                    elif hint_choice == "s":
+                    elif hint_choice_lower == "s":
                         return True  # Skip mission
                     elif hint_choice.strip():  # Wenn User einen Befehl eingegeben hat
-                        # Benutzer hat Command direkt eingegeben - gehe zum Terminal
+                        # Prüfe ob der eingegeben Befehl korrekt ist
+                        cmd_base = hint_choice.strip().split()[0].lower()
+                        for exp in mission.expected_commands:
+                            exp_base = exp.strip().split()[0].lower()
+                            # Exakter Match
+                            if hint_choice.strip().lower() == exp.strip().lower():
+                                show_success("Befehl akzeptiert — Ziel erreicht!")
+                                success = True
+                                attempts_used = 1
+                                final_cmd = hint_choice
+                                break
+                            # Teilweise richtig: richtiger Basis-Befehl
+                            if cmd_base == exp_base and len(mission.expected_commands) == 1:
+                                show_success("Befehl akzeptiert — Ziel erreicht!")
+                                success = True
+                                attempts_used = 1
+                                final_cmd = hint_choice
+                                break
+
+                        # Egal ob korrekt oder nicht, verlasse Hint-Menu
                         break
 
-            hint_avail = self.player.has_hint_gear() or bool(mission.hint_text)
-            success, attempts_used, final_cmd = run_terminal(
-                expected      = mission.expected_commands,
-                task_description = mission.task_description,
-                hint_available= hint_avail,
-                hint_text     = mission.hint_text,
-                max_attempts  = 5 if mission.mtype != "BOSS" else 3
-            )
+            # Wenn Befehl bei Hint-Menu nicht korrekt war, gehe zum Terminal
+            if not success:
+                hint_avail = self.player.has_hint_gear() or bool(mission.hint_text)
+                success, attempts_used, final_cmd = run_terminal(
+                    expected      = mission.expected_commands,
+                    task_description = mission.task_description,
+                    hint_available= hint_avail,
+                    hint_text     = mission.hint_text,
+                    max_attempts  = 5 if mission.mtype != "BOSS" else 3
+                )
 
-            if success:
-                show_success("Befehl akzeptiert — Ziel erreicht!")
-            else:
+            if not success:
                 show_warn("Versuche aufgebraucht. Zeige Lösung:")
                 show_code(mission.expected_commands[0])
                 prompt_continue()
