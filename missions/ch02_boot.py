@@ -70,6 +70,11 @@ CHAPTER_2_MISSIONS = [
         ),
         task_description="Zeige die ersten Kernel-Meldungen des Boot-Prozesses.",
         expected_commands=["dmesg | head -20", "dmesg"],
+        hints=[
+            "Das Kommando 'dmesg' zeigt Kernel-Meldungen an. Kombiniert mit 'head -20' für die ersten 20 Zeilen.",
+            "Versuche: dmesg | head ...",
+            "Der vollständige Befehl: dmesg | head -20",
+        ],
         hint_text="dmesg | head -20 zeigt die ersten 20 Kernel-Boot-Meldungen",
         quiz_questions=[
             QuizQuestion(
@@ -139,6 +144,11 @@ CHAPTER_2_MISSIONS = [
         ),
         task_description="Zeige die Partitionstabelle einer MBR-Disk.",
         expected_commands=["fdisk -l /dev/sda"],
+        hints=[
+            "Nutze 'fdisk' mit dem Flag '-l' (list) um Partitionstabellen anzuzeigen. Das Gerät /dev/sda ist das Ziel.",
+            "Versuche: fdisk -l /dev/sda",
+            "Der vollständige Befehl: fdisk -l /dev/sda",
+        ],
         hint_text="fdisk -l /dev/sda — listet Partitionstabelle auf",
         quiz_questions=[
             QuizQuestion(
