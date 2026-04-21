@@ -63,11 +63,11 @@ python3 main.py
 | 15 | SECURITY PROTOCOL | 110.1 | 22 |
 | 16 | LOCALE MATRIX | 107.3 | 22 |
 | 17 | SHELL ENV | 105.1 | 22 |
-| 18 | EXAM PROTOCOL | ALL | 27 |
+| 18 | STORAGE ADVANCED | 104.1 | 22 |
 | 19 | GHOST PROTOCOL II | 102.6 | 18 |
 | 20 | FIREWALL DOMINION | 109.4 | 21 |
 | 21 | NETWORK SERVICES | 109.2 | 22 |
-| 22 | STORAGE ADVANCED | 104.1 | 22 |
+| 22 | FINAL EXAM PROTOCOL | ALL | 27 |
 
 ---
 
@@ -128,10 +128,10 @@ python3 main.py
 - Auto-Save nach jeder Mission
 - Fortschritt wird kapitelweise gespeichert
 
-**Prüfungsmodus (Kapitel 18)**
+**Prüfungsmodus (Kapitel 22 — FINAL)**
 - 26 Exam-Blöcke mit Linux-Stil Fragen
 - Alle Domains 101–110 abgedeckt
-- Boss: Simulierte Linux-Prüfung
+- Boss: Simulierte Linux-Prüfung (Grand Finale)
 
 ---
 
@@ -163,11 +163,11 @@ neongrid9/
     ├── ch15_security.py       # 22 Missionen
     ├── ch16_locale.py         # 22 Missionen
     ├── ch17_shellenv.py       # 22 Missionen
-    ├── ch18_exam.py           # 26 Missionen
+    ├── ch18_storage_advanced.py # 22 Missionen
     ├── ch19_ghost_processors.py # 18 Missionen
     ├── ch20_firewall_dominion.py # 21 Missionen
     ├── ch21_network_services.py  # 22 Missionen
-    └── ch22_storage_advanced.py  # 22 Missionen
+    └── ch22_exam.py           # 27 Missionen (FINAL EXAM)
 ```
 
 ---
