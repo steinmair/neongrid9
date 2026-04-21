@@ -21,7 +21,7 @@ CHAPTER_11_MISSIONS: list[Mission] = [
         chapter      = 11,
         title        = "syslog & rsyslog — Das Log-Framework",
         mtype        = "SCAN",
-        xp           = 70,
+        xp           = 80,
         speaker      = "ZARA Z3R0",
         story        = (
             "Zara Z3R0: 'Der Angriff wurde gelogged, Ghost.\n"
@@ -2039,7 +2039,7 @@ CHAPTER_11_MISSIONS: list[Mission] = [
         chapter      = 11,
         title        = "BOSS — CHRONO DAEMON v11.0",
         mtype        = "BOSS",
-        xp           = 300,
+        xp           = 450,
         speaker      = "SYSTEM",
         story        = (
             "SYSTEM ALERT: CHRONO DAEMON v11.0 aktiv.\n"

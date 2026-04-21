@@ -17,7 +17,7 @@ CHAPTER_21_MISSIONS: list[Mission] = [
         chapter      = 21,
         title        = "Network Services — Einführung",
         mtype        = "SCAN",
-        xp           = 70,
+        xp           = 130,
         speaker      = "DAEMON",
         story        = (
             "DAEMON: 'Netzwerkdienste. Der Kitt des Systems.\n"
@@ -1436,7 +1436,7 @@ CHAPTER_21_MISSIONS: list[Mission] = [
         chapter      = 21,
         title        = "BOSS: NET DAEMON v21.0",
         mtype        = "BOSS",
-        xp           = 300,
+        xp           = 700,
         speaker      = "DAEMON",
         story        = (
             "DAEMON: 'Ich bin NET DAEMON. Ich kontrolliere jede Verbindung.\n"

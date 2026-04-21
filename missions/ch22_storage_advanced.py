@@ -17,7 +17,7 @@ CHAPTER_22_MISSIONS: list[Mission] = [
         chapter      = 22,
         title        = "Storage Advanced — Einführung & RAID-Konzepte",
         mtype        = "SCAN",
-        xp           = 70,
+        xp           = 135,
         speaker      = "RUST",
         story        = (
             "RUST: 'Datenverlust ist keine Option, Ghost.\n"
@@ -1420,7 +1420,7 @@ CHAPTER_22_MISSIONS: list[Mission] = [
         chapter      = 22,
         title        = "BOSS: STORAGE DAEMON v22.0",
         mtype        = "BOSS",
-        xp           = 300,
+        xp           = 725,
         speaker      = "RUST",
         story        = (
             "RUST: 'Ich bin STORAGE DAEMON. Wächter der Daten.\n"

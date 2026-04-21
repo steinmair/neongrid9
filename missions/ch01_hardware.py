@@ -17,7 +17,7 @@ CHAPTER_1_MISSIONS = [
         mission_id  = "1.01",
         title       = "Erste Signale — Was ist Hardware?",
         mtype       = "SCAN",
-        xp          = 20,
+        xp          = 30,
         chapter     = 1,
         speaker     = "ZARA Z3R0",
         story       = (
@@ -1858,7 +1858,7 @@ CHAPTER_1_MISSIONS = [
         mission_id  = "1.BOSS",
         title       = "BOSS: BIOS Overlord",
         mtype       = "BOSS",
-        xp          = 150,
+        xp          = 200,
         chapter     = 1,
         speaker     = "ZARA Z3R0",
         boss_name   = "BIOS OVERLORD — Hardware Guardian",
@@ -1944,6 +1944,18 @@ CHAPTER_1_MISSIONS = [
                 correct   = "B",
                 explanation = "[ -d /sys/firmware/efi ] — wenn dieses Verzeichnis existiert, ist das System im UEFI-Modus gebootet.",
                 xp_value  = 20,
+            ),
+            QuizQuestion(
+                question  = "Was ist der Unterschied zwischen lspci und lsusb -v?",
+                options   = [
+                    "A) lspci zeigt PCI-Geräte, lsusb -v zeigt USB-Geräte mit ausführlichen Details",
+                    "B) lspci zeigt USB, lsusb zeigt PCI",
+                    "C) Beide zeigen identische Informationen",
+                    "D) lsusb -v braucht Root, lspci nicht",
+                ],
+                correct   = "A",
+                explanation = "lspci = PCI/PCIe-Bus (Grafik, Netz, SATA). lsusb = USB-Geräte. -v = verbose (Hersteller-IDs, Klassen, Protokolle). Beide kommen aus dem Paket pciutils/usbutils.",
+                xp_value  = 25,
             ),
         ],
         exam_tip   = (

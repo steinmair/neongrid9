@@ -20,7 +20,7 @@ CHAPTER_8_MISSIONS: list[Mission] = [
         chapter      = 8,
         title        = "Regex — Die Sprache der Muster",
         mtype        = "SCAN",
-        xp           = 60,
+        xp           = 65,
         speaker      = "ZARA Z3R0",
         story        = (
             "Millionen Log-Zeilen rauschen durch NeonGrid-9.\n"
@@ -2316,7 +2316,7 @@ CHAPTER_8_MISSIONS: list[Mission] = [
         chapter      = 8,
         title        = "BOSS — REGEX DAEMON v8.0",
         mtype        = "BOSS",
-        xp           = 250,
+        xp           = 375,
         speaker      = "SYSTEM",
         story        = (
             "SYSTEM ALERT: REGEX DAEMON v8.0 aktiviert.\n"

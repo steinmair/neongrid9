@@ -18,7 +18,7 @@ CHAPTER_19_MISSIONS: list[Mission] = [
         chapter      = 19,
         title        = "Ghost Processors — Fraktions-Einführung",
         mtype        = "SCAN",
-        xp           = 100,
+        xp           = 120,
         speaker      = "PHANTOM",
         story        = (
             "Phantom: 'Du hast die Oberflächen-Schichten gemeistert.\n"
@@ -1164,7 +1164,7 @@ CHAPTER_19_MISSIONS: list[Mission] = [
         chapter      = 19,
         title        = "PHANTOM CODE — Ghost Processors Boss",
         mtype        = "BOSS",
-        xp           = 300,
+        xp           = 650,
         speaker      = "SYSTEM",
         story        = (
             "SYSTEM: '[ PHANTOM CODE AKTIVIERT ]\n"
@@ -1256,6 +1256,30 @@ CHAPTER_19_MISSIONS: list[Mission] = [
                 correct     = 1,
                 explanation = "systemd-machine-id-setup generiert und schreibt eine neue Machine-ID in /etc/machine-id.",
                 xp_value    = 30,
+            ),
+            QuizQuestion(
+                question    = "Was ist der Unterschied zwischen einem Linux-Container (LXC) und einer virtuellen Maschine (KVM)?",
+                options     = [
+                    "Container teilen den Host-Kernel (OS-Virtualisierung); VMs haben eigenen Kernel und emulieren Hardware (Hypervisor-Virtualisierung)",
+                    "Container sind langsamer als VMs weil sie mehr Overhead haben",
+                    "VMs teilen den Kernel; Container haben eigene Kernel",
+                    "Beide verwenden den gleichen Isolationsmechanismus",
+                ],
+                correct     = 0,
+                explanation = "Container (LXC, Docker) = Namespaces + cgroups auf dem Host-Kernel — schnell, leicht, kein eigener Kernel. VMs (KVM, VMware) = vollständige Hardware-Emulation mit eigenem OS-Image — stärkere Isolation, mehr Overhead.",
+                xp_value    = 35,
+            ),
+            QuizQuestion(
+                question    = "Welche zwei Linux-Kernel-Features bilden die Grundlage aller Container-Technologien?",
+                options     = [
+                    "Namespaces (Isolation) und cgroups (Ressourcenlimits)",
+                    "SELinux und AppArmor",
+                    "iptables und netfilter",
+                    "systemd und D-Bus",
+                ],
+                correct     = 0,
+                explanation = "Namespaces isolieren Prozesse (PID, NET, MNT, UTS, IPC, USER). cgroups (Control Groups) begrenzen Ressourcen (CPU, RAM, I/O). Docker, LXC, podman — alle bauen auf diesen zwei Kernel-Features auf.",
+                xp_value    = 35,
             ),
         ],
         exam_tip     = "Ghost Processors: Container=NS+CG | Cloud-Init=#cloud-config | Drop-in=.service.d | AppArmor/SELinux",

@@ -21,7 +21,7 @@ CHAPTER_10_MISSIONS: list[Mission] = [
         chapter      = 10,
         title        = "Benutzerkonten — /etc/passwd & UIDs",
         mtype        = "SCAN",
-        xp           = 70,
+        xp           = 75,
         speaker      = "ZARA Z3R0",
         story        = (
             "Zara Z3R0: 'Das Imperium kontrolliert Identitäten, Ghost.\n"
@@ -2120,7 +2120,7 @@ CHAPTER_10_MISSIONS: list[Mission] = [
         chapter      = 10,
         title        = "BOSS — IDENTITY DAEMON v10.0",
         mtype        = "BOSS",
-        xp           = 300,
+        xp           = 425,
         speaker      = "SYSTEM",
         story        = (
             "SYSTEM ALERT: IDENTITY DAEMON v10.0 aktiv.\n"

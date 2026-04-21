@@ -11,7 +11,7 @@ CHAPTER_2_MISSIONS = [
     Mission(
         mission_id="2.01",
         title="Power On — BIOS POST Ablauf",
-        mtype="SCAN", xp=20, chapter=2,
+        mtype="SCAN", xp=35, chapter=2,
         speaker="ZARA Z3R0",
         story=(
             "Der Boot-Prozess ist das Herzstück eines Linux-Systems.\n"
@@ -1300,7 +1300,7 @@ CHAPTER_2_MISSIONS = [
     Mission(
         mission_id="2.BOSS",
         title="BOSS: Dead Boot Recovery",
-        mtype="BOSS", xp=150, chapter=2,
+        mtype="BOSS", xp=225, chapter=2,
         speaker="DAEMON",
         boss_name="DEAD BOOT — System Startet Nicht",
         boss_desc="Das System bootet nicht. Drei Phasen. Repariere jeden Fehler.",
@@ -1380,6 +1380,30 @@ CHAPTER_2_MISSIONS = [
                 correct="B",
                 explanation="journalctl -b -1 zeigt den Journal des vorherigen Boots. -b = boot, -1 = einen Boot zurück. Erfordert persistentes Journal (/var/log/journal/).",
                 xp_value=20,
+            ),
+            QuizQuestion(
+                question="Was enthält /proc/cmdline?",
+                options=[
+                    "A) Die aktuell laufenden Befehle",
+                    "B) Die Kernel-Parameter des aktuellen Boots (von GRUB übergeben)",
+                    "C) Die GRUB-Konfiguration",
+                    "D) Die letzte ausgeführte Shell-Befehlszeile",
+                ],
+                correct="B",
+                explanation="/proc/cmdline zeigt die Kernel-Bootparameter des laufenden Systems (z.B. root=/dev/sda1 quiet splash). Diese wurden beim Boot von GRUB an den Kernel übergeben.",
+                xp_value=25,
+            ),
+            QuizQuestion(
+                question="Was ist initramfs und warum wird es beim Boot benötigt?",
+                options=[
+                    "A) Eine RAM-Disk mit Minimaltools um das Root-Dateisystem zu mounten bevor der echte Kernel startet",
+                    "B) Eine Swap-Partition im RAM",
+                    "C) Der GRUB-Bootloader im RAM",
+                    "D) Eine temporäre BIOS-Erweiterung",
+                ],
+                correct="A",
+                explanation="initramfs (initial RAM filesystem) ist ein komprimiertes cpio-Archiv das als temporäres Root-FS geladen wird. Es enthält Treiber und Tools um das echte Root-FS zu finden und zu mounten (z.B. bei verschlüsseltem Disk oder LVM).",
+                xp_value=25,
             ),
         ],
         exam_tip=(

@@ -21,7 +21,7 @@ CHAPTER_17_MISSIONS: list[Mission] = [
         chapter      = 17,
         title        = "Shell-Startup-Dateien — .bashrc vs .profile",
         mtype        = "SCAN",
-        xp           = 90,
+        xp           = 110,
         speaker      = "ZARA Z3R0",
         story        = (
             "Zara Z3R0: 'Dein alias wird manchmal geladen, manchmal nicht.\n"
@@ -1706,7 +1706,7 @@ CHAPTER_17_MISSIONS: list[Mission] = [
         chapter      = 17,
         title        = "BOSS: PHANTOM SHELL v17.0",
         mtype        = "BOSS",
-        xp           = 180,
+        xp           = 600,
         speaker      = "PHANTOM SHELL",
         story        = (
             "PHANTOM SHELL: 'Ich bin in deiner Shell, Ghost.\n"
@@ -1803,6 +1803,30 @@ CHAPTER_17_MISSIONS: list[Mission] = [
                 correct     = 1,
                 explanation = "PATH-Poisoning: Bösartige Kopien von 'sudo', 'ssh', 'ls' in /tmp/.x/ am PATH-Anfang.\nVerteidiung: 'echo $PATH | tr : \\n' — jeden Pfad prüfen.\nFremde Pfade am Anfang sind verdächtig!",
                 xp_value    = 30,
+            ),
+            QuizQuestion(
+                question    = "Was ist der Unterschied zwischen einer login shell und einer non-login shell und welche Konfigurationsdateien werden jeweils geladen?",
+                options     = [
+                    "Login shell lädt /etc/profile + ~/.bash_profile (~/.profile); Non-login lädt ~/.bashrc",
+                    "Login shell lädt ~/.bashrc; Non-login lädt /etc/profile",
+                    "Beide laden identische Dateien",
+                    "Login shell lädt /etc/bash.bashrc; Non-login lädt ~/.bash_login",
+                ],
+                correct     = 0,
+                explanation = "Login shell (ssh, su -): /etc/profile → ~/.bash_profile oder ~/.bash_login oder ~/.profile. Non-login (neue Terminal-Tab): /etc/bash.bashrc → ~/.bashrc. Deshalb source ~/.bashrc in ~/.bash_profile für Konsistenz.",
+                xp_value    = 35,
+            ),
+            QuizQuestion(
+                question    = "Ein Skript setzt eine Variable: MYVAR=test. Warum ist sie in der aufrufenden Shell nicht sichtbar?",
+                options     = [
+                    "Weil Skripte in einer Sub-Shell laufen — Variablen werden nicht an die Parent-Shell exportiert",
+                    "Weil MYVAR nicht mit export gesetzt wurde",
+                    "Weil Skripte read-only Umgebungen haben",
+                    "Weil bash Variablen nach Skriptende löscht",
+                ],
+                correct     = 0,
+                explanation = "Skripte laufen in einer Sub-Shell (child process). Variablen fließen nur von parent → child (via export), nie von child → parent. Lösung: Skript mit 'source skript.sh' oder '. skript.sh' ausführen — dann läuft es in der aktuellen Shell.",
+                xp_value    = 35,
             ),
         ],
         exam_tip     = "\\befehl oder 'command befehl' umgeht Aliases | type zeigt was ein Befehl ist",

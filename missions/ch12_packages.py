@@ -21,7 +21,7 @@ CHAPTER_12_MISSIONS: list[Mission] = [
         chapter      = 12,
         title        = "dpkg — Debian Package Manager",
         mtype        = "SCAN",
-        xp           = 80,
+        xp           = 85,
         speaker      = "ZARA Z3R0",
         story        = (
             "Zara Z3R0: 'Jede Software in NeonGrid-9 ist ein Paket, Ghost.\n"
@@ -1924,7 +1924,7 @@ CHAPTER_12_MISSIONS: list[Mission] = [
         chapter      = 12,
         title        = "BOSS — PACKAGE DAEMON v12.0",
         mtype        = "BOSS",
-        xp           = 320,
+        xp           = 475,
         speaker      = "SYSTEM",
         story        = (
             "SYSTEM ALERT: PACKAGE DAEMON v12.0 aktiv.\n"

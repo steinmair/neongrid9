@@ -21,7 +21,7 @@ CHAPTER_15_MISSIONS: list[Mission] = [
         chapter      = 15,
         title        = "SUID/SGID-Jäger",
         mtype        = "SCAN",
-        xp           = 80,
+        xp           = 100,
         speaker      = "VECTOR",
         story        = (
             "VECTOR: 'Ghost. Jemand hat SUID-Bits auf Binaries gesetzt,\n"
@@ -1606,7 +1606,7 @@ CHAPTER_15_MISSIONS: list[Mission] = [
         chapter      = 15,
         title        = "BOSS: SHADOW ADMIN v15.0",
         mtype        = "BOSS",
-        xp           = 200,
+        xp           = 550,
         speaker      = "SHADOW ADMIN",
         story        = (
             "SHADOW ADMIN: 'Du dachtest, dein System wäre sicher, Ghost.\n"
@@ -1697,6 +1697,30 @@ CHAPTER_15_MISSIONS: list[Mission] = [
                 correct     = 0,
                 explanation = "find / -mtime -1 findet Dateien die in den letzten 24h geändert wurden.\n-mtime -1 = modified time < 1 Tag | -mmin -60 = in letzten 60 Minuten.",
                 xp_value    = 30,
+            ),
+            QuizQuestion(
+                question    = "Was bewirkt 'chmod u+s /usr/bin/passwd' und warum ist das gefährlich wenn auf falschen Binaries?",
+                options     = [
+                    "Das SUID-Bit wird gesetzt: die Binary läuft mit den Rechten des Eigentümers (root). Gefährlich bei Shell oder anderen mächtigen Binaries.",
+                    "Das Sticky-Bit wird gesetzt: nur der Eigentümer kann die Datei löschen.",
+                    "Das SGID-Bit wird gesetzt: die Binary läuft mit Gruppenrechten.",
+                    "Die Datei wird für alle ausführbar gemacht.",
+                ],
+                correct     = 0,
+                explanation = "SUID (chmod u+s oder 4xxx) lässt die Binary mit UID des Eigentümers laufen. /usr/bin/passwd braucht SUID um als root /etc/shadow zu schreiben. Ein SUID auf /bin/bash = direkter Root-Exploit. Prüfen: find / -perm -4000 -type f",
+                xp_value    = 35,
+            ),
+            QuizQuestion(
+                question    = "Welche Datei in sudoers-Syntax erlaubt dem User 'deploy' nur 'systemctl restart nginx' ohne Passwort auszuführen?",
+                options     = [
+                    "deploy ALL=(ALL) NOPASSWD: /bin/systemctl restart nginx",
+                    "deploy ALL=NOPASSWD: systemctl restart nginx",
+                    "deploy ALL=(root) /usr/bin/systemctl",
+                    "%deploy ALL=(ALL) ALL",
+                ],
+                correct     = 0,
+                explanation = "Korrekte sudoers-Syntax: USER HOST=(RUNAS) OPTIONEN: BEFEHL. Vollständiger Pfad ist Pflicht, NOPASSWD: muss vor dem Befehl stehen. Immer mit visudo bearbeiten.",
+                xp_value    = 35,
             ),
         ],
         exam_tip     = "Prüfung: SUID find -perm -4000 | PermitRootLogin no | visudo | fail2ban | openssl -d",

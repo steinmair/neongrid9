@@ -1843,7 +1843,7 @@ CHAPTER_7_MISSIONS: list[Mission] = [
         chapter      = 7,
         title        = "BOSS: Der Prozess-Gott",
         mtype        = "BOSS",
-        xp           = 440,
+        xp           = 350,
         speaker      = "SYSTEM",
         story        = (
             "PID 0. Der Ur-Prozess.\n"

@@ -19,7 +19,7 @@ CHAPTER_6_MISSIONS: list[Mission] = [
         chapter      = 6,
         title        = "Shell-Umgebung — Variablen & PATH",
         mtype        = "SCAN",
-        xp           = 70,
+        xp           = 55,
         speaker      = "ZARA Z3R0",
         story        = (
             "Die Shell ist dein Terminal zu NeonGrid-9.\n"
@@ -1798,7 +1798,7 @@ CHAPTER_6_MISSIONS: list[Mission] = [
         chapter      = 6,
         title        = "BOSS: Der Stream-Lord",
         mtype        = "BOSS",
-        xp           = 420,
+        xp           = 325,
         speaker      = "SYSTEM",
         story        = (
             "Aus den Datenpipelines materialisiert sich eine Gestalt.\n"

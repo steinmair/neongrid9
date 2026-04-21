@@ -21,7 +21,7 @@ CHAPTER_13_MISSIONS: list[Mission] = [
         chapter      = 13,
         title        = "Kernel-Module — Treiber zur Laufzeit",
         mtype        = "SCAN",
-        xp           = 80,
+        xp           = 90,
         speaker      = "ZARA Z3R0",
         story        = (
             "Zara Z3R0: 'Der neue Netzwerk-Adapter funktioniert nicht, Ghost.\n"
@@ -2546,7 +2546,7 @@ CHAPTER_13_MISSIONS: list[Mission] = [
         chapter      = 13,
         title        = "BOSS — KERNEL DAEMON v13.0",
         mtype        = "BOSS",
-        xp           = 320,
+        xp           = 500,
         speaker      = "SYSTEM",
         story        = (
             "SYSTEM CRITICAL: KERNEL DAEMON v13.0 hat Ring-0 übernommen.\n"

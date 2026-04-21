@@ -11,7 +11,7 @@ CHAPTER_3_MISSIONS = [
     Mission(
         mission_id="3.01",
         title="Init Origins — SysVinit Grundkonzept",
-        mtype="SCAN", xp=20, chapter=3,
+        mtype="SCAN", xp=40, chapter=3,
         speaker="DAEMON",
         story=(
             "Init ist PID 1. Der erste Prozess.\n"
@@ -2042,7 +2042,7 @@ CHAPTER_3_MISSIONS = [
     Mission(
         mission_id="3.BOSS",
         title="BOSS: Init War — Das Finale",
-        mtype="BOSS", xp=150, chapter=3,
+        mtype="BOSS", xp=250, chapter=3,
         speaker="DAEMON",
         boss_name="INIT WAR — Das System kämpft zurück",
         boss_desc="systemd vs SysVinit. Drei Phasen. Zeig dass du beide beherrschst.",
@@ -2137,6 +2137,18 @@ CHAPTER_3_MISSIONS = [
                 correct="D",
                 explanation="telinit 0 = Runlevel 0 = System ausschalten. systemd-Äquivalente: systemctl poweroff ODER systemctl isolate poweroff.target — beide korrekt.",
                 xp_value=20,
+            ),
+            QuizQuestion(
+                question="Wo liegt die systemd-Unit-Datei eines Dienstes, der durch apt installiert wurde, und wo platziert man eigene Units?",
+                options=[
+                    "A) Installiert: /lib/systemd/system/ — Eigene: /etc/systemd/system/",
+                    "B) Installiert: /etc/systemd/system/ — Eigene: /usr/lib/systemd/",
+                    "C) Beide in /etc/init.d/",
+                    "D) Installiert: /run/systemd/ — Eigene: /etc/systemd/",
+                ],
+                correct="A",
+                explanation="/lib/systemd/system/ (oder /usr/lib/systemd/system/) = vom Paketmanager installierte Units. /etc/systemd/system/ = lokale Overrides und eigene Units (haben höhere Priorität und werden nicht von apt überschrieben).",
+                xp_value=25,
             ),
         ],
         exam_tip=(

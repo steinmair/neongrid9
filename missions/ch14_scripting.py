@@ -21,7 +21,7 @@ CHAPTER_14_MISSIONS: list[Mission] = [
         chapter      = 14,
         title        = "Bash-Skripte — Struktur & Shebang",
         mtype        = "SCAN",
-        xp           = 70,
+        xp           = 95,
         speaker      = "ZARA Z3R0",
         story        = (
             "Zara Z3R0: 'Du tippst denselben Befehl zum 50. Mal, Ghost.\n"
@@ -2714,7 +2714,7 @@ CHAPTER_14_MISSIONS: list[Mission] = [
         chapter      = 14,
         title        = "BOSS — SCRIPT DAEMON v14.0",
         mtype        = "BOSS",
-        xp           = 320,
+        xp           = 525,
         speaker      = "SYSTEM",
         story        = (
             "SYSTEM ALERT: SCRIPT DAEMON v14.0 aktiv.\n"

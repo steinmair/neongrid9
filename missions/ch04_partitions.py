@@ -18,7 +18,7 @@ CHAPTER_4_MISSIONS: list[Mission] = [
         chapter      = 4,
         title        = "MBR vs GPT — Territorien der Alten Welt",
         mtype        = "SCAN",
-        xp           = 60,
+        xp           = 45,
         speaker      = "RUST",
         story        = (
             "Der Datenmarkt in Sektor 4 ist ein Schlachtfeld.\n"
@@ -1787,7 +1787,7 @@ CHAPTER_4_MISSIONS: list[Mission] = [
         chapter      = 4,
         title        = "BOSS: Der Partition-Wächter",
         mtype        = "BOSS",
-        xp           = 350,
+        xp           = 275,
         speaker      = "SYSTEM",
         story        = (
             "Das Datenmarkt-System ist gesperrt.\n"

@@ -1990,7 +1990,7 @@ CHAPTER_9_MISSIONS: list[Mission] = [
         chapter      = 9,
         title        = "BOSS — NET DAEMON v9.0",
         mtype        = "BOSS",
-        xp           = 280,
+        xp           = 400,
         speaker      = "SYSTEM",
         story        = (
             "SYSTEM ALERT: NET DAEMON v9.0 hat die Kontrolle übernommen.\n"

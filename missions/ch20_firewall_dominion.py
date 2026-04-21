@@ -20,7 +20,7 @@ CHAPTER_20_MISSIONS: list[Mission] = [
         chapter      = 20,
         title        = "Firewall Dominion — Einführung",
         mtype        = "SCAN",
-        xp           = 70,
+        xp           = 125,
         speaker      = "BLAZE",
         story        = (
             "BLAZE: 'Willkommen bei der Firewall Dominion, Operator.\n"
@@ -1415,7 +1415,7 @@ CHAPTER_20_MISSIONS: list[Mission] = [
         chapter      = 20,
         title        = "BOSS: FIREWALL DAEMON v20.0",
         mtype        = "BOSS",
-        xp           = 300,
+        xp           = 675,
         speaker      = "BLAZE",
         story        = (
             "BLAZE: 'Ich bin FIREWALL DAEMON.\n"

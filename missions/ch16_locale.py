@@ -21,7 +21,7 @@ CHAPTER_16_MISSIONS: list[Mission] = [
         chapter      = 16,
         title        = "Locale & Zeichensätze — UTF-8 & iconv",
         mtype        = "SCAN",
-        xp           = 80,
+        xp           = 105,
         speaker      = "ZARA Z3R0",
         story        = (
             "Zara Z3R0: 'Ghost, das Terminal wirft ??? statt Umlaute aus.\n"
@@ -1622,7 +1622,7 @@ CHAPTER_16_MISSIONS: list[Mission] = [
         chapter      = 16,
         title        = "BOSS: GLITCH RENDERER v16.0",
         mtype        = "BOSS",
-        xp           = 180,
+        xp           = 575,
         speaker      = "GLITCH RENDERER",
         story        = (
             "GLITCH RENDERER: 'Du siehst mich nicht, Ghost.\n"
@@ -1711,6 +1711,30 @@ CHAPTER_16_MISSIONS: list[Mission] = [
                 correct     = 1,
                 explanation = "/etc/localtime ist ein Symlink: /etc/localtime → /usr/share/zoneinfo/Europe/Berlin.\n/etc/timezone enthält nur den Namen als Text (Debian-spezifisch).",
                 xp_value    = 30,
+            ),
+            QuizQuestion(
+                question    = "Was ist der Unterschied zwischen LANG, LC_ALL und LANGUAGE?",
+                options     = [
+                    "LANG = Fallback für alle LC_* Variablen; LC_ALL = überschreibt ALLE LC_* Variablen; LANGUAGE = GNU gettext Sprachpräferenz (Liste)",
+                    "Alle drei sind identisch und austauschbar",
+                    "LANG = Sprache; LC_ALL = Zeitzone; LANGUAGE = Encoding",
+                    "LC_ALL hat niedrigste, LANGUAGE höchste Priorität",
+                ],
+                correct     = 0,
+                explanation = "Priorität: LC_ALL > LC_* (LANG als Fallback) > LANGUAGE (nur gettext). LC_ALL=C erzwingt POSIX-Locale und überschreibt alles. Für Debugging: LC_ALL=C command.",
+                xp_value    = 35,
+            ),
+            QuizQuestion(
+                question    = "Welcher Befehl ändert die Systemzeitzone auf 'Europe/Vienna' auf einem systemd-System?",
+                options     = [
+                    "timedatectl set-timezone Europe/Vienna",
+                    "tzselect Europe/Vienna",
+                    "ln -sf /usr/share/zoneinfo/Europe/Vienna /etc/localtime && echo Europe/Vienna > /etc/timezone",
+                    "Sowohl A als auch C sind korrekt",
+                ],
+                correct     = 3,
+                explanation = "timedatectl set-timezone macht beides automatisch. Die manuelle Methode (ln + echo) ist ebenfalls korrekt und LPIC-1 prüfungsrelevant. tzselect ist nur interaktiv, ändert nichts permanent.",
+                xp_value    = 35,
             ),
         ],
         exam_tip     = "locale -a = installierte Locales | locale-gen = generieren | update-locale = setzen",

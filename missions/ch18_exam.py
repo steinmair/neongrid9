@@ -21,7 +21,7 @@ CHAPTER_18_MISSIONS: list[Mission] = [
         chapter      = 18,
         title        = "Exam Block 1 — Hardware & Boot (101.x)",
         mtype        = "QUIZ",
-        xp           = 180,
+        xp           = 115,
         speaker      = "EXAMINATOR",
         story        = (
             "EXAMINATOR: 'Block 1 gestartet. Themen: Hardware, BIOS/UEFI,\n"
@@ -3398,7 +3398,7 @@ CHAPTER_18_MISSIONS: list[Mission] = [
         chapter      = 18,
         title        = "BOSS: FINAL EXAM — LPIC-1 CERTIFICATION",
         mtype        = "BOSS",
-        xp           = 300,
+        xp           = 625,
         speaker      = "EXAMINATOR",
         story        = (
             "EXAMINATOR: 'Ghost. Du hast 17 Kapitel durchkämpft.\n"
@@ -3489,6 +3489,30 @@ CHAPTER_18_MISSIONS: list[Mission] = [
                 correct     = 1,
                 explanation = "uname -r = Kernel-Release (z.B. 6.1.0-debian).\nuname -s = Kernel-Name | uname -m = Maschinenarchitektur | uname -a = alles.",
                 xp_value    = 25,
+            ),
+            QuizQuestion(
+                question    = "Auf der LPIC-1-Prüfung bekommst du eine Frage über einen Befehl den du nicht kennst. Was ist die beste Strategie?",
+                options     = [
+                    "Eliminierung falscher Antworten: man-page-Konventionen, bekannte Flag-Muster (-v verbose, -r recursive, -n dry-run) und Ausschluss offensichtlicher Fallen nutzen",
+                    "Immer die längste Antwort wählen",
+                    "Die mittlere Option ist statistisch am häufigsten korrekt",
+                    "Frage überspringen und am Ende zurückkehren",
+                ],
+                correct     = 0,
+                explanation = "Eliminierung ist die stärkste Test-Strategie: Falsche Flags ausschließen, POSIX-Konventionen anwenden. Auf LPIC-1 gibt es keine Punktabzüge — immer eine Antwort geben. Option C (mittlere) ist ein Mythos.",
+                xp_value    = 30,
+            ),
+            QuizQuestion(
+                question    = "Welche LPIC-1 Topic-Nummer deckt 'Grundlegende Dateiverwaltung' (ls, cp, mv, find, file) ab?",
+                options     = [
+                    "Topic 103.3",
+                    "Topic 104.2",
+                    "Topic 101.1",
+                    "Topic 102.4",
+                ],
+                correct     = 0,
+                explanation = "Topic 103.3 'Perform basic file management' deckt ls, cp, mv, rm, mkdir, find, file, dd ab. Topic 104.x = Filesysteme. Topic 101.x = Hardware/Architektur. Topic 102.x = Linux-Installation.",
+                xp_value    = 30,
             ),
         ],
         exam_tip     = "LPIC-1: 2 Prüfungen (101+102) | je 90 Min | 500/800 Punkte | lpi.org anmelden",

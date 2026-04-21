@@ -19,7 +19,7 @@ CHAPTER_5_MISSIONS: list[Mission] = [
         chapter      = 5,
         title        = "rwx — Die Permission Matrix lesen",
         mtype        = "DECODE",
-        xp           = 60,
+        xp           = 50,
         speaker      = "ZARA Z3R0",
         story        = (
             "Zara Z3R0 öffnet eine holografische Datei-Tabelle.\n"
@@ -1814,7 +1814,7 @@ CHAPTER_5_MISSIONS: list[Mission] = [
         chapter      = 5,
         title        = "BOSS: Die Permission-Göttin",
         mtype        = "BOSS",
-        xp           = 400,
+        xp           = 300,
         speaker      = "SYSTEM",
         story        = (
             "Die Permission Matrix materialisiert sich zu einer Figur.\n"
