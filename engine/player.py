@@ -177,6 +177,14 @@ class Player:
     # Quiz-Statistiken pro Kapitel: {ch_id: {"asked": N, "correct": N}}
     chapter_quiz_stats: Dict[str, dict] = field(default_factory=dict)
 
+    # Erweiterte Statistiken für Profil
+    chapter_completion_time: Dict[int, int] = field(default_factory=dict)  # ch -> seconds
+    boss_kill_times: Dict[str, int] = field(default_factory=dict)  # mission_id -> seconds
+    total_playtime: int = 0  # Sekunden
+    speaker_stats: Dict[str, int] = field(default_factory=dict)  # speaker -> times_heard
+    hints_used: int = 0
+    missions_per_chapter: Dict[int, int] = field(default_factory=dict)  # ch -> completed count
+
     # Achievements
     achievements: AchievementTracker = field(default_factory=AchievementTracker)
 
@@ -264,20 +272,46 @@ class Player:
             self.reputation[faction] = min(100, self.reputation[faction] + amount)
 
     def stats_summary(self) -> str:
+        playtime_hours = self.total_playtime // 3600
+        playtime_mins = (self.total_playtime % 3600) // 60
+
         lines = [
             f"  Name       : {self.name}",
             f"  Level      : {self.level} — {self.level_title}",
             f"  XP         : {self.xp}",
             f"  Missionen  : {len(self.completed_missions)} abgeschlossen",
             f"  Bosse      : {self.bosses_defeated} besiegt",
+            f"  Hinweise   : {self.hints_used} verwendet",
+            f"  Spielzeit  : {playtime_hours}h {playtime_mins}m",
             f"  Streak     : {self.streak} Tage",
             "",
-            "  FRAKTIONEN:",
+            "  KAPITEL-FORTSCHRITT:",
         ]
+
+        # Chapter progress summary
+        for ch in range(1, 23):
+            completed = self.missions_per_chapter.get(ch, 0)
+            time_sec = self.chapter_completion_time.get(ch, 0)
+            time_str = f"{time_sec//60}m" if time_sec > 0 else "—"
+            lines.append(f"    Ch{ch:02d}: {completed:3d} Missionen  ({time_str})")
+            if ch % 4 == 0 and ch < 22:
+                lines.append("")
+
+        lines.append("")
+        lines.append("  FRAKTIONEN:")
         for faction, rep in self.reputation.items():
             lvl = calculate_level(rep)
             bar = "█" * lvl + "░" * (10 - lvl)
             lines.append(f"    {faction:<22} [{bar}] Lvl {lvl:2d}  ({rep}/100 rep)")
+
+        # Top speaker if available
+        if self.speaker_stats:
+            lines.append("")
+            lines.append("  TOP SPEAKER:")
+            sorted_speakers = sorted(self.speaker_stats.items(), key=lambda x: x[1], reverse=True)
+            for speaker, count in sorted_speakers[:3]:
+                lines.append(f"    {speaker:<20} {count:3d}x gehört")
+
         lines.append("")
         lines.append("  AUSRÜSTUNG:")
         for item_id in self.inventory:
@@ -292,21 +326,27 @@ class Player:
 
     def to_dict(self) -> dict:
         return {
-            "name":               self.name,
-            "xp":                 self.xp,
-            "level":              self.level,
-            "level_title":        self.level_title,
-            "completed_missions": list(self.completed_missions),
-            "failed_missions":    self.failed_missions,
-            "inventory":          self.inventory,
-            "reputation":         self.reputation,
-            "total_quizzes":      self.total_quizzes,
-            "correct_first_try":  self.correct_first_try,
-            "bosses_defeated":    self.bosses_defeated,
-            "secrets_found":      self.secrets_found,
-            "days_played":        self.days_played,
-            "streak":             self.streak,
-            "chapter_quiz_stats": self.chapter_quiz_stats,
+            "name":                    self.name,
+            "xp":                      self.xp,
+            "level":                   self.level,
+            "level_title":             self.level_title,
+            "completed_missions":      list(self.completed_missions),
+            "failed_missions":         self.failed_missions,
+            "inventory":               self.inventory,
+            "reputation":              self.reputation,
+            "total_quizzes":           self.total_quizzes,
+            "correct_first_try":       self.correct_first_try,
+            "bosses_defeated":         self.bosses_defeated,
+            "secrets_found":           self.secrets_found,
+            "days_played":             self.days_played,
+            "streak":                  self.streak,
+            "chapter_quiz_stats":      self.chapter_quiz_stats,
+            "chapter_completion_time": self.chapter_completion_time,
+            "boss_kill_times":         self.boss_kill_times,
+            "total_playtime":          self.total_playtime,
+            "speaker_stats":           self.speaker_stats,
+            "hints_used":              self.hints_used,
+            "missions_per_chapter":    self.missions_per_chapter,
         }
 
     @classmethod
@@ -321,13 +361,19 @@ class Player:
         p.inventory          = d.get("inventory", ["basic_terminal", "cracked_manpage"])
         saved_rep = d.get("reputation", {})
         p.reputation = {f: saved_rep.get(f, 0) for f in FACTIONS}  # migration: fill missing factions
-        p.total_quizzes      = d.get("total_quizzes", 0)
-        p.correct_first_try  = d.get("correct_first_try", 0)
-        p.bosses_defeated    = d.get("bosses_defeated", 0)
-        p.secrets_found      = d.get("secrets_found", 0)
-        p.days_played        = d.get("days_played", 1)
-        p.streak             = d.get("streak", 0)
-        p.chapter_quiz_stats = d.get("chapter_quiz_stats", {})
+        p.total_quizzes           = d.get("total_quizzes", 0)
+        p.correct_first_try       = d.get("correct_first_try", 0)
+        p.bosses_defeated         = d.get("bosses_defeated", 0)
+        p.secrets_found           = d.get("secrets_found", 0)
+        p.days_played             = d.get("days_played", 1)
+        p.streak                  = d.get("streak", 0)
+        p.chapter_quiz_stats      = d.get("chapter_quiz_stats", {})
+        p.chapter_completion_time = d.get("chapter_completion_time", {})
+        p.boss_kill_times         = d.get("boss_kill_times", {})
+        p.total_playtime          = d.get("total_playtime", 0)
+        p.speaker_stats           = d.get("speaker_stats", {})
+        p.hints_used              = d.get("hints_used", 0)
+        p.missions_per_chapter    = d.get("missions_per_chapter", {})
         return p
 
     def record_quiz_result(self, chapter: int, correct: bool):
