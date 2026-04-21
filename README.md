@@ -2,21 +2,21 @@
 
 ```
 ╔══════════════════════════════════════════════════════════════════╗
-║  NEONGRID-9 :: Linux COMBAT TRAINING SYSTEM                     ║
-║  Version 2.0  |  22 Kapitel — 500 Missionen                      ║
+║  NEONGRID-9 :: Linux KAMPFTRAINING-SYSTEM                       ║
+║  Version 1.0  |  22 Kapitel — 501 Missionen                      ║
 ║                                                                  ║
-║  "The system does not care who you are.                          ║
-║   Only what you know."                                           ║
+║  "Das System kümmert sich nicht, wer du bist.                    ║
+║   Nur, was du weißt."                                            ║
 ║                                             Powered By Chaoswerk ║
 ╚══════════════════════════════════════════════════════════════════╝
 ```
 
-> Ein Cyberpunk-Terminal-Lernspiel für die Linux-Zertifizierung.  
+> Ein Cyberpunk-Terminal-Lernspiel für Linux-Systemadministration.  
 > Kein Browser. Kein GUI. Kein Bullshit. Nur Terminal.
 
 ---
 
-## Schnellstart
+## 🚀 Schnellstart
 
 ```bash
 python3 main.py
@@ -26,25 +26,25 @@ python3 main.py
 
 ---
 
-## Statistiken
+## 📊 Statistiken
 
 | Stat | Wert |
 |---|---|
 | Kapitel | 22 |
 | Missionen | 501 |
 | Boss-Missionen | 22 |
-| Quiz-Fragen | 1 117 |
-| Max XP | 47 610 |
+| Quiz-Fragen | 1.117 |
+| Max XP | 51.540 |
 | Linux Domains | 101.x – 110.x |
 | Fraktionen | 5 |
-| Prüfungsmodus | 27 Blöcke / Linux komplett |
-| Quiz-Abdeckung | 100 % (501/501) |
+| Prüfungsmodus | Kapitel 22 (Grand Finale) |
+| Hint-Abdeckung | 88,6 % (444/501) |
 
 ---
 
 ## Kapitelübersicht
 
-| Ch | Titel | LPIC Topic | Missionen |
+| Kp | Titel | Topic | Missionen |
 |---|---|---|---|
 | 01 | BOOT CAMP | 101.1 | 31 |
 | 02 | DARK BOOT | 101.2 | 20 |
@@ -71,25 +71,25 @@ python3 main.py
 
 ---
 
-## Linux Coverage
+## Linux-Abdeckung
 
 | Domain | Thema | Kapitel |
 |---|---|---|
-| 101.1 | Hardware & BIOS | Ch01, Ch13 |
-| 101.2 | Boot-Manager & GRUB2 | Ch02 |
-| 101.3 | SysVinit & systemd | Ch03 |
-| 102.4–6 | Pakete, Bibliotheken, Container | Ch12, Ch19 |
-| 103.1–7 | Shell, Prozesse, Regex | Ch06, Ch07, Ch08 |
-| 104.1–7 | Dateisysteme & Partitionen | Ch04, Ch22 |
-| 105.1–2 | Shell-Env & Scripting | Ch17, Ch14 |
-| 107.1–3 | User, Gruppen, Locale | Ch10, Ch16 |
-| 108.1–2 | Logs, cron, MTA | Ch11 |
-| 109.1–4 | Netzwerk, Firewall, Services | Ch09, Ch20, Ch21 |
-| 110.1–3 | Security, VPN, Verschlüsselung | Ch15, Ch20 |
+| 101.1 | Hardware & BIOS | Kp01, Kp13 |
+| 101.2 | Boot-Manager & GRUB2 | Kp02 |
+| 101.3 | SysVinit & systemd | Kp03 |
+| 102.4–6 | Pakete, Bibliotheken, Container | Kp12, Kp19 |
+| 103.1–7 | Shell, Prozesse, Regex | Kp06, Kp07, Kp08 |
+| 104.1–7 | Dateisysteme & Partitionen | Kp04, Kp18, Kp22 |
+| 105.1–2 | Shell-Env & Scripting | Kp17, Kp14 |
+| 107.1–3 | User, Gruppen, Locale | Kp10, Kp16 |
+| 108.1–2 | Logs, cron, MTA | Kp11 |
+| 109.1–4 | Netzwerk, Firewall, Services | Kp09, Kp20, Kp21 |
+| 110.1–3 | Security, VPN, Verschlüsselung | Kp15, Kp20 |
 
 ---
 
-## Mission-Typen
+## Missionstypen
 
 | Typ | Beschreibung |
 |---|---|
@@ -107,11 +107,11 @@ python3 main.py
 
 | Fraktion | Thema | Präsenz |
 |---|---|---|
-| Kernel Syndicate | Kernel, Boot, Hardware | Ch01–03, Ch11 |
-| Root Collective | Dateisysteme, User, Scripting | Ch04–05, Ch10, Ch14 |
-| Net Runners | Netzwerk, Shell, Regex | Ch06, Ch08–09, Ch21 |
-| Ghost Processors | Container, Kernel-Internals | Ch07, Ch13, Ch19 |
-| Firewall Dominion | Security, Firewall, VPN | Ch15, Ch20 |
+| Kernel Syndicate | Kernel, Boot, Hardware | Kp01–03, Kp11 |
+| Root Collective | Dateisysteme, User, Scripting | Kp04–05, Kp10, Kp14 |
+| Net Runners | Netzwerk, Shell, Regex | Kp06, Kp08–09, Kp21 |
+| Ghost Processors | Container, Kernel-Internals | Kp07, Kp13, Kp19 |
+| Firewall Dominion | Security, Firewall, VPN | Kp15, Kp20 |
 
 ---
 
@@ -121,17 +121,107 @@ python3 main.py
 - XP sammeln durch Missionen und Quiz-Antworten
 - Level 1–20 mit steigenden Anforderungen
 - Gear-Rewards für besondere Leistungen (Boss-Missionen)
-- Fraktions-Reputation durch chapter-spezifische Missionen
+- Fraktions-Reputation durch kapitelspezifische Missionen
 
 **Speichersystem**
 - 3 Speicherslots (`~/.neongrid9_save_N.json`)
 - Auto-Save nach jeder Mission
 - Fortschritt wird kapitelweise gespeichert
 
-**Prüfungsmodus (Kapitel 22 — FINAL)**
+**Prüfungsmodus (Kapitel 22 — GRAND FINALE)**
 - 26 Exam-Blöcke mit Linux-Stil Fragen
-- Alle Domains 101–110 abgedeckt
-- Boss: Simulierte Linux-Prüfung (Grand Finale)
+- Alle Domains 101–110 komplett abgedeckt
+- Boss: Simulierte Linux-Prüfung (Höhepunkt)
+
+---
+
+## 📚 Dokumentation
+
+Neue Spieler sollten in dieser Reihenfolge lesen:
+1. **[GAMEPLAY_GUIDE.md](GAMEPLAY_GUIDE.md)** — Wie man spielt, Missionstypen, Progression, Achievements
+2. **[LINUX_TOPICS.md](LINUX_TOPICS.md)** — Kapitel zu Linux-Topics (101–110) zuordnen
+3. **[TIPS_TRICKS.md](TIPS_TRICKS.md)** — Fortgeschrittene Strategien, Speedrun-Taktiken, Optimierung
+
+---
+
+## Spielstatus
+
+**Version 1.0 — Produktionsreif** ✅
+
+- ✅ Alle 501 Missionen vollständig implementiert
+- ✅ 22 Kapitel mit kohärenter Story
+- ✅ 18 Achievements mit funktionierenden Unlock-Triggern
+- ✅ XP/Schwierigkeit ausbalanciert (kein Grinding nötig)
+- ✅ 88,6 % Hint-Abdeckung (444/501 Missionen)
+- ✅ Erweitertes Player-Profil mit detaillierten Statistiken
+- ✅ Umfassende Dokumentation (50+ KB)
+- ✅ Alle Tests bestanden (5/5 Test-Suite)
+- ✅ Null Warnungen/Fehler
+
+### Spielen
+
+```bash
+python3 main.py
+```
+
+### Test-Suite
+
+```bash
+python3 scripts/test_gameflow.py
+```
+
+---
+
+## Installation & Verbreitung
+
+### Systemanforderungen
+- Python 3.10+
+- Terminal/Befehlszeile
+- ~50 MB Speicherplatz
+- Keine externen Abhängigkeiten
+
+### Schnelleinstieg
+
+```bash
+git clone <this-repo>
+cd neongrid9
+python3 main.py
+```
+
+### Geschätzte Spielzeit
+
+- Einzelnes Kapitel: 25–35 Minuten
+- Vollständiges Spiel (Kp01-22): 15–25 Stunden
+- Speedrun (alle Kapitel): 4–5 Stunden
+- Completionist (alle Achievements): 25–30 Stunden
+
+---
+
+## 📖 Lernpfade
+
+### Zur Prüfungsvorbereitung
+
+1. Lies **LINUX_TOPICS.md**, um die Abdeckung zu verstehen
+2. Absolviere die Kapitel der Reihe nach (Kp01-22)
+3. Konzentriere dich auf Kapitel, die Prüfungsdomains entsprechen
+4. Nutze **TIPS_TRICKS.md** für Optimierungsstrategien
+5. Referenziere Befehle für praktische Linux-Übungen
+
+### Zum allgemeinen Linux-Lernen
+
+1. Starten mit **GAMEPLAY_GUIDE.md**
+2. Alle 22 Kapitel der Reihe nach spielen
+3. Story-Narration lesen (sie lehren Konzepte)
+4. Hints strategisch nutzen
+5. Kapitel wiederholen zur Mastery
+
+### Zum Speedrunning
+
+1. Lies **TIPS_TRICKS.md** Speedrun-Sektion
+2. Lerne Missionssmuster
+3. Optimiere Quiz-Antworten
+4. Verfolge persönliche Best-Zeiten
+5. Ziel: < 30 min pro Kapitel
 
 ---
 
@@ -139,185 +229,66 @@ python3 main.py
 
 ```
 neongrid9/
-├── main.py                    # Game Loop, CHAPTERS, Menüs
+├── main.py                              # Einstiegspunkt, Game Loop
 ├── engine/
-│   ├── display.py             # ANSI-Terminal, Farben, Animationen
-│   ├── mission_engine.py      # Mission/QuizQuestion Dataclasses, Runner
-│   ├── player.py              # Player, Level, Gear, XP
-│   └── save_system.py         # JSON Speicherslots
-└── missions/
-    ├── ch01_hardware.py       # 31 Missionen
-    ├── ch02_boot.py           # 20 Missionen
-    ├── ch03_init.py           # 32 Missionen
-    ├── ch04_partitions.py     # 22 Missionen
-    ├── ch05_permissions.py    # 20 Missionen
-    ├── ch06_shell.py          # 20 Missionen
-    ├── ch07_processes.py      # 20 Missionen
-    ├── ch08_regex_vi.py       # 25 Missionen
-    ├── ch09_network.py        # 20 Missionen
-    ├── ch10_users.py          # 22 Missionen
-    ├── ch11_logging.py        # 22 Missionen
-    ├── ch12_packages.py       # 21 Missionen
-    ├── ch13_kernel.py         # 25 Missionen
-    ├── ch14_scripting.py      # 25 Missionen
-    ├── ch15_security.py       # 22 Missionen
-    ├── ch16_locale.py         # 22 Missionen
-    ├── ch17_shellenv.py       # 22 Missionen
-    ├── ch18_storage_advanced.py # 22 Missionen
-    ├── ch19_ghost_processors.py # 18 Missionen
-    ├── ch20_firewall_dominion.py # 21 Missionen
-    ├── ch21_network_services.py  # 22 Missionen
-    └── ch22_exam.py           # 27 Missionen (FINAL EXAM)
-```
-
----
-
-## 📚 Documentation
-
-New players should read in this order:
-1. **[GAMEPLAY_GUIDE.md](GAMEPLAY_GUIDE.md)** — How to play, mission types, progression, achievements
-2. **[LINUX_TOPICS.md](LINUX_TOPICS.md)** — Map chapters to Linux exam topics (101 & 102)
-3. **[TIPS_TRICKS.md](TIPS_TRICKS.md)** — Advanced strategies, speedrun tactics, optimization
-
----
-
-## 🎮 Game Status
-
-**Version 1.0 — Production Ready** ✅
-
-- ✅ All 501 missions fully implemented
-- ✅ 22 chapters complete with coherent story
-- ✅ 18 achievements with working unlock triggers
-- ✅ XP/difficulty balanced (no grinding)
-- ✅ 88.6% hint coverage (444/501 missions)
-- ✅ Enhanced player profile with detailed statistics
-- ✅ Comprehensive documentation (50+ KB)
-- ✅ All tests passing (5/5 test suite)
-- ✅ Zero warnings/errors
-
-### How to Play
-```bash
-python3 main.py
-```
-
-### Test Suite
-```bash
-python3 scripts/test_gameflow.py
-```
-
----
-
-## 🚀 Installation & Distribution
-
-### System Requirements
-- Python 3.8+
-- Terminal/command line
-- ~50 MB disk space
-- No external dependencies
-
-### Quick Start
-```bash
-git clone <this-repo>
-cd neongrid9
-python3 main.py
-```
-
-### Estimated Playtime
-- Single chapter: 25-35 minutes
-- Full game (ch01-22): 15-25 hours
-- Speedrun (all chapters): 4-5 hours
-- Completionist (all achievements): 25-30 hours
-
----
-
-## 📖 Learning Path
-
-### For Linux Exam Prep
-1. Read **LINUX_TOPICS.md** to understand exam coverage
-2. Complete chapters sequentially (Ch01-22)
-3. Focus on chapters matching exam domains
-4. Use **TIPS_TRICKS.md** for optimization strategies
-5. Reference commands section for real Linux practice
-
-### For General Linux Learning
-1. Start with **GAMEPLAY_GUIDE.md**
-2. Play through all 22 chapters in order
-3. Read story narratives (they teach concepts)
-4. Use hints strategically to learn
-5. Repeat chapters for mastery
-
-### For Speedrunning
-1. Read **TIPS_TRICKS.md** speedrun section
-2. Learn mission patterns
-3. Optimize quiz answers
-4. Track personal best times
-5. Target: < 30 min per chapter
-
----
-
-## 🏗️ Project Structure (Detailed)
-
-```
-neongrid9/
-├── main.py                              # Entry point, game loop
-├── engine/
-│   ├── display.py                      # Terminal UI, ANSI colors, formatting
-│   ├── mission_engine.py                # Mission system, QuizQuestion, achievement triggers
-│   ├── player.py                        # Player profile, XP, leveling, stats (6 new fields)
-│   ├── features.py                      # Achievements (18 total), hints, factions
-│   ├── terminal_sim.py                  # Terminal simulator
-│   └── save_system.py                   # Save/load persistence
+│   ├── display.py                      # Terminal UI, ANSI-Farben, Formatierung
+│   ├── mission_engine.py                # Mission-System, Achievement-Trigger
+│   ├── player.py                        # Player-Profil, XP, Leveling, Statistiken
+│   ├── features.py                      # 18 Achievements, Hints, Fraktionen
+│   ├── terminal_sim.py                  # Terminal-Simulator
+│   └── save_system.py                   # Speichern/Laden-System
 ├── missions/
-│   ├── ch01_hardware.py                 # 31 missions (Hardware basics)
-│   ├── ch02_boot.py                     # 20 missions (Boot process)
-│   ├── ch03_init.py                     # 32 missions (Init systems)
-│   ├── ch04_partitions.py               # 22 missions (Partitions/disks)
-│   ├── ch05_permissions.py              # 20 missions (File permissions)
-│   ├── ch06_shell.py → ch22_storage...  # Chapters 6-22 (440 missions total)
-└── Documentation/
-    ├── README.md                        # This file
-    ├── GAMEPLAY_GUIDE.md                # How to play (15 KB)
-    ├── LPIC_1_MAPPING.md                # Exam mapping (20 KB)
-    ├── TIPS_TRICKS.md                   # Advanced strategies (18 KB)
-    ├── PERFECTION_ROADMAP.md            # Implementation guide
-    └── PERFECTION_COMPLETE.md           # Final status report
+│   ├── ch01_hardware.py                 # 31 Missionen (Hardware-Grundlagen)
+│   ├── ch02_boot.py                     # 20 Missionen (Boot-Prozess)
+│   ├── ch03_init.py                     # 32 Missionen (Init-Systeme)
+│   ├── ch04_partitions.py               # 22 Missionen (Partitionen/Festplatten)
+│   ├── ch05_permissions.py              # 20 Missionen (Dateiberechtigungen)
+│   ├── ch06_shell.py → ch22_exam.py     # Kapitel 6-22 (440 Missionen insgesamt)
+└── Dokumentation/
+    ├── README.md                        # Diese Datei
+    ├── GAMEPLAY_GUIDE.md                # Spielanleitung (15 KB)
+    ├── LINUX_TOPICS.md                  # Topic-Zuordnung (20 KB)
+    └── TIPS_TRICKS.md                   # Fortgeschrittene Strategien (18 KB)
 ```
 
 ---
 
-## 📊 Content Statistics
+## Inhaltsstatistiken
 
-| Metric | Count | Status |
-|--------|-------|--------|
-| Total Missions | 501 | ✅ Complete |
-| Chapters | 22 | ✅ Complete |
-| Boss Missions | 22 | ✅ Complete |
-| Quiz Questions | 1,117+ | ✅ Complete |
-| Achievements | 18 | ✅ Complete |
-| Factions | 5 | ✅ Complete |
-| Gear Items | 20+ | ✅ Complete |
-| Total XP | 51,540 | ✅ Balanced |
-| Hint Coverage | 444/501 (88.6%) | ✅ Complete |
+| Metrik | Anzahl | Status |
+|--------|--------|--------|
+| Gesamt Missionen | 501 | ✅ Vollständig |
+| Kapitel | 22 | ✅ Vollständig |
+| Boss-Missionen | 22 | ✅ Vollständig |
+| Quiz-Fragen | 1.117+ | ✅ Vollständig |
+| Achievements | 18 | ✅ Vollständig |
+| Fraktionen | 5 | ✅ Vollständig |
+| Gear-Items | 20+ | ✅ Vollständig |
+| Gesamt XP | 51.540 | ✅ Ausbalanciert |
+| Hint-Abdeckung | 444/501 (88,6%) | ✅ Vollständig |
 
 ---
 
-## 🧪 Development & Testing
+## Entwicklung & Tests
 
-### Running Tests
+### Tests ausführen
+
 ```bash
 python3 scripts/test_gameflow.py
 ```
 
-### Test Coverage
-- ✅ Mission loading (501 missions)
-- ✅ Player systems (XP, leveling, achievements)
-- ✅ Mission data integrity (hints, commands, format)
-- ✅ Quiz questions (format, answers, explanations)
-- ✅ Chapter access (all 22 chapters verified)
+### Test-Abdeckung
 
-**Result:** ✅ ALL TESTS PASSED (5/5)
+- ✅ Mission-Laden (501 Missionen)
+- ✅ Player-Systeme (XP, Leveling, Achievements)
+- ✅ Mission-Datenintegritä (Hints, Befehle, Format)
+- ✅ Quiz-Fragen (Format, Antworten, Erklärungen)
+- ✅ Kapitelzugriff (alle 22 Kapitel verifiziert)
 
-### Debugging a Mission
+**Ergebnis:** ✅ ALLE TESTS BESTANDEN (5/5)
+
+### Eine Mission debuggen
+
 ```python
 import sys
 sys.path.insert(0, '/home/ande/neongrid9')
@@ -330,15 +301,15 @@ print(f"Hints: {mission.hints}")
 
 ---
 
-## 📄 License & Attribution
+## Lizenz & Zuschreibung
 
-**NeonGrid-9** - Linux Cyberpunk Learning Game
+**NeonGrid-9** — Linux Cyberpunk Lernspiel
 
-*A cyberpunk-themed terminal learning game for Linux certification exam prep.*
+*Ein cyberpunk-inspiriertes Terminal-Lernspiel für Linux-Systemadministration.*
 
-Created with pedagogical intent: making complex Linux system administration concepts accessible through interactive gameplay.
+Mit pädagogischer Absicht erstellt: Komplexe Linux-Systemverwaltungskonzepte durch interaktives Gameplay zugänglich machen.
 
 ---
 
 *Powered By Chaoswerk*  
-*Ready to Ship* 🚀
+*Produktionsreif* 🚀
