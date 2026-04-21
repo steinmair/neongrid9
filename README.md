@@ -150,7 +150,7 @@ Neue Spieler sollten in dieser Reihenfolge lesen:
 
 - ✅ Alle 501 Missionen vollständig implementiert
 - ✅ 22 Kapitel mit kohärenter Story
-- ✅ 18 Achievements mit funktionierenden Unlock-Triggern
+- ✅ 19 Achievements mit funktionierenden Unlock-Triggern
 - ✅ XP/Schwierigkeit ausbalanciert (kein Grinding nötig)
 - ✅ 88,6 % Hint-Abdeckung (444/501 Missionen)
 - ✅ Erweitertes Player-Profil mit detaillierten Statistiken
@@ -234,7 +234,7 @@ neongrid9/
 │   ├── display.py                      # Terminal UI, ANSI-Farben, Formatierung
 │   ├── mission_engine.py                # Mission-System, Achievement-Trigger
 │   ├── player.py                        # Player-Profil, XP, Leveling, Statistiken
-│   ├── features.py                      # 18 Achievements, Hints, Fraktionen
+│   ├── features.py                      # 19 Achievements, Hints, Fraktionen
 │   ├── terminal_sim.py                  # Terminal-Simulator
 │   └── save_system.py                   # Speichern/Laden-System
 ├── missions/
@@ -260,12 +260,12 @@ neongrid9/
 | Gesamt Missionen | 501 | ✅ Vollständig |
 | Kapitel | 22 | ✅ Vollständig |
 | Boss-Missionen | 22 | ✅ Vollständig |
-| Quiz-Fragen | 1.117+ | ✅ Vollständig |
-| Achievements | 18 | ✅ Vollständig |
+| Quiz-Fragen | 1.169 | ✅ Vollständig |
+| Achievements | 19 | ✅ Vollständig |
 | Fraktionen | 5 | ✅ Vollständig |
 | Gear-Items | 20+ | ✅ Vollständig |
 | Gesamt XP | 51.540 | ✅ Ausbalanciert |
-| Hint-Abdeckung | 444/501 (88,6%) | ✅ Vollständig |
+| Hint-Abdeckung | 441/444 (99,3%) | ✅ Vollständig |
 
 ---
 
