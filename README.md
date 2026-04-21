@@ -179,10 +179,6 @@ New players should read in this order:
 2. **[LPIC_1_MAPPING.md](LPIC_1_MAPPING.md)** — Map chapters to LPIC-1 exam topics (101 & 102)
 3. **[TIPS_TRICKS.md](TIPS_TRICKS.md)** — Advanced strategies, speedrun tactics, optimization
 
-For development status:
-- **[PERFECTION_COMPLETE.md](PERFECTION_COMPLETE.md)** — Final implementation report & checklist
-- **[PERFECTION_ROADMAP.md](PERFECTION_ROADMAP.md)** — Implementation guide & strategy
-
 ---
 
 ## 🎮 Game Status
