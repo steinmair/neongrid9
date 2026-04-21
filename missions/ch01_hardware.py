@@ -139,6 +139,11 @@ CHAPTER_1_MISSIONS = [
         task_description  = "Prüfe ob dieses System UEFI oder BIOS nutzt (ls /sys/firmware/efi/).",
         expected_commands = ["ls /sys/firmware/efi/", "ls /sys/firmware/efi"],
         hint_text         = "Schau in /sys/firmware/efi/ — wenn das Verzeichnis existiert: UEFI",
+        hints = [
+            "Das Verzeichnis, das du suchst, ist in /sys/ — speziell im firmware-Unterverzeichnis.",
+            "Versuche: ls /sys/firmware/efi/ oder ls /sys/firmware/efi",
+            "Der vollständige Befehl ist: ls /sys/firmware/efi/",
+        ],
         quiz_questions    = [
             QuizQuestion(
                 question  = "Was ist der Hauptunterschied zwischen BIOS und UEFI bezüglich Partitionen?",

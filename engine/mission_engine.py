@@ -11,10 +11,11 @@ from engine.display import (
     C, clear, mission_header, show_story, show_code, show_info,
     show_warn, show_error, show_success, show_exam_tip, show_memory_tip,
     show_xp_gain, xp_bar, prompt_continue, prompt_input, boss_intro, level_up_screen,
-    show_ascii_art, show_transition
+    show_ascii_art, show_transition, show_hint, show_achievements
 )
 from engine.player import Player
 from engine.terminal_sim import run_terminal
+from engine.features import HintRequest, HintLevel
 
 
 # ── Datenstruktur: Quiz-Frage ──────────────────────────────────────────────────
@@ -133,6 +134,29 @@ class MissionRunner:
             print(C.GREEN + "  ── AUFGABE " + "─" * 56 + C.RESET)
             print(C.WHITE + f"\n  {mission.task_description}\n" + C.RESET)
 
+            # Hint menu loop
+            hints_used = 0
+            if mission.hints:
+                while True:
+                    hint_choice = prompt_input(
+                        C.CYAN + "  [h]int / [q]uiz / [s]kip? " + C.RESET,
+                        ("h", "q", "s")
+                    )
+                    if hint_choice == "h":
+                        if hints_used < len(mission.hints):
+                            hint_req = HintRequest.create(mission.mission_id, mission.hints, hints_used)
+                            if hint_req:
+                                show_hint(hint_req.text, hints_used, hint_req.xp_cost)
+                                if hint_req.xp_cost > 0:
+                                    self.player.xp = max(0, self.player.xp - hint_req.xp_cost)
+                                hints_used += 1
+                        else:
+                            show_warn("Keine weiteren Hinweise verfügbar.")
+                    elif hint_choice == "q":
+                        break
+                    elif hint_choice == "s":
+                        return True  # Skip mission
+
             hint_avail = self.player.has_hint_gear() or bool(mission.hint_text)
             success, attempts_used, final_cmd = run_terminal(
                 expected      = mission.expected_commands,
@@ -180,6 +204,44 @@ class MissionRunner:
                self.player.get_current_level_xp(),
                self.player.get_next_level_xp())
         print()
+
+        # Check achievements
+        unlocked = []
+        if len(self.player.completed_missions) == 1:
+            ach = self.player.achievements.unlock('first_mission')
+            if ach:
+                unlocked.append(ach)
+                self.player.add_xp(ach.xp_reward)
+
+        if mission.mtype == "BOSS":
+            self.player.bosses_defeated += 1
+            ach = self.player.achievements.unlock('boss_defeated')
+            if ach:
+                unlocked.append(ach)
+                self.player.add_xp(ach.xp_reward)
+
+            if self.player.bosses_defeated == 5:
+                ach = self.player.achievements.unlock('five_bosses')
+                if ach:
+                    unlocked.append(ach)
+                    self.player.add_xp(ach.xp_reward)
+
+            if self.player.bosses_defeated == 22:
+                ach = self.player.achievements.unlock('all_bosses')
+                if ach:
+                    unlocked.append(ach)
+                    self.player.add_xp(ach.xp_reward)
+
+        # Chapter completion check
+        chapter_missions = [m for m in self.player.completed_missions if m.startswith(f"{mission.chapter}.")]
+        if mission.chapter == 1 and len(chapter_missions) >= 31:
+            ach = self.player.achievements.unlock('chapter_1_complete')
+            if ach:
+                unlocked.append(ach)
+                self.player.add_xp(ach.xp_reward)
+
+        if unlocked:
+            show_achievements(unlocked)
 
         if leveled_up:
             level_up_screen(self.player.level, self.player.level_title)
