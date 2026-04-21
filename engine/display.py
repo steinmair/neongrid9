@@ -235,10 +235,17 @@ def prompt_input(label: str = "terminal", valid_choices: tuple = None) -> str:
     """Eingabe-Prompt im Terminal-Style."""
     print()
     while True:
-        response = input(C.PROMPT + f"  [{label}]> " + C.RESET).strip().lower()
-        if valid_choices is None or response in valid_choices:
-            return response
-        # If invalid choice, loop and ask again (silently)
+        response = input(C.PROMPT + f"  [{label}]> " + C.RESET).strip()
+
+        # If valid_choices provided, validate against lowercase version
+        if valid_choices is not None:
+            if response.lower() in valid_choices:
+                return response.lower()
+            # Invalid choice, loop silently
+            continue
+
+        # No validation needed, return as-is
+        return response
 
 
 def show_progress(chapter: int, total_chapters: int, missions_done: int, total_missions: int):
