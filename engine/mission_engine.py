@@ -79,6 +79,16 @@ class MissionRunner:
         self.player = player
         self.save_callback = save_callback
 
+    @staticmethod
+    def _calculate_base_xp(mission_xp: int, success: bool, attempts_used: int) -> int:
+        """Berechnet Basis-XP unter Berücksichtigung von Erfolg und Versuchen."""
+        base_xp = mission_xp
+        if not success:
+            base_xp = base_xp // 3
+        if attempts_used == 1 and success:
+            base_xp = int(base_xp * 1.2)
+        return base_xp
+
     def run(self, mission: Mission) -> bool:
         """Führt eine Mission aus. Returns True bei Erfolg."""
         if self.player.mission_completed(mission.mission_id) and mission.mtype != "BOSS":
@@ -221,11 +231,7 @@ class MissionRunner:
             show_memory_tip(mission.memory_tip)
 
         # ── XP berechnen ──
-        base_xp = mission.xp
-        if not success:
-            base_xp = base_xp // 3  # Teilpunkte wenn gescheitert
-        if attempts_used == 1 and success:
-            base_xp = int(base_xp * 1.2)  # Bonus für ersten Versuch
+        base_xp = self._calculate_base_xp(mission.xp, success, attempts_used)
 
         total_xp = base_xp + quiz_xp
         new_xp, leveled_up = self.player.add_xp(total_xp)
