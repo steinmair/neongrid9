@@ -392,6 +392,17 @@ def about_screen():
 # GAME HUB — Hauptspiel-Interface
 # ══════════════════════════════════════════════════════════════════════════════
 
+def _show_player_status_header(player: Player) -> None:
+    """Zeigt XP-Bar, Name und Level-Titel des Spielers an."""
+    xp_bar(
+        player.xp, player.level,
+        player.get_current_level_xp(),
+        player.get_next_level_xp()
+    )
+    print(C.GRAY + f"  {player.name}  ::  {player.level_title}" + C.RESET)
+    print()
+
+
 def game_hub():
     """Haupt-Hub während des Spielens."""
     while GAME.running and GAME.player:
@@ -400,14 +411,7 @@ def game_hub():
         clear()
         print(C.NEON + "\n  NEONGRID-9 — OPERATIONS HUB\n" + C.RESET)
 
-        # Status
-        xp_bar(
-            player.xp, player.level,
-            player.get_current_level_xp(),
-            player.get_next_level_xp()
-        )
-        print(C.GRAY + f"  {player.name}  ::  {player.level_title}" + C.RESET)
-        print()
+        _show_player_status_header(player)
 
         # Fraktions-Status kompakt
         factions_line = "  "
