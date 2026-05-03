@@ -166,25 +166,31 @@ def show_info(text: str):
     print()
 
 
+def _show_badge(color: str, symbol: str, text: str, prefix: str = ""):
+    """Generische Badge-Ausgabe mit Symbol und Text.
+
+    Common pattern: empty line, colored badge line, empty line.
+    Variable: color, symbol, text (with optional prefix).
+    """
+    print()
+    display_text = f"{prefix}{text}" if prefix else text
+    print(color + f"  {symbol}  {display_text}" + color + f"  {symbol}" + C.RESET)
+    print()
+
+
 def show_warn(text: str):
     """Warnung."""
-    print()
-    print(C.WARN + f"  ⚠  {text}" + C.WARN + "  ⚠" + C.RESET)
-    print()
+    _show_badge(C.WARN, "⚠", text)
 
 
 def show_error(text: str):
     """Fehlermeldung."""
-    print()
-    print(C.DANGER + f"  ✗  SYSTEM ERROR: {text}" + C.DANGER + "  ✗" + C.RESET)
-    print()
+    _show_badge(C.DANGER, "✗", text, prefix="SYSTEM ERROR: ")
 
 
 def show_success(text: str):
     """Erfolgsmeldung."""
-    print()
-    print(C.SUCCESS + f"  ✓  {text}" + C.SUCCESS + "  ✓" + C.RESET)
-    print()
+    _show_badge(C.SUCCESS, "✓", text)
 
 
 def show_exam_tip(text: str):
