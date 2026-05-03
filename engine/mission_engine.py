@@ -109,6 +109,13 @@ class MissionRunner:
         if self.save_callback:
             self.save_callback(self.player)
 
+    def _try_unlock(self, achievement_id: str, unlocked: list) -> None:
+        """Versucht ein Achievement zu entsperren und fügt es der Liste hinzu."""
+        ach = self.player.achievements.unlock(achievement_id)
+        if ach:
+            unlocked.append(ach)
+            self.player.add_xp(ach.xp_reward)
+
     def run(self, mission: Mission) -> bool:
         """Führt eine Mission aus. Returns True bei Erfolg."""
         if self.player.mission_completed(mission.mission_id) and mission.mtype != "BOSS":
@@ -265,75 +272,46 @@ class MissionRunner:
 
         # Check achievements
         unlocked = []
+        # Check achievements
         if len(self.player.completed_missions) == 1:
-            ach = self.player.achievements.unlock('first_mission')
-            if ach:
-                unlocked.append(ach)
-                self.player.add_xp(ach.xp_reward)
+            self._try_unlock('first_mission', unlocked)
 
         if mission.mtype == "BOSS":
             self.player.bosses_defeated += 1
-            ach = self.player.achievements.unlock('boss_defeated')
-            if ach:
-                unlocked.append(ach)
-                self.player.add_xp(ach.xp_reward)
+            self._try_unlock('boss_defeated', unlocked)
 
             if self.player.bosses_defeated == 5:
-                ach = self.player.achievements.unlock('five_bosses')
-                if ach:
-                    unlocked.append(ach)
-                    self.player.add_xp(ach.xp_reward)
+                self._try_unlock('five_bosses', unlocked)
 
             if self.player.bosses_defeated == 22:
-                ach = self.player.achievements.unlock('all_bosses')
-                if ach:
-                    unlocked.append(ach)
-                    self.player.add_xp(ach.xp_reward)
+                self._try_unlock('all_bosses', unlocked)
 
         # Chapter completion check
         chapter_missions = [m for m in self.player.completed_missions if m.startswith(f"{mission.chapter}.")]
         if mission.chapter == 1 and len(chapter_missions) >= 31:
-            ach = self.player.achievements.unlock('chapter_1_complete')
-            if ach:
-                unlocked.append(ach)
-                self.player.add_xp(ach.xp_reward)
+            self._try_unlock('chapter_1_complete', unlocked)
 
         # New achievement triggers
         if len(self.player.completed_missions) == 100:
-            ach = self.player.achievements.unlock('quest_marathon')
-            if ach:
-                unlocked.append(ach)
-                self.player.add_xp(ach.xp_reward)
+            self._try_unlock('quest_marathon', unlocked)
 
         if self.player.level >= 10:
-            ach = self.player.achievements.unlock('level_ten')
-            if ach:
-                unlocked.append(ach)
-                self.player.add_xp(ach.xp_reward)
+            self._try_unlock('level_ten', unlocked)
 
         # Check for chapter masters (5+ chapters complete)
         chapters_complete = len(set(m.split('.')[0] for m in self.player.completed_missions))
         if chapters_complete >= 5:
-            ach = self.player.achievements.unlock('chapter_master')
-            if ach:
-                unlocked.append(ach)
-                self.player.add_xp(ach.xp_reward)
+            self._try_unlock('chapter_master', unlocked)
 
         # Check for all factions at level 2+
         from engine.features import calculate_level
         faction_levels = [calculate_level(rep) for rep in self.player.reputation.values()]
         if all(lvl >= 2 for lvl in faction_levels):
-            ach = self.player.achievements.unlock('all_factions')
-            if ach:
-                unlocked.append(ach)
-                self.player.add_xp(ach.xp_reward)
+            self._try_unlock('all_factions', unlocked)
 
         # Check for gear collector (10+ items)
         if len(self.player.inventory) >= 10:
-            ach = self.player.achievements.unlock('gear_collector')
-            if ach:
-                unlocked.append(ach)
-                self.player.add_xp(ach.xp_reward)
+            self._try_unlock('gear_collector', unlocked)
 
         if unlocked:
             show_achievements(unlocked)
