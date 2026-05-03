@@ -34,6 +34,16 @@ class C:
     XP      = "\033[93m"          # yellow für XP
 
 
+def _screen(title: str, color: str = C.NEON):
+    """Löscht den Bildschirm und zeigt einen farbigen Titel-Header an.
+
+    Common pattern: clear screen + print colored title header.
+    Variable: title text, color.
+    """
+    clear()
+    print(color + f"\n  {title}\n" + C.RESET)
+
+
 def clear():
     os.system('cls' if os.name == 'nt' else 'clear')
 

@@ -24,7 +24,7 @@ if sys.version_info < (3, 10):
     sys.exit(1)
 
 from engine.display import (
-    C, clear, header, chapter_header, show_story, show_info,
+    C, clear, _screen, header, chapter_header, show_story, show_info,
     show_success, show_warn, show_error, xp_bar, prompt_continue,
     prompt_input, typewrite, slow_print, box, level_up_screen
 )
@@ -159,8 +159,7 @@ def show_title_screen():
 
 def show_story_prologue():
     """Story-Prolog beim ersten Start."""
-    clear()
-    print(C.NEON + "\n  NEONGRID-9  ::  YEAR 2089\n" + C.RESET)
+    _screen("NEONGRID-9  ::  YEAR 2089")
     time.sleep(0.5)
 
     typewrite(
@@ -213,8 +212,7 @@ def main_menu() -> str:
 
 def new_game_menu():
     """Neues Spiel starten."""
-    clear()
-    print(C.NEON + "\n  NEUES SPIEL\n" + C.RESET)
+    _screen("NEUES SPIEL")
 
     # Name
     print(C.WHITE + "  Dein Hacker-Name?" + C.RESET)
@@ -263,8 +261,7 @@ def new_game_menu():
 
 def load_game_menu() -> bool:
     """Spiel laden."""
-    clear()
-    print(C.NEON + "\n  SPIEL LADEN\n" + C.RESET)
+    _screen("SPIEL LADEN")
     for slot in [1, 2, 3]:
         info = slot_info(slot)
         print(C.CYAN + f"  [{slot}]" + C.RESET + f"  Slot {slot}: {info}")
@@ -298,8 +295,7 @@ def load_game_menu() -> bool:
 
 def manage_saves_menu():
     """Spielstände verwalten."""
-    clear()
-    print(C.NEON + "\n  SPIELSTÄNDE\n" + C.RESET)
+    _screen("SPIELSTÄNDE")
     for slot in [1, 2, 3]:
         info = slot_info(slot)
         print(C.CYAN + f"  [{slot}]" + C.RESET + f"  {info}")
@@ -420,8 +416,7 @@ def game_hub():
     while GAME.running and GAME.player:
         player = GAME.player
 
-        clear()
-        print(C.NEON + "\n  NEONGRID-9 — OPERATIONS HUB\n" + C.RESET)
+        _screen("NEONGRID-9 — OPERATIONS HUB")
 
         _show_player_status_header(player)
 
@@ -897,8 +892,7 @@ def _show_chapter_complete(ch_id: int, ch_title: str, ch_topic: str):
 
 def show_player_status():
     """Spieler-Status anzeigen."""
-    clear()
-    print(C.NEON + "\n  GHOST PROFILE\n" + C.RESET)
+    _screen("GHOST PROFILE")
     print(GAME.player.stats_summary())
     print()
     prompt_continue()
@@ -906,9 +900,8 @@ def show_player_status():
 
 def show_linux_readiness():
     """Linux Readiness Report — pro Topic, Quiz-Genauigkeit, Gesamtbewertung."""
-    clear()
     player = GAME.player
-    print(C.NEON + "\n  Linux READINESS REPORT\n" + C.RESET)
+    _screen("Linux READINESS REPORT")
     print(C.GRAY + "  ─" * 35 + C.RESET)
 
     total_missions = sum(len(m) for _, m, *_ in CHAPTERS)
@@ -1001,11 +994,9 @@ def show_linux_readiness():
 
 def timed_exam_mode():
     """Linux Prüfungssimulation — 90 Minuten, 60 Fragen, LPIC-Scoring."""
-    clear()
     player = GAME.player
     EXAM_LIMIT = 90 * 60  # 5400 Sekunden
-
-    print(C.NEON + "\n  Linux PRÜFUNGSSIMULATION\n" + C.RESET)
+    _screen("Linux PRÜFUNGSSIMULATION")
     print(C.CYAN + "  " + "─" * 60 + C.RESET)
     print(f"\n  {C.WHITE}Regelwerk:{C.RESET}")
     print(f"  {C.GRAY}• 60 Fragen aus allen Linux Topics")
@@ -1195,11 +1186,9 @@ def timed_exam_mode():
 def review_mode():
     """Spaced-Repetition lite — zufällige Quiz-Fragen aus schwachen Kapiteln."""
     import random
-    clear()
-    player  = GAME.player
-    runner  = MissionRunner(player, GAME.auto_save)
-
-    print(C.NEON + "\n  REVIEW MODE — GEZIELTE WIEDERHOLUNG\n" + C.RESET)
+    player = GAME.player
+    runner = MissionRunner(player, GAME.auto_save)
+    _screen("REVIEW MODE — GEZIELTE WIEDERHOLUNG")
 
     # Alle Quiz-Fragen aus allen Kapiteln sammeln, mit Kapitel-Kontext
     pool: list[tuple] = []  # (chapter_id, topic, title, question)
@@ -1263,9 +1252,8 @@ def review_mode():
         prompt_continue()
 
     # Session-Auswertung
-    clear()
     pct = int(correct_count / len(session) * 100)
-    print(C.NEON + "\n  REVIEW ABGESCHLOSSEN\n" + C.RESET)
+    _screen("REVIEW ABGESCHLOSSEN")
     print(f"  Ergebnis: {correct_count}/{len(session)} richtig  ({pct}%)\n")
     if pct >= 80:
         print(C.SUCCESS + "  Ausgezeichnet! Du beherrschst diese Topics.\n" + C.RESET)
@@ -1281,9 +1269,8 @@ def review_mode():
 def show_inventory():
     """Inventar anzeigen."""
     from engine.player import RARITY_COLOR
-    clear()
     player = GAME.player
-    print(C.NEON + "\n  GEAR & INVENTORY\n" + C.RESET)
+    _screen("GEAR & INVENTORY")
 
     rarity_order = {"legendary": 0, "rare": 1, "uncommon": 2, "common": 3}
     sorted_inv   = sorted(
@@ -1361,8 +1348,7 @@ def main():
             about_screen()
 
         elif choice in ("q", "quit", "exit"):
-            clear()
-            print(C.NEON + "\n  NeonGrid-9 wird beendet...\n" + C.RESET)
+            _screen("NeonGrid-9 wird beendet...")
             print(C.GRAY + '  "Knowledge is the only weapon they cannot take from you."\n' + C.RESET)
             sys.exit(0)
 
