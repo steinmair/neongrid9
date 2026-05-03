@@ -403,6 +403,18 @@ def _show_player_status_header(player: Player) -> None:
     print()
 
 
+def _show_faction_status_compact(player: Player) -> None:
+    """Zeigt Fraktions-Reputationen mit Abkürzungen kompakt an."""
+    factions_line = "  "
+    for faction, rep in player.reputation.items():
+        if rep > 0:
+            short = faction.split()[0][:3].upper()
+            factions_line += C.MAGENTA + f"{short}:{rep} " + C.RESET
+    if factions_line.strip():
+        print(factions_line)
+        print()
+
+
 def game_hub():
     """Haupt-Hub während des Spielens."""
     while GAME.running and GAME.player:
@@ -413,15 +425,7 @@ def game_hub():
 
         _show_player_status_header(player)
 
-        # Fraktions-Status kompakt
-        factions_line = "  "
-        for faction, rep in player.reputation.items():
-            if rep > 0:
-                short = faction.split()[0][:3].upper()
-                factions_line += C.MAGENTA + f"{short}:{rep} " + C.RESET
-        if factions_line.strip():
-            print(factions_line)
-            print()
+        _show_faction_status_compact(player)
 
         # Missionsfortschritt pro Kapitel
         print(C.WHITE + "  MISSIONEN\n" + C.RESET)
