@@ -480,14 +480,9 @@ class MissionRunner:
             show_exam_tip(mission.exam_tip)
 
         if mission.gear_reward and win:
-            if self.player.add_gear(mission.gear_reward):
-                from engine.player import GEAR_CATALOG
-                item = GEAR_CATALOG.get(mission.gear_reward, {})
-                print(C.YELLOW + f"\n  ★  BOSS REWARD: {item.get('name', mission.gear_reward)}" + C.RESET)
-                print(C.GRAY   + f"     {item.get('desc', '')}" + C.RESET)
+            self._show_gear_reward(mission.gear_reward, label="BOSS REWARD")
 
-        if self.save_callback:
-            self.save_callback(self.player)
+        self._auto_save()
 
         prompt_continue()
         return win
