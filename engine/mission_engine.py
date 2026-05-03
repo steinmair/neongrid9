@@ -89,6 +89,26 @@ class MissionRunner:
             base_xp = int(base_xp * 1.2)
         return base_xp
 
+    def _show_gear_reward(self, gear_id: str, label: str = "NEUES GEAR") -> None:
+        """Zeigt Gear-Belohnung an, falls neu im Inventar."""
+        if self.player.add_gear(gear_id):
+            from engine.player import GEAR_CATALOG
+            item = GEAR_CATALOG.get(gear_id, {})
+            print(C.YELLOW + f"  ★  {label}: {item.get('name', gear_id)}" + C.RESET)
+            print(C.GRAY   + f"     {item.get('desc', '')}" + C.RESET)
+            print()
+
+    def _show_faction_reward(self, faction: str, amount: int) -> None:
+        """Verleiht Fraktions-Reputation und zeigt sie an."""
+        self.player.add_reputation(faction, amount)
+        print(C.MAGENTA + f"  ↑  REPUTATION: {faction} +{amount}" + C.RESET)
+        print()
+
+    def _auto_save(self) -> None:
+        """Speichert automatisch, wenn ein Callback registriert ist."""
+        if self.save_callback:
+            self.save_callback(self.player)
+
     def run(self, mission: Mission) -> bool:
         """Führt eine Mission aus. Returns True bei Erfolg."""
         if self.player.mission_completed(mission.mission_id) and mission.mtype != "BOSS":
@@ -323,22 +343,14 @@ class MissionRunner:
 
         # Gear-Belohnung
         if mission.gear_reward:
-            if self.player.add_gear(mission.gear_reward):
-                from engine.player import GEAR_CATALOG
-                item = GEAR_CATALOG.get(mission.gear_reward, {})
-                print(C.YELLOW + f"  ★  NEUES GEAR: {item.get('name', mission.gear_reward)}" + C.RESET)
-                print(C.GRAY   + f"     {item.get('desc', '')}" + C.RESET)
-                print()
+            self._show_gear_reward(mission.gear_reward)
 
         # Fraktions-Reputation
         if mission.faction_reward:
             faction, amount = mission.faction_reward
-            self.player.add_reputation(faction, amount)
-            print(C.MAGENTA + f"  ↑  REPUTATION: {faction} +{amount}" + C.RESET)
-            print()
+            self._show_faction_reward(faction, amount)
 
-        if self.save_callback:
-            self.save_callback(self.player)
+        self._auto_save()
 
         prompt_continue()
         return success
